@@ -39,6 +39,14 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>OCSF</groupId>
+			<artifactId>OCSF</artifactId>
+			<version>1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/static/OCSF.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
