@@ -23,7 +23,7 @@ public class User {
     @Transient
     private String passwordConfirm;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private  Collection<GroupeUser> groupeUsers;
     
 

@@ -35,15 +35,7 @@ public class GroupeUserService {
 	 * @return groupeUser
 	 */
 	public GroupeUser findByGroupeAndUser(Long groupe_i, Long user_i) {
-		return groupeUserRepository.findByGroupeAndUser(groupe_i, user_i); 
-	}
-	
-	/**
-	 * 
-	 * @return tous les groupeUser
-	 */
-	public List<GroupeUser> findAll(){
-		return groupeUserRepository.findAll(); 
+		return groupeUserRepository.findByGroupeUser(groupe_i, user_i); 
 	}
 	
 	/**
@@ -52,7 +44,7 @@ public class GroupeUserService {
 	 * @return Tous les groupeUser d'un groupe spécifique
 	 */
 	public List<GroupeUser> findByGroupe(Long groupe_id){
-		return groupeUserRepository.findByGroupe(groupe_id); 
+		return groupeUserRepository.findByGroupeId(groupe_id); 
 	}
 	
 	/**
@@ -62,5 +54,13 @@ public class GroupeUserService {
 	 */
 	public List<GroupeUser> findByGroupeAndDeletedatIsNull(Long groupe_id){
 		return groupeUserRepository.findByGroupeAndDeletedatIsNull(groupe_id); 
+	}
+	
+	/**
+	 * 
+	 * @return tous les groupeUser
+	 */
+	public List<GroupeUser> findAll(){
+		return groupeUserRepository.findAll(); 
 	}
 }

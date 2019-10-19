@@ -31,7 +31,7 @@ public class GroupeService {
     }
 	
 	public GroupeUser findByGroupeUser(Long groupe_id, Long user_id) {
-		return groupeUserRepository.findByGroupeAndUser(groupe_id, user_id); 
+		return groupeUserRepository.findByGroupeUser(groupe_id, user_id); 
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class GroupeService {
 	 * @return Tous les groupeUser
 	 */
 	public Collection<GroupeUser> findAllGroupeUser(Long groupe_id){
-		return groupeUserRepository.findByGroupe(groupe_id); 
+		return groupeUserRepository.findByGroupeId(groupe_id); 
 	}
 	
 	/**

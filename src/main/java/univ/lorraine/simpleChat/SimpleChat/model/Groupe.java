@@ -37,7 +37,7 @@ public class Groupe {
     @Temporal(TemporalType.DATE)
     private Date createdat;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupe")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "groupe")
 	private  Collection<GroupeUser> groupeUsers;
 
 	public Groupe() {

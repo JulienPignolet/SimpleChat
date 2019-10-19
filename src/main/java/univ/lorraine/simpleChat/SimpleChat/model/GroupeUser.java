@@ -1,7 +1,6 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
 import java.util.Date;
-import java.util.Optional;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -13,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "groupe_user")
@@ -32,14 +33,17 @@ public class GroupeUser {
     
     @ManyToOne(targetEntity=User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private User user;
     
     @ManyToOne(targetEntity=Groupe.class)
     @JoinColumn(name = "groupe_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private Groupe groupe;
     
 	@ManyToOne(targetEntity=Role.class)
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = true)
+	@JsonBackReference
     private Role role;
 
 	
