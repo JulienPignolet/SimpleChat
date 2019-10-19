@@ -1,0 +1,66 @@
+package univ.lorraine.simpleChat.SimpleChat.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
+import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
+
+@Service
+public class GroupeUserService {
+	
+	@Autowired
+	private GroupeUserRepository groupeUserRepository; 
+	
+	public void save(GroupeUser groupeUser) {
+        groupeUserRepository.save(groupeUser); 
+    }
+	
+	/**
+	 * 
+	 * @param id
+	 * @return GroupeUser 
+	 */
+	public Optional<GroupeUser> findById(Long id) {
+		return groupeUserRepository.findById(id); 
+	}
+	
+	/**
+	 * 
+	 * @param groupe_i
+	 * @param user_i
+	 * @return groupeUser
+	 */
+	public GroupeUser findByGroupeAndUser(Long groupe_i, Long user_i) {
+		return groupeUserRepository.findByGroupeAndUser(groupe_i, user_i); 
+	}
+	
+	/**
+	 * 
+	 * @return tous les groupeUser
+	 */
+	public List<GroupeUser> findAll(){
+		return groupeUserRepository.findAll(); 
+	}
+	
+	/**
+	 * 
+	 * @param groupe_id
+	 * @return Tous les groupeUser d'un groupe spécifique
+	 */
+	public List<GroupeUser> findByGroupe(Long groupe_id){
+		return groupeUserRepository.findByGroupe(groupe_id); 
+	}
+	
+	/**
+	 * 
+	 * @param groupe_id
+	 * @return Tous les groupeUser qui n'ont pas été supprimés d'un groupe spécifique
+	 */
+	public List<GroupeUser> findByGroupeAndDeletedatIsNull(Long groupe_id){
+		return groupeUserRepository.findByGroupeAndDeletedatIsNull(groupe_id); 
+	}
+}
