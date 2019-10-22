@@ -96,17 +96,17 @@ public class GroupeTestController {
 			role_i = Long.parseLong(role_id);
 		}
 		Optional<Groupe> groupe = groupeService.findById(groupe_i);
-		Optional<User> user = userService.findById(user_i);
+		User user = userService.findById(user_i);
 		GroupeUser groupeUser = new GroupeUser();
 		groupe.get().addGroupeUser(groupeUser);
-		user.get().addGroupeUser(groupeUser);
+		user.addGroupeUser(groupeUser);
 		if(role_i != null)
 		{
 			Optional<Role> role = roleService.findById(role_i);
 			groupeUser.setRole(role.get());
 		}
 		
-		userService.save(user.get());
+		userService.save(user);
 		groupeService.save(groupe.get());
 		groupeUserService.save(groupeUser);
 		

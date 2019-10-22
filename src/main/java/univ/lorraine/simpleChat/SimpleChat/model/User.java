@@ -1,5 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
+import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
+
 import javax.persistence.*;
 
 import java.util.Collection;
@@ -17,6 +19,9 @@ public class User {
 
     private String password;
 
+    @Transient
+	private ClientRunnable clientOCSF;
+
     @ManyToMany
     private Set<Role> roles;
 
@@ -25,9 +30,16 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private  Collection<GroupeUser> groupeUsers;
-    
 
-	
+	public ClientRunnable getClientOCSF() {
+		return clientOCSF;
+	}
+
+	public void setClientOCSF(ClientRunnable clientOCSF) {
+		if(this.clientOCSF == null)
+			this.clientOCSF = clientOCSF;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -88,6 +100,23 @@ public class User {
 			this.groupeUsers.remove(groupUser); 
 			groupUser.setUser(null);
 		}
+	}
+
+	public void startClient()
+	{
+		this.setClientOCSF(new ClientRunnable());
+		this.clientOCSF.start();
+	}
+
+	public void stopClient()
+	{
+		this.clientOCSF.stop();
+		this.setClientOCSF(null);
+	}
+
+	public void sendMsg(String msg)
+	{
+		this.clientOCSF.sendMsg(msg);
 	}
 
 	@Override

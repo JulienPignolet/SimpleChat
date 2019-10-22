@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
@@ -32,7 +33,9 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-	public Optional<User> findById(Long user_id) {
-		return userRepository.findById(user_id);
+	public User findById(Long user_id) {
+		User user = userRepository.findById(user_id).isPresent() ? userRepository.findById(user_id).get():userRepository.findById(user_id).get();
+        user.startClient();
+        return user;
 	}
 }
