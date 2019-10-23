@@ -25,7 +25,9 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private  Collection<GroupeUser> groupeUsers;
-    
+
+    @OneToMany(mappedBy = "author")
+    private Collection<Message> messages;
 
 	
 	public Long getId() {
