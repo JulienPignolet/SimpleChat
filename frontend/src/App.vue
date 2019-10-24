@@ -1,20 +1,22 @@
 <template>
-  <div id="appVue">
-      <my-header></my-header>
-
-      <div class="content">
-        <router-view></router-view>
-      </div>
-  </div>
+  <v-app>
+    <v-content fluid>
+      <app-bar />
+      <router-view></router-view>
+    </v-content>
+    <alerte />
+  </v-app>
 </template>
 
 <script>
-import MyHeader from "./components/MyHeader.vue"
+import AppBar from "@/components/AppBar.vue";
+import Alerte from '@/components/Alerte.vue'
 
 export default {
-  components: { MyHeader }
+  name: "App",
+  components: {
+    AppBar,
+    Alerte
+  }
 };
 </script>
-
-<style lang="scss" src="./components/css/app.scss">
-</style>

@@ -1,27 +1,16 @@
 import Vue from 'vue';
-import vuetify from './plugins/vuetify';
-import VueRouter from 'vue-router';
-
-// load compenents
 import App from './App';
-import HelloWorld from './components/HelloWorld.vue';
-import PageTest from './components/PageTest.vue';
-import LoginPage from './components/Login.vue';
+import router from "./router";
+import store from "@/store";
+import vuetify from './plugins/vuetify';
+import "roboto-fontface/css/roboto/roboto-fontface.css";
+import "@mdi/font/css/materialdesignicons.css";
 
-Vue.use(VueRouter)
 Vue.config.productionTip = false
 
-const router = new VueRouter({
-  mode: 'history',
-  routes : [
-    {path : "/", component : HelloWorld},
-    {path : "/test", component : PageTest},
-    {path : "/login", component : LoginPage},
-  ],
-});
-
 new Vue({
-  vuetify,
   router,
+  store,
+  vuetify,
   render: h => h(App)
-}).$mount('#app')
+}).$mount("#app");
