@@ -1,5 +1,6 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -43,6 +44,7 @@ public class Groupe {
 	public Groupe() {
 		this.setCreatedat(new Date());
 		this.setDeletedat(null);
+		this.groupeUsers = new ArrayList<>(); 
 	}
 	
 	public Long getId() {
