@@ -55,7 +55,7 @@ public class GroupeService {
 		User user = userRepository.findByUsername(username);
 		GroupeUser groupeUser = new GroupeUser();
 		user.addGroupeUser(groupeUser);
-		Role role = this.roleRepository.findByName("ADMIN_GROUPE"); 
+		Role role = this.roleRepository.findByName("ROLE_ADMIN_GROUPE"); 
 		groupeUser.setRole(role);
 		groupe.addGroupeUser(groupeUser);
 		
