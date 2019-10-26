@@ -21,8 +21,7 @@ public class Message {
     private Groupe groupe;
 
     @ManyToOne
-    @Column(nullable = false)
-    private User user;
+    private User author;
 
     @ManyToMany
     private Collection<MessageFile> files;
@@ -51,12 +50,12 @@ public class Message {
         this.groupe = groupe;
     }
 
-    public User getUser() {
-        return user;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public Date getCreated_at() {

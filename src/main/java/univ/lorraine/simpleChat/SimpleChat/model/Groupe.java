@@ -32,6 +32,9 @@ public class Groupe {
     @Basic
     @Temporal(TemporalType.DATE)
     private Date deletedat;
+
+	@OneToMany(mappedBy = "groupe")
+	private Collection<Message> messages;
     
     @Basic
     @Temporal(TemporalType.DATE)
@@ -44,7 +47,15 @@ public class Groupe {
 		this.setCreatedat(new Date());
 		this.setDeletedat(null);
 	}
-	
+
+	public Collection<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Collection<Message> messages) {
+		this.messages = messages;
+	}
+
 	public Long getId() {
 		return id;
 	}
