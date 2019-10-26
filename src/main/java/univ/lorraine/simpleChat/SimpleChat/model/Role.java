@@ -1,6 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
 import javax.persistence.*;
+
 import java.util.Set;
 
 @Entity
@@ -14,7 +15,8 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
-
+    
+    
     public Long getId() {
         return id;
     }

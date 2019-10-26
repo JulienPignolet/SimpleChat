@@ -21,4 +21,13 @@ public class RoleService {
 	public Optional<Role> findById(Long id){
 		return roleRepository.findById(id); 
 	}
+	
+	public Role create(String name)
+	{
+		Role role = new Role();
+		role.setName(name);
+		roleRepository.save(role); 
+		return role;
+	}
+	
 }
