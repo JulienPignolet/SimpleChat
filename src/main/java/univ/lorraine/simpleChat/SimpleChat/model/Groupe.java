@@ -48,7 +48,7 @@ public class Groupe {
 		this.setCreatedat(new Date());
 		this.setDeletedat(null);
 		this.groupeUsers = new ArrayList<>(); 
-	}t status
+	}
 
 	public Collection<Message> getMessages() {
 		return messages;
