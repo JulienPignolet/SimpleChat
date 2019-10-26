@@ -11,6 +11,7 @@ import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 @Repository
 public interface GroupeRepository extends JpaRepository<Groupe, Long>{
 	Optional<Groupe> findById(Long id);
+	Groupe findByIdAndDeletedatIsNull(Long id);
 	List<Groupe> findAll();
 	List<Groupe> findByDeletedatIsNull();
 }

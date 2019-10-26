@@ -18,6 +18,10 @@ public interface GroupeUserRepository extends JpaRepository<GroupeUser, Long>{
 			  nativeQuery = true)
 	GroupeUser findByGroupeUser(Long groupe_id, Long user_id);
 	
+	@Query(value = "SELECT * FROM groupe_user join groupe on groupe.id = groupe_user.groupe_id join user on user.id = groupe_user.user_id WHERE groupe.id = ?1 and user.id = ?2 and groupe_user.deletedat is null", 
+			  nativeQuery = true)
+	GroupeUser findByGroupeUserActif(Long groupe_id, Long user_id);
+	
 	List<GroupeUser> findAll();
 	List<GroupeUser> findByGroupeId(Long groupe_id);
 	List<GroupeUser> findByGroupeAndDeletedatIsNull(Long groupe_id);
