@@ -1,5 +1,6 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,17 +48,12 @@ public class GroupeTestController {
      * 
      * @param request
      * @param name
-     * @return Le groupe groupe qu'on vient d'ajouter
+     * @return Le groupe qu'on vient de créer
      */
-	@GetMapping("/add/groupe/{name}")
-	public Groupe add(HttpServletRequest request, @PathVariable String name) 
+	@GetMapping("/add/groupe/{name}/{isPrivateChat}")
+	public Groupe add(HttpServletRequest request, Principal principal, @PathVariable String name, @PathVariable String isPrivateChat) 
 	{
-		Groupe groupe = new Groupe();
-		groupe.setName(name);
-		groupe.setPrivateChat(false);
-		this.groupeService.save(groupe);
-
-		return groupe;
+		return this.groupeService.create(name, isPrivateChat, principal.getName());
 	}
 	
 	

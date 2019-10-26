@@ -8,8 +8,12 @@ import org.springframework.stereotype.Service;
 
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
+import univ.lorraine.simpleChat.SimpleChat.model.Role;
+import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
+import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
+import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
 
 @Service
@@ -21,10 +25,47 @@ public class GroupeService {
 	@Autowired
 	private GroupeRepository groupeRepository; 
 	
+	@Autowired 
+	private UserRepository userRepository; 
+	
+	@Autowired 
+	private RoleRepository roleRepository; 
+	
 	
 	public void save(Groupe groupe) {
         groupeRepository.save(groupe); 
     }
+	
+	
+	/**
+	 * 
+	 * @param name
+	 * @param isPrivateChat (ce parametre est un string. les valeurs possibles sont 0, false, 1 ou true)
+	 * @param username (l'utilisateur courant : admin du groupe)
+	 * @return Le groupe crée
+	 */
+	public Groupe create(String name, String isPrivateChat, String username) {
+		
+		Groupe groupe = new Groupe();
+		groupe.setName(name);
+		boolean	chatPrive = false;
+		if(isPrivateChat == "1" || isPrivateChat == "true") chatPrive = true;
+		groupe.setPrivateChat(chatPrive);
+		
+		User user = userRepository.findByUsername(username);
+		GroupeUser groupeUser = new GroupeUser();
+		user.addGroupeUser(groupeUser);
+		Role role = this.roleRepository.findByName("ADMIN_GROUPE"); 
+		groupeUser.setRole(role);
+		groupe.addGroupeUser(groupeUser);
+		
+		groupeRepository.save(groupe);
+		userRepository.save(user);
+		groupeUserRepository.save(groupeUser);
+		
+        return groupe;
+    }
+	
 	
 	public Optional<Groupe> findById(Long id) {
         return groupeRepository.findById(id); 
