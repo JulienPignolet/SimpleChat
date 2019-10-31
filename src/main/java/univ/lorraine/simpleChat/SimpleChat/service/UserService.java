@@ -35,7 +35,6 @@ public class UserService {
 
 	public User findById(Long user_id) {
 		User user = userRepository.findById(user_id).isPresent() ? userRepository.findById(user_id).get():userRepository.findById(user_id).get();
-        user.startClient();
         return user;
 	}
 }

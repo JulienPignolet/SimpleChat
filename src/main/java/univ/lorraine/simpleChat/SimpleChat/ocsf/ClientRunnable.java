@@ -6,25 +6,29 @@ public class ClientRunnable implements Runnable {
     private ClientImpl client;
     private String msgToSend;
     private Thread thread;
+    private Long id;
 
-    public ClientRunnable(ClientImpl client) {
+    public ClientRunnable(Long id, ClientImpl client) {
+        this.id = id;
         this.client = client;
         msgToSend = null;
         this.thread = null;
 
     }
 
-    public ClientRunnable() {
-        this.client = new ClientImpl("localhost", 12345);
+    public ClientRunnable(Long id) {
+        this.client = new ClientImpl(id, "localhost", 12345);
+        this.id = id;
     }
 
     @Override
     public void run() {
         try {
+            client.isConnected();
+            client.openConnection();
             while (true) {
                 try {
                     client.isConnected();
-                    client.openConnection();
                     if (msgToSend != null) {
                         client.sendToServer(msgToSend);
                         msgToSend = null;
@@ -35,7 +39,7 @@ public class ClientRunnable implements Runnable {
                 }
             }
         }
-        catch (InterruptedException e)
+        catch (InterruptedException | IOException e)
         {
             System.out.println(e.getMessage());
         }
@@ -62,6 +66,11 @@ public class ClientRunnable implements Runnable {
     public void sendMsg(String msg)
     {
         this.msgToSend=msg;
+    }
+
+    public String getMessagesEnAttente()
+    {
+        return this.client.messagesEnAttenteJSON();
     }
 }
 

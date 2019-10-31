@@ -7,16 +7,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import univ.lorraine.simpleChat.SimpleChat.adapter.UserAdapter;
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
 import univ.lorraine.simpleChat.SimpleChat.service.SecurityService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 
 @Controller
 public class UserController {
@@ -26,6 +29,8 @@ public class UserController {
 
     @Autowired
     private SecurityService securityService;
+
+    private HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
 
     @GetMapping("/registration")
     public String registration(Model model) {
@@ -79,7 +84,13 @@ public class UserController {
         try {
             Message JSON = new Message(msg);
             User user = userService.findById(JSON.getUser_id());
-            user.sendMsg(JSON.getMessage());
+            if(!clientPool.containsKey(JSON.getUser_id()))
+            {
+                clientPool.put(JSON.getUser_id(), new ClientRunnable(JSON.getUser_id()));
+                clientPool.get(JSON.getUser_id()).start();
+            }
+            clientPool.get(JSON.getUser_id()).sendMsg(msg);
+//            user.sendMsg(msg);
         }
         catch(Exception e)
         {
@@ -87,6 +98,16 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/messages")
+    public ResponseEntity<Object> byName(@PathVariable(value = "id") Long id)
+    {
+        User user = userService.findById(id);
+        if(!clientPool.containsKey(id))
+            return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
+        String messages = clientPool.get(id).getMessagesEnAttente();
+        return new ResponseEntity<Object>(messages, HttpStatus.OK);
     }
 
     @GetMapping({"/"})
