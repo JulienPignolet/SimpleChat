@@ -8,8 +8,12 @@ import univ.lorraine.simpleChat.SimpleChat.repository.MessageRepository;
 @Service
 public class MessageService {
 
+    private final MessageRepository messageRepository;
+
     @Autowired
-    private MessageRepository messageRepository;
+    public MessageService(MessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
+    }
 
 
     public void save(Message message) {

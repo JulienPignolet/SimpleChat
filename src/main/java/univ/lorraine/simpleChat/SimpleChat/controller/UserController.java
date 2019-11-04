@@ -27,19 +27,23 @@ import java.util.HashMap;
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private GroupeService groupeService;
+    private final GroupeService groupeService;
 
-    @Autowired
-    private SecurityService securityService;
+    private final SecurityService securityService;
 
-    @Autowired
-    private MessageService messageService;
+    private final MessageService messageService;
 
     private HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
+
+    @Autowired
+    public UserController(UserService userService, GroupeService groupeService, SecurityService securityService, MessageService messageService) {
+        this.userService = userService;
+        this.groupeService = groupeService;
+        this.securityService = securityService;
+        this.messageService = messageService;
+    }
 
     @GetMapping("/registration")
     public String registration(Model model) {

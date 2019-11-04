@@ -1,20 +1,23 @@
 package univ.lorraine.simpleChat.SimpleChat.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GroupeUserService {
 	
+	private final GroupeUserRepository groupeUserRepository;
+
 	@Autowired
-	private GroupeUserRepository groupeUserRepository; 
-	
+	public GroupeUserService(GroupeUserRepository groupeUserRepository) {
+		this.groupeUserRepository = groupeUserRepository;
+	}
+
 	public void save(GroupeUser groupeUser) {
         groupeUserRepository.save(groupeUser); 
     }

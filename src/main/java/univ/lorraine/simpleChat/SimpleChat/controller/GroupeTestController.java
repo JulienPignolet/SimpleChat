@@ -1,20 +1,18 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
-import java.security.Principal;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
+
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.List;
 /*
 	CECI EST UN CONTROLLER DE TEST (api)
 	Ainsi, toutes les actions seront en get. 
@@ -27,14 +25,18 @@ import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
 public class GroupeTestController {
 
     
-    @Autowired
-    private GroupeService groupeService;
+    private final GroupeService groupeService;
     
-    @Autowired
-    private GroupeUserService groupeUserService;
-    
-    
-    /**
+    private final GroupeUserService groupeUserService;
+
+	@Autowired
+	public GroupeTestController(GroupeService groupeService, GroupeUserService groupeUserService) {
+		this.groupeService = groupeService;
+		this.groupeUserService = groupeUserService;
+	}
+
+
+	/**
      * 
      * @param request
      * @param principal

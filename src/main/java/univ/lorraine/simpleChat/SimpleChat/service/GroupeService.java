@@ -16,19 +16,23 @@ import java.util.Optional;
 @Service
 public class GroupeService {
 
+	private final GroupeUserRepository groupeUserRepository;
+	
+	private final GroupeRepository groupeRepository;
+	
+	private final UserRepository userRepository;
+	
+	private final RoleRepository roleRepository;
+
 	@Autowired
-	private GroupeUserRepository groupeUserRepository; 
-	
-	@Autowired
-	private GroupeRepository groupeRepository; 
-	
-	@Autowired 
-	private UserRepository userRepository; 
-	
-	@Autowired 
-	private RoleRepository roleRepository; 
-	
-	
+	public GroupeService(GroupeUserRepository groupeUserRepository, GroupeRepository groupeRepository, UserRepository userRepository, RoleRepository roleRepository) {
+		this.groupeUserRepository = groupeUserRepository;
+		this.groupeRepository = groupeRepository;
+		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
+	}
+
+
 	public void save(Groupe groupe) {
         groupeRepository.save(groupe); 
     }

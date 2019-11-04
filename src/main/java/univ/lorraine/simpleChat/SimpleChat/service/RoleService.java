@@ -11,9 +11,13 @@ import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 @Service
 public class RoleService {
 
+	private final RoleRepository roleRepository;
+
 	@Autowired
-	private RoleRepository roleRepository; 
-	
+	public RoleService(RoleRepository roleRepository) {
+		this.roleRepository = roleRepository;
+	}
+
 	public void save(Role role) {
         roleRepository.save(role); 
     }
