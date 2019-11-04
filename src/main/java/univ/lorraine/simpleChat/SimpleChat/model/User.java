@@ -1,10 +1,12 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
-import javax.persistence.*;
+import org.springframework.web.context.annotation.ApplicationScope;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
 
+@ApplicationScope
 @Entity
 @Table(name = "user")
 public class User {
@@ -28,8 +30,6 @@ public class User {
 
     @OneToMany(mappedBy = "author")
     private Collection<Message> messages;
-
-	
 	public Long getId() {
 		return id;
 	}

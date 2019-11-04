@@ -3,13 +3,11 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
 import java.util.HashSet;
-import java.util.Optional;
 
 
 @Service
@@ -31,7 +29,8 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-	public Optional<User> findById(Long user_id) {
-		return userRepository.findById(user_id);
+	public User findById(Long user_id) {
+		User user = userRepository.findById(user_id).isPresent() ? userRepository.findById(user_id).get():userRepository.findById(user_id).get();
+        return user;
 	}
 }

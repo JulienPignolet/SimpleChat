@@ -33,6 +33,11 @@ public class Message {
     @Basic(optional = false)
     private String contenu;
 
+    public Message(String contenu, User author, Groupe groupe){
+        this.contenu = contenu;
+        this.author = author;
+        this.groupe = groupe;
+    }
 
     public Long getId() {
         return id;

@@ -1,21 +1,16 @@
 package univ.lorraine.simpleChat.SimpleChat.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
-import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
-import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
-import univ.lorraine.simpleChat.SimpleChat.model.Role;
-import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.model.*;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
 
 
 @Service
@@ -166,7 +161,11 @@ public class GroupeService {
 	public Optional<Groupe> findById(Long id) {
         return groupeRepository.findById(id); 
     }
-	
+
+	public Groupe find(Long id) {
+		return groupeRepository.getOne(id);
+	}
+
 	public GroupeUser findByGroupeUser(Long groupe_id, Long user_id) {
 		return groupeUserRepository.findByGroupeUser(groupe_id, user_id); 
 	}
