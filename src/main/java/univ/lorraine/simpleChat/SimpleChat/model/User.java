@@ -1,8 +1,12 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
+import org.springframework.web.context.annotation.ApplicationScope;
+
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
+@ApplicationScope
 @Entity
 @Table(name = "user")
 public class User {
@@ -21,43 +25,79 @@ public class User {
     @Transient
     private String passwordConfirm;
 
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	private  Collection<GroupeUser> groupeUsers;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "author")
+    private Collection<Message> messages;
+	public Long getId() {
+		return id;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
+	public Set<Role> getRoles() {
+		return roles;
+	}
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
+	public String getPasswordConfirm() {
+		return passwordConfirm;
+	}
+
+	public void setPasswordConfirm(String passwordConfirm) {
+		this.passwordConfirm = passwordConfirm;
+	}
+
+	public Collection<GroupeUser> getGroupeUsers() {
+		return groupeUsers;
+	}
+
+	public void setGroupeUsers(Collection<GroupeUser> groupeUsers) {
+		this.groupeUsers = groupeUsers;
+	}
+
+	public void addGroupeUser(GroupeUser groupeUser) {
+		if(!this.groupeUsers.contains(groupeUser)) {
+			this.groupeUsers.add(groupeUser); 
+			groupeUser.setUser(this);
+		}
+	}
+	
+	public void removeGroupeUser(GroupeUser groupUser) {
+		if(this.groupeUsers.contains(groupUser)) {
+			this.groupeUsers.remove(groupUser); 
+			groupUser.setUser(null);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", roles=" + roles
+				+ ", passwordConfirm=" + passwordConfirm + ", groupeUsers=" + groupeUsers + "]";
+	}
+
+	
+    
 }
