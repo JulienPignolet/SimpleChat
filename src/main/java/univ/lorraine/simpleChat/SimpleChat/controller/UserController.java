@@ -21,7 +21,7 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 import javax.validation.Valid;
 import java.util.HashMap;
 
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 public class UserController {
 

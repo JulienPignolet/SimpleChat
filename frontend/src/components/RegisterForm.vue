@@ -12,7 +12,6 @@
                     </v-toolbar>
                     <v-card-text>
                     <v-form>
-                        <!-- TODO : Changer les v-model par un autre truc mieux mais jme rappelle plus faut que je regarde plus tard-->
                         <v-text-field
                         label="Pseudonyme"
                         name="username"
@@ -20,8 +19,6 @@
                         prepend-icon="mdi-account"
                         type="text"
                         ></v-text-field>
-
-                        <!-- TODO : Changer les v-model par un autre truc mieux mais jme rappelle plus faut que je regarde plus tard-->
                         <v-text-field
                         id="password"
                         name="password"
@@ -30,8 +27,6 @@
                         prepend-icon="mdi-lock"
                         type="password"
                         ></v-text-field>
-
-                        <!-- TODO : Changer les v-model par un autre truc mieux mais jme rappelle plus faut que je regarde plus tard-->
                         <v-text-field
                         id="repeatPassword"
                         name="repeatPassword"
@@ -45,7 +40,7 @@
                     <v-spacer></v-spacer>
                     <v-btn
                         color="primary"
-                        @click="register"
+                        @click="register({username, password, password})"
                     >S'inscrire</v-btn>
                     </v-card-actions>
                 </v-card>
@@ -59,8 +54,9 @@
 </template>
 
 <script>
-import axios from 'axios';
-import * as constants from "../constants/constants";
+import { call } from "vuex-pathify";
+import { register } from "@/store/modules/register";
+import * as types from "@/store/types.js";
 
 export default {
   data() {
@@ -69,18 +65,11 @@ export default {
       password: "",
     };
   },
-
+  beforeCreate() {
+    this.$store.registerModule("register", register);
+  },
   methods: {
-    register  : function() {
-      let request = { "username": this.username,"password": this.password,"passwordConfirm": this.password };
-      console.log(request);
-
-      axios
-      .post(constants.API_URL + 'registrationTest', request)
-      .then(response => {
-        console.log(response);
-      }) 
-    }
+    register: call("register/" + types.register)
   }
 };
 </script>

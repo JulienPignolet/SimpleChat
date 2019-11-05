@@ -41,12 +41,16 @@ const actions = {
   async [types.sendMessage]({ state, dispatch, rootState }, message) {
     dispatch(types.setMessage, new Message(rootState.loginForm.user.username, message)
     );
+
     /*TODO : Recuperer vrai user*/
     axios.post("http://localhost:8080/message", {
-      user_id: "1",
-      group_id: "2",
+      user_id: 1,
+      group_id: 2,
       message: message
-    });
+    })
+    .then(function (response) {
+      console.log(response)
+    })
     state.messageList.push(state.message);
   }
 };
