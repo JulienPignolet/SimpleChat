@@ -50,6 +50,11 @@ public class UserController {
         return "registration";
     }
 
+    @GetMapping("/registrationTest")
+    public ResponseEntity<String> registrationTest() {
+        System.out.println("gg");
+        return new ResponseEntity<>("Hello World!", HttpStatus.OK);
+    }
 
     @PostMapping("/registration")
     public String registration(@Valid UserForm userForm, BindingResult bindingResult, Model model) {
