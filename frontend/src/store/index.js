@@ -1,15 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import pathify from '../plugins/pathify';
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
+const store = new Vuex.Store({
+  plugins: [pathify.plugin]
 })
+
+export default store
+window.store = store

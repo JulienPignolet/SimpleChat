@@ -1,9 +1,7 @@
 <template>
   <v-app>
-    <v-content fluid>
       <app-bar />
       <router-view></router-view>
-    </v-content>
     <alerte />
   </v-app>
 </template>
