@@ -12,12 +12,16 @@ import java.util.HashSet;
 
 @Service
 public class UserService {
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -28,4 +32,9 @@ public class UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+	public User findById(Long user_id) {
+		User user = userRepository.findById(user_id).isPresent() ? userRepository.findById(user_id).get():userRepository.findById(user_id).get();
+        return user;
+	}
 }
