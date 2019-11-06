@@ -90,6 +90,20 @@ public class GroupeTestController {
 		Long user_i = Long.parseLong(user_id); 
 		return groupeUserService.findByGroupeAndUser(groupe_i, user_i);
 	}
+
+	/**
+	 *
+	 * @param request
+	 * @param groupe_id
+	 * @param user_id
+	 * @return Le groupeUser dont groupe et le user sont en parametres
+	 */
+	@GetMapping("/appartient/{groupe_id}/{user_id}")
+	public int appartenanceGroupe(HttpServletRequest request, @PathVariable String groupe_id, @PathVariable String user_id) {
+		Long groupe_i = Long.parseLong(groupe_id);
+		Long user_i = Long.parseLong(user_id);
+		return groupeUserService.CountByGroupeIdAndUserId(groupe_i, user_i);
+	}
 	
 	
 	/**
@@ -103,7 +117,7 @@ public class GroupeTestController {
 		Long groupe_i = Long.parseLong(groupe_id); 
 		return groupeUserService.findByGroupe(groupe_i);
 	}
-	
+
 	/*
 	 Il manque des tests
 	 */
