@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     sendMessage(message){
-      this.$store.dispatch("chat/" + types.sendMessage, message)
+      this.$store.dispatch(`chat/${types.sendMessage}`, message)
       this.message = ""
       } 
   }

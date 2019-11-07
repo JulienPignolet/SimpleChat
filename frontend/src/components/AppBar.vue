@@ -17,7 +17,7 @@ import * as types from "@/store/types.js";
 
 export default {
   methods: {
-    deconnexion: call("loginForm/" + types.deconnexion)
+    deconnexion: call(`loginForm/${types.deconnexion}`)
   }
 };
 </script>

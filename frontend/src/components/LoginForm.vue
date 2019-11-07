@@ -53,7 +53,7 @@ export default {
     this.$store.registerModule("loginForm", loginForm);
   },
   methods: {
-    connexion: call("loginForm/" + types.connexion)
+    connexion: call(`loginForm/${types.connexion}`)
   }
 };
 </script>

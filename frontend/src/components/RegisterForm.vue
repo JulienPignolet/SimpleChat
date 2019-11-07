@@ -69,7 +69,7 @@ export default {
     this.$store.registerModule("register", register);
   },
   methods: {
-    register: call("register/" + types.register)
+    register: call(`register/${types.register}`)
   }
 };
 </script>
