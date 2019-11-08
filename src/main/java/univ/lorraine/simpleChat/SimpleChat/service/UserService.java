@@ -37,4 +37,18 @@ public class UserService {
 		User user = userRepository.findById(user_id).isPresent() ? userRepository.findById(user_id).get():userRepository.findById(user_id).get();
         return user;
 	}
+
+    public User find(Long user_id) {
+        return userRepository.findById(user_id).orElse(null);
+    }
+
+    public void addBuddy(User user, User buddy){
+        user.addBuddy(buddy);
+        userRepository.save(user);
+    }
+
+    public void removeBuddy(User user, User buddy){
+        user.removeBuddy(buddy);
+        userRepository.save(user);
+    }
 }

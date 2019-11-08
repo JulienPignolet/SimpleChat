@@ -1,5 +1,6 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.persistence.*;
@@ -27,6 +28,20 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private  Collection<GroupeUser> groupeUsers;
+
+    //
+	@JsonIgnore
+	@ManyToMany(cascade={CascadeType.ALL})
+	@JoinTable(name="BUDDYMASTER_BUDDY",
+			joinColumns={@JoinColumn(name="id")},
+			inverseJoinColumns={@JoinColumn(name="BUDDY_ID")})
+	private Collection<User> buddyMaster;
+
+	@ManyToMany(cascade={CascadeType.ALL})
+	@JoinTable(name="BUDDYMASTER_BUDDY",
+			joinColumns={@JoinColumn(name="BUDDY_ID")},
+			inverseJoinColumns={@JoinColumn(name="id")})
+	private Collection<User> buddyList;
 
     @OneToMany(mappedBy = "author")
     private Collection<Message> messages;
@@ -60,6 +75,14 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Collection<User> getBuddyMaster() {
+		return buddyMaster;
+	}
+
+	public void setBuddyMaster(Collection<User> buddyMaster) {
+		this.buddyMaster = buddyMaster;
 	}
 
 	public String getPasswordConfirm() {
@@ -98,6 +121,21 @@ public class User {
 				+ ", passwordConfirm=" + passwordConfirm + ", groupeUsers=" + groupeUsers + "]";
 	}
 
-	
-    
+
+	public Collection<User> getBuddyList() {
+		return buddyList;
+	}
+
+	public void addBuddy(User buddy) {
+		//if(buddyList == null) buddyList = new ArrayList<>();
+		if(!this.buddyList.contains(buddy)) {
+			this.buddyList.add(buddy);
+		}
+	}
+
+	public void removeBuddy(User buddy) {
+		if(this.buddyList.contains(buddy)) {
+			this.buddyList.remove(buddy);
+		}
+	}
 }
