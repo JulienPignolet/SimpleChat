@@ -26,6 +26,11 @@ public class RoleService {
 		return roleRepository.findById(id); 
 	}
 	
+	public Role findByName(String name) 
+	{
+		return this.roleRepository.findByName(name); 
+	}
+	
 	public Role create(String name)
 	{
 		Role role = new Role();

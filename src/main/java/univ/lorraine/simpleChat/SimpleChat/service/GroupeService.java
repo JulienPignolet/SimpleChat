@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import univ.lorraine.simpleChat.SimpleChat.model.*;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
-import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -21,15 +20,12 @@ public class GroupeService {
 	private final GroupeRepository groupeRepository;
 	
 	private final UserRepository userRepository;
-	
-	private final RoleRepository roleRepository;
 
 	@Autowired
-	public GroupeService(GroupeUserRepository groupeUserRepository, GroupeRepository groupeRepository, UserRepository userRepository, RoleRepository roleRepository) {
+	public GroupeService(GroupeUserRepository groupeUserRepository, GroupeRepository groupeRepository, UserRepository userRepository) {
 		this.groupeUserRepository = groupeUserRepository;
 		this.groupeRepository = groupeRepository;
 		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
 	}
 
 
@@ -40,12 +36,11 @@ public class GroupeService {
 	
 	/**
 	 * 
-	 * @param name
+	 * @param name : Le nom du groupe
 	 * @param isPrivateChat (ce parametre est un string. les valeurs possibles sont 0 ou 1)
-	 * @param username (l'utilisateur courant : admin du groupe)
-	 * @return Le groupe crée ou un message d'erreur
+	 * @return Le groupe créé
 	 */
-	public Groupe create(String name, String isPrivateChat, String username) {
+	public Groupe create(String name, String isPrivateChat) {
 		
 		Groupe groupe = new Groupe();
 		groupe.setName(name);
@@ -54,30 +49,9 @@ public class GroupeService {
 		if(tmp == 1) chatPrive = true;
 		groupe.setPrivateChat(chatPrive);
 		
-		User user = userRepository.findByUsername(username);
-		if(user == null)
-		{
-			System.out.println("L'utilisateur '"+username+"' n'a pas été trouvé. Nous ne pouvons pas créer un groupe sans admin.");
-			return null;
-		}
-		
-		GroupeUser groupeUser = new GroupeUser();
-		user.addGroupeUser(groupeUser);
-		Role role = this.roleRepository.findByName(EnumRole.ADMIN_GROUP.getRole()); 
-		if(role == null)
-		{
-			System.out.println("Il faut d'abord créer un role 'ROLE_ADMIN_GROUP' pour pouvoir créer un groupe."); 
-			return null; 
-		}
-		groupeUser.setRole(role);
-		groupe.addGroupeUser(groupeUser);
-		
-		groupeRepository.save(groupe);
-		userRepository.save(user);
-		groupeUserRepository.save(groupeUser);
-		
         return groupe;
     }
+	
 	
 	/**
 	 * 

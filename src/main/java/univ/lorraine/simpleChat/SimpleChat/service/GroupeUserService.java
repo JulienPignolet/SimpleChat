@@ -2,7 +2,11 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
+import univ.lorraine.simpleChat.SimpleChat.model.Role;
+import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
 
 import java.util.List;
@@ -21,6 +25,32 @@ public class GroupeUserService {
 	public void save(GroupeUser groupeUser) {
         groupeUserRepository.save(groupeUser); 
     }
+	
+	/**
+	 * 
+	 * @param groupe
+	 * @param user
+	 * @return Le groupeUser créé
+	 */
+	public GroupeUser create(Groupe groupe, User user)
+	{
+		GroupeUser groupeUser = new GroupeUser();
+		user.addGroupeUser(groupeUser);
+		groupe.addGroupeUser(groupeUser);
+		return groupeUser;
+	}
+	
+	/**
+	 * 
+	 * @param groupeUser
+	 * @param role
+	 * @return GroupeUser
+	 */
+	public GroupeUser roleGroupeUser(GroupeUser groupeUser, Role role)
+	{
+		groupeUser.setRole(role);
+		return groupeUser;
+	}
 	
 	/**
 	 * 

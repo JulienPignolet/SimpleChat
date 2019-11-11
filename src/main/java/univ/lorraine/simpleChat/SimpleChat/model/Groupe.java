@@ -123,8 +123,10 @@ public class Groupe {
 	@Override
 	public String toString() {
 		return "Groupe [id=" + id + ", name=" + name + ", isPrivateChat=" + isPrivateChat + ", deletedat=" + deletedat
-				+ ", createdat=" + createdat + ", groupeUsers=" + groupeUsers + "]";
+				+ ", messages=" + messages + ", createdat=" + createdat + ", groupeUsers=" + groupeUsers + "]";
 	}
+
+	
 
 
 

@@ -138,4 +138,11 @@ public class User {
 			this.buddyList.remove(buddy);
 		}
 	}
+	
+	public boolean containsRole(String role) {
+		for (Role roleObject : this.getRoles()) {
+			if(roleObject.getName().equals(role)) return true;
+		}
+		return false;
+	}
 }
