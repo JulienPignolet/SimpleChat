@@ -2,9 +2,19 @@ package univ.lorraine.simpleChat.SimpleChat.model;
 
 import org.springframework.web.context.annotation.ApplicationScope;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Set;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 
 @ApplicationScope
 @Entity
@@ -98,6 +108,4 @@ public class User {
 				+ ", passwordConfirm=" + passwordConfirm + ", groupeUsers=" + groupeUsers + "]";
 	}
 
-	
-    
 }
