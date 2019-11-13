@@ -5,11 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import io.swagger.annotations.Api;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 @RestController
-@RequestMapping("/buddy")
+@RequestMapping("/api/buddy")
+@Api( value="Simple Chat")
 public class BuddyController {
 
     private final UserService userService;

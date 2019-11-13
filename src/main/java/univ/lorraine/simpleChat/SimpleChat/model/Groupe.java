@@ -41,6 +41,7 @@ public class Groupe {
 		this.setCreatedat(new Date());
 		this.setDeletedat(null);
 		this.groupeUsers = new ArrayList<>(); 
+		this.messages = new ArrayList<>(); 
 	}
 
 	public Collection<Message> getMessages() {
