@@ -3,6 +3,8 @@ package univ.lorraine.simpleChat.SimpleChat.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -37,6 +39,7 @@ public class Message {
         this.contenu = contenu;
         this.author = author;
         this.groupe = groupe;
+        this.files = new ArrayList<>(); 
     }
 
     public Long getId() {

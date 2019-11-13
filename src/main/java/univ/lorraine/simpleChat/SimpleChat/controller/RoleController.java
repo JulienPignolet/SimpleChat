@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
@@ -19,6 +20,7 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 @RestController
 @RequestMapping("/api/role")
+@Api( value="Simple Chat")
 public class RoleController {
 	
 	private final RoleService roleService;

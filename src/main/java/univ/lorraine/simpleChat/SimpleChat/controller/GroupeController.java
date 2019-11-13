@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
@@ -28,6 +29,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/groupe")
+@Api( value="Simple Chat")
 public class GroupeController {
 
 	private final UserService userService;
@@ -93,22 +95,11 @@ public class GroupeController {
 	 * @return Un groupe qui n'est pas supprimé et dont l'id égal à groupeId 
 	 */
 	@GetMapping("/find/groupe/{groupeId}")
-	public Groupe findGroupe(HttpServletRequest request, @PathVariable String groupeId) 
+	public ResponseEntity findGroupe(HttpServletRequest request, @PathVariable String groupeId) 
 	{
-		return this.groupeService.findByIdAndDeletedatIsNull(groupeId);
-	}
-	
-	/**
-	 * 
-	 * @param request
-	 * @param groupeId : est l'identifiant du groupe dans lequel on souhaite ajouter un membre
-	 * @param usernameNew : est le username de l'utilisateur qu'on souhaite ajouter au groupe
-	 * @return Le groupeUser du membre ou un message d'erreur
-	 */
-	@GetMapping("/add/member/{groupeId}/{usernameNew}")
-	public GroupeUser addMember(HttpServletRequest request, Principal principal, @PathVariable String groupeId, @PathVariable String usernameNew)
-	{	
-		return this.groupeService.addMember(groupeId, usernameNew, principal.getName());
+		Groupe  groupe = this.groupeService.findByIdAndDeletedatIsNull(groupeId);
+		if (groupe != null) return ResponseEntity.ok(groupe);
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Groupe non trouvé !");   
 	}
 	
 
