@@ -29,6 +29,9 @@ public class User {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private  Collection<GroupeUser> groupeUsers;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	private  Collection<Vote> listVotes;
+
     //
 	@JsonIgnore
 	@ManyToMany(cascade={CascadeType.ALL})
@@ -45,6 +48,11 @@ public class User {
 
     @OneToMany(mappedBy = "author")
     private Collection<Message> messages;
+
+	@OneToMany(mappedBy = "initiateur")
+	private Collection<Sondage> listSondage;
+
+
 	public Long getId() {
 		return id;
 	}
@@ -138,11 +146,63 @@ public class User {
 			this.buddyList.remove(buddy);
 		}
 	}
-	
+
+	public void addVote(Vote vote) {
+		if(!this.listVotes.contains(vote)) {
+			this.listVotes.add(vote);
+		}
+	}
+
+	public void removeVote(Vote vote) {
+		if(this.listVotes.contains(vote)) {
+			this.listVotes.remove(vote);
+		}
+	}
+
 	public boolean containsRole(String role) {
 		for (Role roleObject : this.getRoles()) {
 			if(roleObject.getName().equals(role)) return true;
 		}
 		return false;
+	}
+
+	public void addSondage(Sondage sondage) {
+		if(!this.listSondage.contains(sondage)) {
+			this.listSondage.add(sondage);
+		}
+	}
+
+	public void removeSondage(Sondage sondage) {
+		if(this.listSondage.contains(sondage)) {
+			this.listSondage.remove(sondage);
+		}
+	}
+
+	public Collection<Vote> getListVotes() {
+		return listVotes;
+	}
+
+	public void setListVotes(Collection<Vote> listVotes) {
+		this.listVotes = listVotes;
+	}
+
+	public void setBuddyList(Collection<User> buddyList) {
+		this.buddyList = buddyList;
+	}
+
+	public Collection<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Collection<Message> messages) {
+		this.messages = messages;
+	}
+
+	public Collection<Sondage> getListSondage() {
+		return listSondage;
+	}
+
+	public void setListSondage(Collection<Sondage> listSondage) {
+		this.listSondage = listSondage;
 	}
 }
