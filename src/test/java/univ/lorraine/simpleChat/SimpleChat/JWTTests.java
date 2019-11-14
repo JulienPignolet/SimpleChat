@@ -13,12 +13,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 public class JWTTests {
 
-    @Test
-    public void TestReadingKeyFile()
-    {
-        String key = JWTManager.getStringKey();
-        assertThat(key).isEqualTo("AesWOgsVInu5PQSqz53cqoZzOhcrZaIIYfUh/phYU4Y=");
-    }
 
     @Test
     public void TestGeneratingToken()
@@ -29,7 +23,6 @@ public class JWTTests {
         //String expectedKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbGV4In0.C5dclFAMRkFipw80OqYwP2PzR9VDVj3f8cPVEIdpxto";
         String expectedKey = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGV4In0.acdhk2lYyeEeNcJY4aPYlrE4hb1hiJATdMpiuk3gMNc";
         assertThat(currentKey).isEqualTo(expectedKey);
-
 
     }
 

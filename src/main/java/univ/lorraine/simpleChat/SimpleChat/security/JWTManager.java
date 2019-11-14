@@ -13,26 +13,15 @@ import java.security.Key;
 
 public class JWTManager {
 
-    public static String getStringKey()
-    {
-        try {
-            String fileName = System.getProperty("user.dir")+"/src/main/resources/static/key.txt";
-            File file = new File(fileName);
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-            return br.readLine();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+    private static final String key = "AesWOgsVInu5PQSqz53cqoZzOhcrZaIIYfUh/phYU4Y=";
 
-    }
-
+    /**
+     * Génère un JWT avec la clé du fichier key.txt
+     * @param user utilise le username de l'utilisateur pour générer le token
+     * @return
+     */
     public static String getJWT(User user){
-        byte[] bytekey = Base64.getDecoder().decode(getStringKey());
+        byte[] bytekey = Base64.getDecoder().decode(key);
         Key key = Keys.hmacShaKeyFor(bytekey);
         return Jwts.builder().setSubject(user.getUsername()).signWith(key).compact();
     }
