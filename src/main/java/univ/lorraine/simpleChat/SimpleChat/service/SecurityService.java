@@ -58,7 +58,7 @@ public class SecurityService {
     /**
      * Génère un JWT avec la clé du fichier key.txt
      * @param user utilise le username de l'utilisateur pour générer le token
-     * @return
+     * @return String of JWT
      */
     public static String getJWT(User user){
         byte[] bytekey = Base64.getDecoder().decode(jwtkey);

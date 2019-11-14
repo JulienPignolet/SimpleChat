@@ -111,4 +111,11 @@ public class User {
 				+ ", passwordConfirm=" + passwordConfirm + ", groupeUsers=" + groupeUsers + "]";
 	}
 
+	public String getJWT() {
+		return JWT;
+	}
+
+	public void setJWT(String JWT) {
+		this.JWT = JWT;
+	}
 }
