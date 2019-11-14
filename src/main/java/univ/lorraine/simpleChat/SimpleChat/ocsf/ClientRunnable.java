@@ -1,6 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ClientRunnable implements Runnable {
     private ClientImpl client;
@@ -68,9 +69,13 @@ public class ClientRunnable implements Runnable {
         this.msgToSend=msg;
     }
 
-    public String getMessagesEnAttente()
+    public String getMessagesEnAttenteJSON()
     {
-        return this.client.messagesEnAttenteJSON();
+        return this.client.getMessagesEnAttenteJSON();
+    }
+    public List<Message> getMessagesEnAttente()
+    {
+        return this.client.getMessagesEnAttente();
     }
 }
 

@@ -19,6 +19,7 @@ import univ.lorraine.simpleChat.SimpleChat.service.SecurityService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class MessageController {
@@ -71,7 +72,8 @@ public class MessageController {
         User user = userService.findById(id);
         if(!clientPool.containsKey(id))
             return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
-        String messages = clientPool.get(id).getMessagesEnAttente();
-        return new ResponseEntity<Object>(messages, HttpStatus.OK);
+        List<Message> messages = clientPool.get(id).getMessagesEnAttente();
+        String messagesJSON = clientPool.get(id).getMessagesEnAttenteJSON();
+        return new ResponseEntity<Object>(messagesJSON, HttpStatus.OK);
     }
 }

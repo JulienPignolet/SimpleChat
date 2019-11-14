@@ -23,6 +23,7 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 public class UserController {

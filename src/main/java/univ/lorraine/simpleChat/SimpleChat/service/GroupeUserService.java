@@ -96,4 +96,8 @@ public class GroupeUserService {
 	public List<GroupeUser> findAll(){
 		return groupeUserRepository.findAll(); 
 	}
+
+	public boolean CountByGroupeIdAndUserId(Long groupe_id, Long user_id){
+		return groupeUserRepository.findByGroupeIdAndUserId(groupe_id,user_id).size() > 0;
+	}
 }

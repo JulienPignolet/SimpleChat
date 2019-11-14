@@ -8,7 +8,7 @@ import java.util.List;
 class ClientImpl extends AbstractClient {
 
     private Long id;
-    private List<String> messagesEnAttente;
+    private List<Message> messagesEnAttente;
     ClientImpl(Long id, String h, int p) {
         super(h,p);
         this.id = id;
@@ -36,18 +36,23 @@ class ClientImpl extends AbstractClient {
 
         System.out.println("Client: Message received=" +msg);
         Message message = new Message((String) msg);
-        if(!message.getUser_id().equals(this.id)) {
-            messagesEnAttente.add((String) msg);
-        }
-        System.out.println(messagesEnAttenteJSON());
+//        if(!message.getUser_id().equals(this.id)) {
+            messagesEnAttente.add(new Message((String) msg));
+//        }
+//        System.out.println(messagesEnAttenteJSON());
     }
 
-    public String messagesEnAttenteJSON()
+    public List<Message> getMessagesEnAttente()
+    {
+        return messagesEnAttente;
+    }
+
+    public String getMessagesEnAttenteJSON()
     {
         StringBuilder res = new StringBuilder("{");
-        for(String msg: messagesEnAttente)
+        for(Message msg: messagesEnAttente)
         {
-            res.append(msg).append(',');
+            res.append(msg.toString()).append(',');
         }
         if(messagesEnAttente.size() > 0)
             res.deleteCharAt(res.length()-1);
