@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
@@ -30,6 +31,7 @@ public class MessageController {
     private final MessageService messageService;
 
     private HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
+
 
     @Autowired
     public MessageController(UserService userService, GroupeService groupeService, MessageService messageService) {
@@ -68,23 +70,39 @@ public class MessageController {
 
     /**
      *
-     * @param id
+     * @param idGroupe
+     * @param  idUser
+     * TODO rajouter l idUser comme parametre dans le front
      * @return
      */
-    @GetMapping("/group/{id}/messages")
-    public ResponseEntity<Object> byName(@PathVariable(value = "id") Long id)
+    @GetMapping("/group/{idGroupe}/messages")
+    public ResponseEntity<Object> byName(@PathVariable(value = "idGroupe") Long idGroupe,long idUser)
     {
-        User user = userService.findById(id);
+    /*		/!\
+     *
+     * 		getMessagesEnAttenteJSON(user_id) renvoie une exception si le user_id n'est pas présent dans la liste des
+     * 		users du groupe. Il faudra donc faire un try catch et renvoyer une erreur HTTP 401 pour lui dire qu'il
+     * 		n'est pas autorisé à consulter ce groupe.
+     */
 
-        Groupe groupe = groupeService.find(id);
-
-        //on verifie si le groupe existe dans la liste des groupes (clientsPool)
-        // et qu´il existe dans la base de données ()
-        if(!clientPool.containsKey(id) || !groupe.getId().equals(id))
+        // verifie si idGroupe n´existe pas dans dans clientPool)
+        if (!clientPool.containsKey(idGroupe))
             return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
 
-        List<Message> messages = clientPool.get(id).getMessagesEnAttente();
-        String messagesJSON = clientPool.get(id).getMessagesEnAttenteJSON();
-        return new ResponseEntity<Object>(messagesJSON, HttpStatus.OK);
+        //on récupere le clientRunnable
+        ClientRunnable clientRunnable = clientPool.get(idGroupe);
+
+        try {
+            //on récupère les messages en attentes
+            String messagesEnAttente = clientRunnable.getMessagesEnAttenteJSON(idUser);
+            //on doit maintenant vider le buffer de l´utilisateur
+            clientRunnable.viderBuffer(idUser);
+            return new ResponseEntity<Object>(messagesEnAttente, HttpStatus.OK);
+        } catch (AutorisationException e) {
+            e.printStackTrace();
+            return new ResponseEntity<Object>("{}", HttpStatus.UNAUTHORIZED);
+
+        }
+
     }
 }
