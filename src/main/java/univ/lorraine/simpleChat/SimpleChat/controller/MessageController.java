@@ -66,12 +66,23 @@ public class MessageController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/group/{id}/messages")
     public ResponseEntity<Object> byName(@PathVariable(value = "id") Long id)
     {
         User user = userService.findById(id);
-        if(!clientPool.containsKey(id))
+
+        Groupe groupe = groupeService.find(id);
+
+        //on verifie si le groupe existe dans la liste des groupes (clientsPool)
+        // et qu´il existe dans la base de données ()
+        if(!clientPool.containsKey(id) || !groupe.getId().equals(id))
             return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
+
         List<Message> messages = clientPool.get(id).getMessagesEnAttente();
         String messagesJSON = clientPool.get(id).getMessagesEnAttenteJSON();
         return new ResponseEntity<Object>(messagesJSON, HttpStatus.OK);
