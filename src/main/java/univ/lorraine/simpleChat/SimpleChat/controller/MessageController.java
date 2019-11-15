@@ -69,11 +69,19 @@ public class MessageController {
     @GetMapping("/group/{id}/messages")
     public ResponseEntity<Object> byName(@PathVariable(value = "id") Long id)
     {
-        User user = userService.findById(id);
-        if(!clientPool.containsKey(id))
+    	
+    	/*		/!\
+    	 * 		
+    	 * 		getMessagesEnAttenteJSON(user_id) renvoie une exception si le user_id n'est pas présent dans la liste des 
+    	 * 		users du groupe. Il faudra donc faire un try catch et renvoyer une erreur HTTP 401 pour lui dire qu'il
+    	 * 		n'est pas autorisé à consulter ce groupe.
+    	 */
+    	
+    	
+   // 	User user = userService.findById(id);
+   //   if(!clientPool.containsKey(id))
             return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
-        List<Message> messages = clientPool.get(id).getMessagesEnAttente();
-        String messagesJSON = clientPool.get(id).getMessagesEnAttenteJSON();
-        return new ResponseEntity<Object>(messagesJSON, HttpStatus.OK);
+   //   String messagesJSON = clientPool.get(id).getMessagesEnAttenteJSON();
+   //   return new ResponseEntity<Object>(messagesJSON, HttpStatus.OK);
     }
 }
