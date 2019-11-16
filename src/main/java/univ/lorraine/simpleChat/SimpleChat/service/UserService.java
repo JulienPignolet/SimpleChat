@@ -3,6 +3,8 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
@@ -25,9 +27,10 @@ public class UserService {
 
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<>(roleRepository.findAll()));
+        //user.setRoles(new HashSet<>(roleRepository.findAll()));
         userRepository.save(user);
     }
+    
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -50,5 +53,10 @@ public class UserService {
     public void removeBuddy(User user, User buddy){
         user.removeBuddy(buddy);
         userRepository.save(user);
+    }
+    
+    public void addRole(User user, Role role)
+    {
+        user.addRole(role);
     }
 }

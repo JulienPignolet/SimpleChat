@@ -95,40 +95,12 @@ public class GroupeController {
 	 * @return Un groupe qui n'est pas supprimé et dont l'id égal à groupeId 
 	 */
 	@GetMapping("/find/groupe/{groupeId}")
-	public ResponseEntity findGroupe(HttpServletRequest request, @PathVariable String groupeId) 
+	public ResponseEntity<Groupe> findGroupe(HttpServletRequest request, @PathVariable String groupeId) 
 	{
 		Groupe  groupe = this.groupeService.findByIdAndDeletedatIsNull(groupeId);
 		if (groupe != null) return ResponseEntity.ok(groupe);
-        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Groupe non trouvé !");   
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);   
 	}
 	
-
-	
-	/**
-	 * 
-	 * @param request
-	 * @param groupe_id
-	 * @param user_id
-	 * @return Le groupeUser dont groupe et le user sont en parametres
-	 */
-	@GetMapping("/groupe-user/{groupe_id}/{user_id}")
-	public GroupeUser groupeUser(HttpServletRequest request, @PathVariable String groupe_id, @PathVariable String user_id) {
-		Long groupe_i = Long.parseLong(groupe_id); 
-		Long user_i = Long.parseLong(user_id); 
-		return groupeUserService.findByGroupeAndUser(groupe_i, user_i);
-	}
-	
-	
-	/**
-	 * 
-	 * @param request
-	 * @param groupe_id
-	 * @return Tous les groupeUser d'un groupe spécifique
-	 */
-	@GetMapping("/groupe-user/groupe/{groupe_id}")
-	public List<GroupeUser> groupeUserGroupe(HttpServletRequest request, @PathVariable String groupe_id) {
-		Long groupe_i = Long.parseLong(groupe_id); 
-		return groupeUserService.findByGroupe(groupe_i);
-	}
 	
 }
