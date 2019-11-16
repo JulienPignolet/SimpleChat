@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.persistence.*;
+
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @ApplicationScope
@@ -20,7 +22,8 @@ public class User {
 
     private String password;
 
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     @Transient
@@ -45,12 +48,18 @@ public class User {
 			joinColumns={@JoinColumn(name="BUDDY_ID")},
 			inverseJoinColumns={@JoinColumn(name="id")})
 	private Collection<User> buddyList;
+	
 
     @OneToMany(mappedBy = "author")
     private Collection<Message> messages;
 
 	@OneToMany(mappedBy = "initiateur")
 	private Collection<Sondage> listSondage;
+	
+	public User()
+	{
+		this.roles = new HashSet<Role>();
+	}
 
 
 	public Long getId() {
@@ -80,7 +89,12 @@ public class User {
 	public Set<Role> getRoles() {
 		return roles;
 	}
-
+	
+	public void addRole(Role role)
+	{
+		if(!this.containsRole(role.getName())) this.roles.add(role);
+	}
+	
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
