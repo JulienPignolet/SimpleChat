@@ -77,6 +77,7 @@ class ClientImpl extends AbstractClient {
     			return user.getMsgBuffer();
     	throw new AutorisationException(this.id, user_id);
     }
+
     /**
      * vider le buffer d'un utilisateur
      * @param user_id id de l utilisateur
@@ -85,6 +86,7 @@ class ClientImpl extends AbstractClient {
      */
     public void viderBuffer(long user_id) throws AutorisationException {
         for(UserBuffer user: users)
+
             if(user.getId() == user_id) {
                 user.clearBufferFromMessages();
                 return;

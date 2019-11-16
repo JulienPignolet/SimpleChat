@@ -96,7 +96,7 @@ public class MessageController {
             //on récupère les messages en attentes
             String messagesEnAttente = clientRunnable.getMessagesEnAttenteJSON(idUser);
             //on doit maintenant vider le buffer de l´utilisateur
-            clientRunnable.viderBuffer(idUser);
+           // clientRunnable.viderBuffer(idUser);
             return new ResponseEntity<Object>(messagesEnAttente, HttpStatus.OK);
         } catch (AutorisationException e) {
             e.printStackTrace();

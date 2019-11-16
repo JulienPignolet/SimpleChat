@@ -30,14 +30,14 @@ public class UserBuffer {
 	}
 
 	/**
-	 * Retourne un JSON contenant les messages et vide le buffer
+	 * Retourne un JSON contenant les messages et VIDER LE BUFFER
 	 * @return JSON
 	 */
 	public String getMsgBuffer() {
 		StringBuilder json = new StringBuilder("{");
 		for(Message msg: msgBuffer)
 			json.append(msg.toString()).append(',');
-		msgBuffer = new ArrayList<Message>();
+		msgBuffer.clear();
 		return json.append('}').toString();
 	}
 	
