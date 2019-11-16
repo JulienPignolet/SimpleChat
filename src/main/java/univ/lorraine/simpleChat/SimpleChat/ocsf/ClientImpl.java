@@ -7,17 +7,19 @@ package univ.lorraine.simpleChat.SimpleChat.ocsf;
 import com.lloseng.ocsf.client.AbstractClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class ClientImpl extends AbstractClient {
 
     private Long id;
-    private List<UserBuffer> users;
+    private Map<Long, UserBuffer> users;
     
     ClientImpl(Long id, String host, int port) {
         super(host, port);
         setId(id);
-        setUsers(new ArrayList<UserBuffer>());
+        setUsers(new HashMap<>());
     }
     
     public Long getId() {
@@ -28,11 +30,11 @@ class ClientImpl extends AbstractClient {
 		this.id = id;
 	}
 
-	public List<UserBuffer> getUsers() {
+	public Map<Long, UserBuffer> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<UserBuffer> users) {
+	public void setUsers(Map<Long, UserBuffer> users) {
 		this.users = users;
 	}
 	
@@ -41,7 +43,7 @@ class ClientImpl extends AbstractClient {
 	 * @param user_id
 	 */
 	public void addUserToGroup(long user_id) {
-		users.add(new UserBuffer(user_id));
+		users.put(user_id, new UserBuffer(user_id));
 	}
 
 	protected void connectionClosed() {
@@ -60,8 +62,8 @@ class ClientImpl extends AbstractClient {
 
     protected void handleMessageFromServer(Object msg) {
         System.out.println("Client: Message received = " + msg);
-        for (UserBuffer user : users) {
-    		user.addMessageToBuffer(new Message((String) msg));
+        for (Map.Entry<Long, UserBuffer> user : users.entrySet()) {
+    		user.getValue().addMessageToBuffer(new Message((String) msg));
     	}
     }
     
@@ -72,10 +74,9 @@ class ClientImpl extends AbstractClient {
      * @throws AutorisationException
      */
     public String getBufferById(long user_id) throws AutorisationException {
-    	for(UserBuffer user: users)
-    		if(user.getId() == user_id)
-    			return user.getMsgBuffer();
-    	throw new AutorisationException(this.id, user_id);
+    if(users.containsKey(user_id))
+        return users.get(user_id).getMsgBuffer();
+    throw new AutorisationException(this.id, user_id);
     }
 
     /**
@@ -85,12 +86,9 @@ class ClientImpl extends AbstractClient {
      * @throws AutorisationException si user n´est pas identifié
      */
     public void viderBuffer(long user_id) throws AutorisationException {
-        for(UserBuffer user: users)
-
-            if(user.getId() == user_id) {
-                user.clearBufferFromMessages();
-                return;
-            }
-        throw new AutorisationException(this.id, user_id);
+        if(users.containsKey(user_id))
+            users.get(user_id).clearBufferFromMessages();
+        else
+            throw new AutorisationException(this.id, user_id);
     }
 }
