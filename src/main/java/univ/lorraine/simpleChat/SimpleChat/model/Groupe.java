@@ -1,6 +1,9 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -23,6 +26,7 @@ public class Groupe {
     @Temporal(TemporalType.DATE)
     private Date deletedat;
 
+    @JsonIgnore
 	@OneToMany(mappedBy = "groupe")
 	private Collection<Message> messages;
     
@@ -30,9 +34,11 @@ public class Groupe {
     @Temporal(TemporalType.DATE)
     private Date createdat;
     
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "groupe")
 	private  Collection<GroupeUser> groupeUsers;
 
+    @JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "groupe")
 	private Collection<Sondage> listSondage;
 
