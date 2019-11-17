@@ -100,4 +100,9 @@ public class GroupeUserService {
 	public boolean CountByGroupeIdAndUserId(Long groupe_id, Long user_id) {
 		return groupeUserRepository.findByGroupeIdAndUserId(groupe_id, user_id).size() > 0;
 	}
+	
+	public GroupeUser findByGroupeUserActif(Long groupeId, Long userId)
+	{
+		return groupeUserRepository.findByGroupeUserActif(groupeId, userId);
+	}
 }
