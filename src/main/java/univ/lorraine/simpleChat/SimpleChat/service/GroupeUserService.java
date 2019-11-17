@@ -91,7 +91,7 @@ public class GroupeUserService {
 	
 	/**
 	 * 
-	 * @return tous les groupeUser
+	 * @return Tous les groupeUser
 	 */
 	public List<GroupeUser> findAll(){
 		return groupeUserRepository.findAll(); 

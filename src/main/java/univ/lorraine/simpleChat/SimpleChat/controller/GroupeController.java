@@ -186,5 +186,20 @@ public class GroupeController {
 		return ResponseEntity.ok(listGroupe); 
 	}
 	
+	/**
+	 * 
+	 * @param request
+	 * @param groupeId
+	 * @return Tous les membres d'un groupe
+	 */
+	@GetMapping("/find/Members/groupe/{groupeId}")
+	public ResponseEntity<Collection<User>> findMembersGroupe(HttpServletRequest request, @PathVariable String groupeId)
+	{
+		Long gid = Long.parseLong(groupeId); 
+		Collection<User> users = userService.findMembersGroupe(gid); 
+		return ResponseEntity.ok(users); 
+	}
+	
+	
 	
 }

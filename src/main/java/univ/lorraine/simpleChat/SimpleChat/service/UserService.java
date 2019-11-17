@@ -9,6 +9,7 @@ import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 
@@ -58,5 +59,10 @@ public class UserService {
     public void addRole(User user, Role role)
     {
         user.addRole(role);
+    }
+    
+    public Collection<User> findMembersGroupe(Long groupe_id)
+    {
+    	return userRepository.findMembersGroupe(groupe_id);
     }
 }
