@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/resources/**", "/registration","/h2-console/**").permitAll() // Allow to disable authentication security for matching URL
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
 //                .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
                 .and().headers().frameOptions().sameOrigin()//allow use of frame to same origin urls
                 .and()
