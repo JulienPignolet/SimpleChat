@@ -5,7 +5,6 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
@@ -14,11 +13,8 @@ import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
-import univ.lorraine.simpleChat.SimpleChat.service.SecurityService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
-
 import java.util.HashMap;
-import java.util.List;
 
 
 @RestController
@@ -49,16 +45,17 @@ public class MessageController {
             User user = userService.findById(JSON.getGroup_id());
             if(!clientPool.containsKey(JSON.getGroup_id()))
             {
+            	/**
+            	 *  ATTENTION : Il faut informer la BDD que nous créons un nouveau groupe
+            	 */
                 clientPool.put(JSON.getGroup_id(), new ClientRunnable(JSON.getGroup_id()));
                 clientPool.get(JSON.getGroup_id()).start();
             }
             clientPool.get(JSON.getGroup_id()).sendMsg(msg);
 
-            // sauvegarde
+            // Sauvegarde
             Groupe groupe = groupeService.find(JSON.getGroup_id());
-            messageService.save(
-                    new univ.lorraine.simpleChat.SimpleChat.model.Message(
-                            JSON.getMessage(),user,groupe));
+            messageService.save( new univ.lorraine.simpleChat.SimpleChat.model.Message(JSON.getMessage(), user, groupe));
 //            user.sendMsg(msg);
         }
         catch(Exception e)
@@ -77,7 +74,7 @@ public class MessageController {
      * @return
      */
     @GetMapping("/group/{idGroupe}/messages")
-    public ResponseEntity<Object> byName(@PathVariable(value = "idGroupe") Long idGroupe,long idUser)
+    public ResponseEntity<Object> byName(@PathVariable(value = "idGroupe") long idGroupe, long idUser)
     {
     /*		/!\
      *
@@ -90,14 +87,14 @@ public class MessageController {
         if (!clientPool.containsKey(idGroupe))
             return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
 
-        //on récupere le clientRunnable
+        // on récupere le clientRunnable
         ClientRunnable clientRunnable = clientPool.get(idGroupe);
 
+        // on récupère les messages en attente
         try {
-            //on récupère les messages en attente
-            String messagesEnAttente = clientRunnable.getMessagesEnAttenteJSON(idUser);
-            //on doit maintenant vider le buffer de l´utilisateur
-            clientRunnable.viderBuffer(idUser);
+        	
+            String messagesEnAttente = clientRunnable.getMessagesEnAttente(idUser);
+            //clientRunnable.viderBuffer(idUser);	// /!\ NE SERT ACTUELLEMENT PAS
             return new ResponseEntity<Object>(messagesEnAttente, HttpStatus.OK);
         } catch (AutorisationException e) {
             e.printStackTrace();

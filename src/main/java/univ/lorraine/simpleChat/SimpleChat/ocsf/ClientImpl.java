@@ -1,16 +1,13 @@
-/**
- * Représente un groupe de discussion
- */
-
 package univ.lorraine.simpleChat.SimpleChat.ocsf;
 
 import com.lloseng.ocsf.client.AbstractClient;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Représente un groupe de discussion
+ */
 class ClientImpl extends AbstractClient {
 
     private Long id;
@@ -85,7 +82,7 @@ class ClientImpl extends AbstractClient {
      * @return la suppression est effectué
      * @throws AutorisationException si user n´est pas identifié
      */
-    public void viderBuffer(long user_id) throws AutorisationException {
+    public void viderBuffer(long user_id) throws AutorisationException { // /!\ NE SERT ACTUELLEMENT PAS
         if(users.containsKey(user_id))
             users.get(user_id).clearBufferFromMessages();
         else

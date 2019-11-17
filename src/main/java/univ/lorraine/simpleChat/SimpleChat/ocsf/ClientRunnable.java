@@ -1,7 +1,6 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ClientRunnable implements Runnable {
     private ClientImpl client;
@@ -69,11 +68,11 @@ public class ClientRunnable implements Runnable {
      * @return String
      * @throws AutorisationException
      */
-    public String getMessagesEnAttenteJSON(long user_id) throws AutorisationException {
+    public String getMessagesEnAttente(long user_id) throws AutorisationException {
 		return this.client.getBufferById(user_id);
     }
-
-    public void viderBuffer(long user_id) throws AutorisationException {
+    
+    public void viderBuffer(long user_id) throws AutorisationException { // /!\ NE SERT ACTUELLEMENT PAS
         this.client.viderBuffer(user_id);
     }
 }

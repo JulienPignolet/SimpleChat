@@ -1,12 +1,11 @@
-/**
- * Représente un utilisateur dans une discussion de groupe.
- */
-
 package univ.lorraine.simpleChat.SimpleChat.ocsf;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Représente un utilisateur dans une discussion de groupe.
+ */
 public class UserBuffer {
 	
 	private long id; 					// ID de l'utilisateur
@@ -30,7 +29,7 @@ public class UserBuffer {
 	}
 
 	/**
-	 * Retourne un JSON contenant les messages et VIDER LE BUFFER
+	 * Retourne un JSON contenant les messages et vide le buffer
 	 * @return JSON
 	 */
 	public String getMsgBuffer() {
@@ -51,9 +50,8 @@ public class UserBuffer {
 
 	/**
 	 * vider le buffer
-	 *
 	 */
-	public void clearBufferFromMessages(){
+	public void clearBufferFromMessages() { // /!\ NE SERT ACTUELLEMENT PAS
 		msgBuffer.clear();
 	}
 }
