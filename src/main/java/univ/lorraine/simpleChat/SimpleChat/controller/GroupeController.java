@@ -25,6 +25,8 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 @RestController
@@ -170,6 +172,18 @@ public class GroupeController {
         } catch (NumberFormatException  e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
         }
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @return Tous les groupes non supprimés
+	 */
+	@GetMapping("/findAll/groupe")
+	public ResponseEntity<Collection<Groupe>> findAllGroupe(HttpServletRequest request) 
+	{
+		Collection<Groupe> listGroupe = this.groupeService.findByDeletedatIsNull(); 
+		return ResponseEntity.ok(listGroupe); 
 	}
 	
 	
