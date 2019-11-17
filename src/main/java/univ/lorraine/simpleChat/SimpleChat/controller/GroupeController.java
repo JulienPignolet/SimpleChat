@@ -16,6 +16,7 @@ import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddMemberTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.GroupeTemplate;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
@@ -23,8 +24,7 @@ import univ.lorraine.simpleChat.SimpleChat.service.RoleService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
-import java.util.List;
+import java.util.ArrayList;
 
 
 @RestController
@@ -100,6 +100,76 @@ public class GroupeController {
 		Groupe  groupe = this.groupeService.findByIdAndDeletedatIsNull(groupeId);
 		if (groupe != null) return ResponseEntity.ok(groupe);
         else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);   
+	}
+	
+	/**
+	 * 
+	 * @param addMemberTemplate
+	 * @return  Un message de confirmation d'ajout ou un message d'erreur
+	 */
+	@PostMapping("/add/member")
+	public ResponseEntity addMember(@RequestBody AddMemberTemplate addMemberTemplate)
+	{
+
+		try {
+			
+			Long adminGroupeId = Long.parseLong(addMemberTemplate.getAdminGroupeId());
+            User adminGroupe = this.userService.findById(adminGroupeId);
+    		if(adminGroupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+adminGroupeId+" n'a pas été trouvé.");
+    		}
+    		
+            Long userId = Long.parseLong(addMemberTemplate.getUserId());
+            User user = this.userService.findById(userId);
+    		if(user == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userId+" n'a pas été trouvé.");
+    		}
+
+    		String groupeId = addMemberTemplate.getGroupeId();
+    		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(groupeId);
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+groupeId+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		GroupeUser groupeUserAdmin = groupeUserService.findByGroupeUserActif(groupe.getId(), adminGroupe.getId());
+    		if( groupeUserAdmin == null )
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+adminGroupeId+"' ne fait pas partir de ce groupe !");
+    		}
+    		
+    		Role role = groupeUserAdmin.getRole(); 
+    		ArrayList<String> acceptRoles = new ArrayList<>();
+    		acceptRoles.add(EnumRole.ADMIN_GROUP.getRole());
+    		acceptRoles.add(EnumRole.SUPER_ADMIN.getRole()); 
+    		if( role == null || !acceptRoles.contains(role.getName())) 
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Seul l'admin du groupe peut rajouter un membre au groupe !");
+    		}
+    		
+    		GroupeUser groupeUserNew = groupeUserService.findByGroupeUserActif(groupe.getId(), user.getId());
+    		if( groupeUserNew != null )
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+user.getId()+"' est déjà membre de ce groupe !");
+    		}
+    		
+    		GroupeUser groupeUser = new GroupeUser();
+    		groupe.addGroupeUser(groupeUser);
+    		user.addGroupeUser(groupeUser);
+    		groupeUser.setRole(null);
+    		
+    		
+    		
+    		this.userService.save(user);
+    		this.groupeService.save(groupe);
+    		this.groupeUserService.save(groupeUser);
+            
+    		return ResponseEntity.ok("L'utilisateur d'id "+user.getId()+"a été ajouté au groupe d'id "+groupe.getId()+" avec succès !");
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
 	}
 	
 	

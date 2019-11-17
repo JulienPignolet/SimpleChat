@@ -96,4 +96,9 @@ public class GroupeUserService {
 	public List<GroupeUser> findAll(){
 		return groupeUserRepository.findAll(); 
 	}
+	
+	public GroupeUser findByGroupeUserActif(Long groupeId, Long userId)
+	{
+		return groupeUserRepository.findByGroupeUserActif(groupeId, userId);
+	}
 }
