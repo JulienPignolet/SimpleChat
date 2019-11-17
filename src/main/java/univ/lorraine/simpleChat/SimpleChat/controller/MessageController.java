@@ -22,15 +22,11 @@ import java.util.HashMap;
 @Api( value="Simple Chat")
 public class MessageController {
     private final UserService userService;
-
     private final GroupeService groupeService;
-
     private final MessageService messageService;
 
-    private HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
+    public HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
 
-
-    @Autowired
     public MessageController(UserService userService, GroupeService groupeService, MessageService messageService) {
         this.userService = userService;
         this.groupeService = groupeService;
@@ -42,7 +38,7 @@ public class MessageController {
     {
         try {
             Message JSON = new Message(msg);
-            User user = userService.findById(JSON.getGroup_id());
+//            User user = userService.findById(JSON.getGroup_id());
             if(!clientPool.containsKey(JSON.getGroup_id()))
             {
             	/**
@@ -51,11 +47,13 @@ public class MessageController {
                 clientPool.put(JSON.getGroup_id(), new ClientRunnable(JSON.getGroup_id()));
                 clientPool.get(JSON.getGroup_id()).start();
             }
+            //Il faudra vérifier que le user appartient au groupe
+            clientPool.get(JSON.getGroup_id()).addUserToGroup(JSON.getUser_id());
             clientPool.get(JSON.getGroup_id()).sendMsg(msg);
 
             // Sauvegarde
-            Groupe groupe = groupeService.find(JSON.getGroup_id());
-            messageService.save( new univ.lorraine.simpleChat.SimpleChat.model.Message(JSON.getMessage(), user, groupe));
+//            Groupe groupe = groupeService.find(JSON.getGroup_id());
+//            messageService.save( new univ.lorraine.simpleChat.SimpleChat.model.Message(JSON.getMessage(), user, groupe));
 //            user.sendMsg(msg);
         }
         catch(Exception e)
@@ -94,7 +92,7 @@ public class MessageController {
         try {
         	
             String messagesEnAttente = clientRunnable.getMessagesEnAttente(idUser);
-            //clientRunnable.viderBuffer(idUser);	// /!\ NE SERT ACTUELLEMENT PAS
+            clientRunnable.viderBuffer(idUser);	// /!\ NE SERT ACTUELLEMENT PAS
             return new ResponseEntity<Object>(messagesEnAttente, HttpStatus.OK);
         } catch (AutorisationException e) {
             e.printStackTrace();

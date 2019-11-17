@@ -35,6 +35,7 @@ public class ClientRunnable implements Runnable {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    this.stop();
                 }
             }
         }
@@ -61,7 +62,11 @@ public class ClientRunnable implements Runnable {
     public void sendMsg(String msg) {
         this.msgToSend = msg;
     }
-    
+
+    public void addUserToGroup(long user_id) {
+        client.addUserToGroup(user_id);
+    }
+
     /**
      * Retourne un objet JSON contenant tous le buffer de l'utilisateur
      * @param user_id

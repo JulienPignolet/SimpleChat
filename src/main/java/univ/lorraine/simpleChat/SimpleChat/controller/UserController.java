@@ -1,13 +1,16 @@
+
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import univ.lorraine.simpleChat.SimpleChat.adapter.UserAdapter;
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
@@ -24,11 +27,8 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 
-@RestController
-@RequestMapping("/api/user")
-@Api( value="Simple Chat")
+@Controller
 public class UserController {
 
     private final UserService userService;
@@ -77,11 +77,11 @@ public class UserController {
         }
 
         User user = UserAdapter.AdaptUserFormToUser(userForm);
-        
+
         Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
         if(role == null)
         {
-        	return "registration";
+            return "registration";
         }
         userService.addRole(user, role);
         userService.save(user);
