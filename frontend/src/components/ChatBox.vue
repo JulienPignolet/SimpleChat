@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { get } from "vuex-pathify";
 import * as types from "@/store/types.js";
 export default {
   data () {
@@ -25,8 +24,7 @@ export default {
   },
   methods: {
     sendMessage(message){
-      console.log(get('loginForm/user'))
-      this.$store.dispatch("chat/" + types.sendMessage, message)
+      this.$store.dispatch(`chat/${types.sendMessage}`, message)
       this.message = ""
       } 
   }

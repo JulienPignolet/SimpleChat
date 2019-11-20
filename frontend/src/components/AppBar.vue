@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="primary">
+  <v-app-bar app color="primary">
     <!-- TODO : Activer ce bouton après connexion -->
     <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
     <img src="../../public/images/logo.svg" alt="logo simple chat" class="logo" height="40" />
@@ -17,7 +17,7 @@ import * as types from "@/store/types.js";
 
 export default {
   methods: {
-    deconnexion: call("loginForm/" + types.deconnexion)
+    deconnexion: call(`loginForm/${types.deconnexion}`)
   }
 };
 </script>

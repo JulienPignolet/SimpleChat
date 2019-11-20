@@ -1,6 +1,7 @@
 <template>
         <v-navigation-drawer
           permanent
+          app
         >
           <v-list
             dense

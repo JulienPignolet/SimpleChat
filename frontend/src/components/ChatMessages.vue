@@ -1,5 +1,4 @@
 <template>
-<v-flex md8 offset-md2>
 <v-list three-line>
         <template v-for="(item, index) in items">
           <v-subheader
@@ -30,7 +29,6 @@
           </v-list-item>
         </template>
       </v-list>
-</v-flex>
 </template>
 
 <script>

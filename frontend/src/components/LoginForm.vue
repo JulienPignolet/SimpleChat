@@ -9,14 +9,12 @@
             </v-toolbar>
             <v-card-text>
               <v-form>
-                <!-- TODO : Changer les v-model par un autre truc mieux mais jme rappelle plus faut que je regarde plus tard-->
                 <v-text-field
                   label="Pseudonyme"
                   v-model="username"
                   prepend-icon="mdi-account"
                   type="text"
                 ></v-text-field>
-                <!-- TODO : Changer les v-model par un autre truc mieux mais jme rappelle plus faut que je regarde plus tard-->
                 <v-text-field
                   id="password"
                   label="Mot de passe"
@@ -55,7 +53,7 @@ export default {
     this.$store.registerModule("loginForm", loginForm);
   },
   methods: {
-    connexion: call("loginForm/" + types.connexion)
+    connexion: call(`loginForm/${types.connexion}`)
   }
 };
 </script>

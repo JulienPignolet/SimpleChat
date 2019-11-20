@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
                 .and().headers().frameOptions().sameOrigin()//allow use of frame to same origin urls
                 .and()
+                .cors().and()
                 .formLogin()
                 .loginPage("/login").defaultSuccessUrl("/welcome").failureUrl("/login")
                 .permitAll()
