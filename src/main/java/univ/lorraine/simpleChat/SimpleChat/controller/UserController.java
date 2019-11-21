@@ -76,7 +76,7 @@ public class UserController {
 
         User user = UserAdapter.AdaptUserFormToUser(userForm);
 
-        Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
+        Role role = roleService.findByName(EnumRole.USER.getRole());
         if(role == null)
         {
             return "registration";
