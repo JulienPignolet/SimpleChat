@@ -9,12 +9,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import univ.lorraine.simpleChat.SimpleChat.adapter.UserAdapter;
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
+import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
+import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
+import univ.lorraine.simpleChat.SimpleChat.service.RoleService;
 import univ.lorraine.simpleChat.SimpleChat.service.SecurityService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
@@ -32,15 +35,17 @@ public class UserController {
     private final SecurityService securityService;
 
     private final MessageService messageService;
+    private final RoleService roleService;
 
     private HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
 
     @Autowired
-    public UserController(UserService userService, GroupeService groupeService, SecurityService securityService, MessageService messageService) {
+    public UserController(UserService userService, GroupeService groupeService, SecurityService securityService, MessageService messageService, RoleService roleService) {
         this.userService = userService;
         this.groupeService = groupeService;
         this.securityService = securityService;
         this.messageService = messageService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/registration")
@@ -74,7 +79,13 @@ public class UserController {
         }
 
         User user = UserAdapter.AdaptUserFormToUser(userForm);
-
+        
+        Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
+        if(role == null)
+        {
+        	return "registration";
+        }
+        userService.addRole(user, role);
         userService.save(user);
 
         securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());

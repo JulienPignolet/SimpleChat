@@ -3,7 +3,7 @@ package univ.lorraine.simpleChat.SimpleChat.model;
 public enum EnumRole {
 	
 	SUPER_ADMIN("SUPER_ADMIN", "ROLE_SUPER_ADMIN"),
-	AMIN("ADMIN", "ROLE_ADMIN"),
+	ADMIN("ADMIN", "ROLE_ADMIN"),
 	ADMIN_GROUP("ADMIN_GROUP", "ROLE_ADMIN_GROUP"),
 	USER("USER", "ROLE_USER");
 	
