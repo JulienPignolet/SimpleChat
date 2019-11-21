@@ -15,6 +15,7 @@
                         <v-text-field
                         label="Pseudonyme"
                         name="username"
+                        id="username"
                         v-model="username"
                         prepend-icon="mdi-account"
                         type="text"
@@ -31,6 +32,7 @@
                         id="repeatPassword"
                         name="repeatPassword"
                         label="Répéter le mot de passe"
+                        v-model="passwordConfirm"
                         prepend-icon="mdi-lock"
                         type="password"
                         ></v-text-field>
@@ -40,7 +42,7 @@
                     <v-spacer></v-spacer>
                     <v-btn
                         color="primary"
-                        @click="register({username, password, password})"
+                        @click="register({username, password, passwordConfirm})"
                     >S'inscrire</v-btn>
                     </v-card-actions>
                 </v-card>
@@ -63,6 +65,7 @@ export default {
     return {
       username: "",
       password: "",
+      passwordConfirm: "",
     };
   },
   beforeCreate() {

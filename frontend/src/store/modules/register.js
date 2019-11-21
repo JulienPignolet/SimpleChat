@@ -12,14 +12,17 @@ const mutations = make.mutations(state);
 const actions = {
   ...make.actions("register"),
   async [types.register]({ state }, registeringUser) {
-    console.log(state)
-    let request = { "username": registeringUser.username,"password": registeringUser.password,"passwordConfirm": registeringUser.password };
-    console.log(request);
+    console.log(state);
+    let request = { "username": registeringUser.username,"password": registeringUser.password,"passwordConfirm": registeringUser.passwordConfirm };
+    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
     axios
-    .post(constants.API_URL + 'registrationTest', request)
+    .post(constants.API_URL + 'registration', request)
     .then(response => {
-      console.log(response);
-    }) 
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.log(error.response.data);
+    });
   }
 };
 
