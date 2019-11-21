@@ -39,8 +39,6 @@ public class User {
 	private  Collection<GroupeUser> groupeUsers;
 
 
-    private String JWT;
-
     @OneToMany(mappedBy = "author")
     private Collection<Message> messages;
 	public Long getId() {
@@ -111,11 +109,4 @@ public class User {
 				+ ", passwordConfirm=" + passwordConfirm + ", groupeUsers=" + groupeUsers + "]";
 	}
 
-	public String getJWT() {
-		return JWT;
-	}
-
-	public void setJWT(String JWT) {
-		this.JWT = JWT;
-	}
 }

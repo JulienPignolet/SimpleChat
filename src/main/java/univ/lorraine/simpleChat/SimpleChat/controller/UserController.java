@@ -71,7 +71,6 @@ public class UserController {
         }
 
         User user = UserAdapter.AdaptUserFormToUser(userForm);
-        user.setJWT(SecurityService.getJWT(user));
 
         userService.save(user);
 
