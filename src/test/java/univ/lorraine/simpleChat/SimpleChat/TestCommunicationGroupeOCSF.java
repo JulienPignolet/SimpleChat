@@ -1,18 +1,12 @@
 package univ.lorraine.simpleChat.SimpleChat;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import univ.lorraine.simpleChat.SimpleChat.controller.MessageController;
-import univ.lorraine.simpleChat.SimpleChat.model.Message;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
+import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
-
-import java.io.StringReader;
-import java.util.function.DoubleToIntFunction;
 
 public class TestCommunicationGroupeOCSF {
 
@@ -24,6 +18,9 @@ public class TestCommunicationGroupeOCSF {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private GroupeUserService groupeUserService;
     @Test
     public void commEntre2Users() {
         String msg = "{\n" +
@@ -31,7 +28,7 @@ public class TestCommunicationGroupeOCSF {
                 "        \"group_id\": 1,\n" +
                 "        \"message\": \"blablabla\"" +
                 "}";
-        MessageController messageController = new MessageController(userService, groupeService, messageService);
+        MessageController messageController = new MessageController(userService, groupeService, messageService, groupeUserService);
         messageController.sendMessage(msg);
         msg = "{\n" +
                 "        \"user_id\": 11,\n" +

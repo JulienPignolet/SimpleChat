@@ -20,18 +20,22 @@ public class User {
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @JsonIgnore
     @Transient
     private String passwordConfirm;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private  Collection<GroupeUser> groupeUsers;
 
+    @JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private  Collection<Vote> listVotes;
 
@@ -43,16 +47,18 @@ public class User {
 			inverseJoinColumns={@JoinColumn(name="BUDDY_ID")})
 	private Collection<User> buddyMaster;
 
+	@JsonIgnore
 	@ManyToMany(cascade={CascadeType.ALL})
 	@JoinTable(name="BUDDYMASTER_BUDDY",
 			joinColumns={@JoinColumn(name="BUDDY_ID")},
 			inverseJoinColumns={@JoinColumn(name="id")})
 	private Collection<User> buddyList;
 	
-
+	@JsonIgnore
     @OneToMany(mappedBy = "author")
     private Collection<Message> messages;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "initiateur")
 	private Collection<Sondage> listSondage;
 	

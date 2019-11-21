@@ -2,16 +2,14 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
-import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
+import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 import java.util.HashMap;
@@ -24,13 +22,15 @@ public class MessageController {
     private final UserService userService;
     private final GroupeService groupeService;
     private final MessageService messageService;
+    private final GroupeUserService groupeUserService;
 
     public HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
 
-    public MessageController(UserService userService, GroupeService groupeService, MessageService messageService) {
+    public MessageController(UserService userService, GroupeService groupeService, MessageService messageService, GroupeUserService groupeUserService) {
         this.userService = userService;
         this.groupeService = groupeService;
         this.messageService = messageService;
+        this.groupeUserService = groupeUserService;
     }
 
     @PostMapping("/group/{id}/message")
@@ -39,26 +39,26 @@ public class MessageController {
         try {
             Message JSON = new Message(msg);
 //            User user = userService.findById(JSON.getGroup_id());
-            if(!clientPool.containsKey(JSON.getGroup_id()))
-            {
-            	/**
-            	 *  ATTENTION : Il faut informer la BDD que nous créons un nouveau groupe
-            	 */
-                clientPool.put(JSON.getGroup_id(), new ClientRunnable(JSON.getGroup_id()));
-                clientPool.get(JSON.getGroup_id()).start();
-            }
-            //Il faudra vérifier que le user appartient au groupe
-            clientPool.get(JSON.getGroup_id()).addUserToGroup(JSON.getUser_id());
-            clientPool.get(JSON.getGroup_id()).sendMsg(msg);
+            if(groupeUserService.CountByGroupeIdAndUserId(JSON.getGroup_id(), JSON.getUser_id())) {
+                if (!clientPool.containsKey(JSON.getGroup_id())) {
+                    /**
+                     *  ATTENTION : Il faut informer la BDD que nous créons un nouveau groupe
+                     */
+                    clientPool.put(JSON.getGroup_id(), new ClientRunnable(JSON.getGroup_id()));
+                    clientPool.get(JSON.getGroup_id()).start();
+                }
+                //Il faudra vérifier que le user appartient au groupe
+                clientPool.get(JSON.getGroup_id()).addUserToGroup(JSON.getUser_id());
+                clientPool.get(JSON.getGroup_id()).sendMsg(msg);
 
-            // Sauvegarde
+                // Sauvegarde
 //            Groupe groupe = groupeService.find(JSON.getGroup_id());
 //            messageService.save( new univ.lorraine.simpleChat.SimpleChat.model.Message(JSON.getMessage(), user, groupe));
 //            user.sendMsg(msg);
+            }
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
