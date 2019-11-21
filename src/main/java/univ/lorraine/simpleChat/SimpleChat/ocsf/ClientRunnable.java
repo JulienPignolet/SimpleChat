@@ -6,23 +6,22 @@ public class ClientRunnable implements Runnable {
     private ClientImpl client;
     private String msgToSend;
     private Thread thread;
-    private Long id;
-
+    
     public ClientRunnable(Long id, ClientImpl client) {
-        this.id = id;
         this.client = client;
         msgToSend = null;
         this.thread = null;
-
     }
 
     public ClientRunnable(Long id) {
         this.client = new ClientImpl(id, "localhost", 12345);
-        this.id = id;
     }
 
     @Override
     public void run() {
+
+		// ATTENTION : Il faut demander au serveur d'enregistrer le message dans la BDD
+    	
         try {
             client.isConnected();
             client.openConnection();
@@ -36,6 +35,7 @@ public class ClientRunnable implements Runnable {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    this.stop();
                 }
             }
         }
@@ -45,32 +45,40 @@ public class ClientRunnable implements Runnable {
         }
     }
 
-    public void start()
-    {
-        if (this.thread == null)
-        {
+    public void start() {
+        if (this.thread == null) {
             this.thread = new Thread(this);
             thread.start();
         }
     }
 
-    public void stop()
-    {
-        if (thread != null)
-        {
+    public void stop() {
+        if (thread != null) {
             this.thread.interrupt();
             this.thread = null;
         }
     }
-
-    public void sendMsg(String msg)
-    {
-        this.msgToSend=msg;
+    
+    public void sendMsg(String msg) {
+        this.msgToSend = msg;
     }
 
-    public String getMessagesEnAttente()
-    {
-        return this.client.messagesEnAttenteJSON();
+    public void addUserToGroup(long user_id) {
+        client.addUserToGroup(user_id);
+    }
+
+    /**
+     * Retourne un objet JSON contenant tous le buffer de l'utilisateur
+     * @param user_id
+     * @return String
+     * @throws AutorisationException
+     */
+    public String getMessagesEnAttente(long user_id) throws AutorisationException {
+		return this.client.getBufferById(user_id);
+    }
+    
+    public void viderBuffer(long user_id) throws AutorisationException { // /!\ NE SERT ACTUELLEMENT PAS
+        this.client.viderBuffer(user_id);
     }
 }
 

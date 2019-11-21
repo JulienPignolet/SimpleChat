@@ -3,10 +3,13 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 
@@ -25,16 +28,41 @@ public class UserService {
 
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<>(roleRepository.findAll()));
+        //user.setRoles(new HashSet<>(roleRepository.findAll()));
         userRepository.save(user);
     }
+    
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
 	public User findById(Long user_id) {
-		User user = userRepository.findById(user_id).isPresent() ? userRepository.findById(user_id).get():userRepository.findById(user_id).get();
+		User user = userRepository.findById(user_id).isPresent() ? userRepository.findById(user_id).get() : null;
         return user;
 	}
+
+    public User find(Long user_id) {
+        return userRepository.findById(user_id).orElse(null);
+    }
+
+    public void addBuddy(User user, User buddy){
+        user.addBuddy(buddy);
+        userRepository.save(user);
+    }
+
+    public void removeBuddy(User user, User buddy){
+        user.removeBuddy(buddy);
+        userRepository.save(user);
+    }
+    
+    public void addRole(User user, Role role)
+    {
+        user.addRole(role);
+    }
+    
+    public Collection<User> findMembersGroupe(Long groupe_id)
+    {
+    	return userRepository.findMembersGroupe(groupe_id);
+    }
 }

@@ -2,9 +2,15 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
+import univ.lorraine.simpleChat.SimpleChat.model.Role;
+import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +27,32 @@ public class GroupeUserService {
 	public void save(GroupeUser groupeUser) {
         groupeUserRepository.save(groupeUser); 
     }
+	
+	/**
+	 * 
+	 * @param groupe
+	 * @param user
+	 * @return Le groupeUser créé
+	 */
+	public GroupeUser create(Groupe groupe, User user)
+	{
+		GroupeUser groupeUser = new GroupeUser();
+		user.addGroupeUser(groupeUser);
+		groupe.addGroupeUser(groupeUser);
+		return groupeUser;
+	}
+	
+	/**
+	 * 
+	 * @param groupeUser
+	 * @param role
+	 * @return GroupeUser
+	 */
+	public GroupeUser roleGroupeUser(GroupeUser groupeUser, Role role)
+	{
+		groupeUser.setRole(role);
+		return groupeUser;
+	}
 	
 	/**
 	 * 
@@ -61,13 +93,22 @@ public class GroupeUserService {
 	
 	/**
 	 * 
-	 * @return tous les groupeUser
+	 * @return Tous les groupeUser
 	 */
 	public List<GroupeUser> findAll(){
 		return groupeUserRepository.findAll(); 
 	}
 
-	public int CountByGroupeIdAndUserId(Long groupe_id, Long user_id){
-		return groupeUserRepository.findByGroupeIdAndUserId(groupe_id,user_id).size();
+	public boolean CountByGroupeIdAndUserId(Long groupe_id, Long user_id) throws AutorisationException {
+		boolean authorized = false;
+		authorized = groupeUserRepository.findByGroupeIdAndUserId(groupe_id, user_id).size() > 0;
+		if(authorized)
+			return true;
+		throw new AutorisationException(groupe_id, user_id);
+	}
+	
+	public GroupeUser findByGroupeUserActif(Long groupeId, Long userId)
+	{
+		return groupeUserRepository.findByGroupeUserActif(groupeId, userId);
 	}
 }
