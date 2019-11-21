@@ -29,18 +29,17 @@ public class TestCommunicationGroupeOCSF {
                 "        \"message\": \"blablabla\"" +
                 "}";
         MessageController messageController = new MessageController(userService, groupeService, messageService, groupeUserService);
-        messageController.sendMessage(msg);
+//        messageController.sendMessage(msg);
         msg = "{\n" +
                 "        \"user_id\": 11,\n" +
                 "        \"group_id\": 1,\n" +
                 "        \"message\": \"blablabla\"" +
                 "}";
-        messageController.sendMessage(msg);
-        String response1 = String.valueOf(messageController.byName(1, 10));
+//        messageController.sendMessage(msg);
+        String response1 = String.valueOf(messageController.byName(1L, 10L));
         System.out.println(response1);
-        String response2 = String.valueOf(messageController.byName(1, 11));
+        String response2 = String.valueOf(messageController.byName(1L, 11L));
         System.out.println(response2);
-        response1 = String.valueOf(messageController.byName(1, 10));
         System.out.println(response1);
     }
 }

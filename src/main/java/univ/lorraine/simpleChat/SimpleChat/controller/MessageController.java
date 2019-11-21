@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import univ.lorraine.simpleChat.SimpleChat.modelTemplate.MessageTemplate;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
@@ -33,27 +34,26 @@ public class MessageController {
         this.groupeUserService = groupeUserService;
     }
 
-    @PostMapping("/group/{id}/message")
-    public ResponseEntity<Object> sendMessage(@RequestBody String msg)
+    @PostMapping("/")
+    public ResponseEntity<Object> sendMessage(@RequestBody MessageTemplate message)
     {
         try {
-            Message JSON = new Message(msg);
-//            User user = userService.findById(JSON.getGroup_id());
-            if(groupeUserService.CountByGroupeIdAndUserId(JSON.getGroup_id(), JSON.getUser_id())) {
-                if (!clientPool.containsKey(JSON.getGroup_id())) {
+//            User user = userService.findById(message.getGroup_id());
+            if(groupeUserService.CountByGroupeIdAndUserId(message.getGroup_id(), message.getUser_id())) {
+                if (!clientPool.containsKey(message.getGroup_id())) {
                     /**
                      *  ATTENTION : Il faut informer la BDD que nous créons un nouveau groupe
                      */
-                    clientPool.put(JSON.getGroup_id(), new ClientRunnable(JSON.getGroup_id()));
-                    clientPool.get(JSON.getGroup_id()).start();
+                    clientPool.put(message.getGroup_id(), new ClientRunnable(message.getGroup_id()));
+                    clientPool.get(message.getGroup_id()).start();
                 }
                 //Il faudra vérifier que le user appartient au groupe
-                clientPool.get(JSON.getGroup_id()).addUserToGroup(JSON.getUser_id());
-                clientPool.get(JSON.getGroup_id()).sendMsg(msg);
+                clientPool.get(message.getGroup_id()).addUserToGroup(message.getUser_id());
+                clientPool.get(message.getGroup_id()).sendMsg(message.toString());
 
                 // Sauvegarde
-//            Groupe groupe = groupeService.find(JSON.getGroup_id());
-//            messageService.save( new univ.lorraine.simpleChat.SimpleChat.model.Message(JSON.getMessage(), user, groupe));
+//            Groupe groupe = groupeService.find(message.getGroup_id());
+//            messageService.save( new univ.lorraine.simpleChat.SimpleChat.model.Message(message.getMessage(), user, groupe));
 //            user.sendMsg(msg);
             }
         }
@@ -71,12 +71,12 @@ public class MessageController {
      * TODO rajouter l idUser comme parametre dans le front
      * @return
      */
-    @GetMapping("/group/{idGroupe}/messages")
-    public ResponseEntity<Object> byName(@PathVariable(value = "idGroupe") long idGroupe, long idUser)
+    @GetMapping("/{idGroupe}/{idUser}")
+    public ResponseEntity<Object> byName(@PathVariable(value = "idGroupe") Long idGroupe, @PathVariable(value="idUser") Long idUser)
     {
     /*		/!\
      *
-     * 		getMessagesEnAttenteJSON(user_id) renvoie une exception si le user_id n'est pas présent dans la liste des
+     * 		getMessagesEnAttentemessage(user_id) renvoie une exception si le user_id n'est pas présent dans la liste des
      * 		users du groupe. Il faudra donc faire un try catch et renvoyer une erreur HTTP 401 pour lui dire qu'il
      * 		n'est pas autorisé à consulter ce groupe.
      */
