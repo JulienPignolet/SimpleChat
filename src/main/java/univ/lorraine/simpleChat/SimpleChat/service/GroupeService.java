@@ -109,6 +109,11 @@ public class GroupeService {
 		return groupeRepository.findByDeletedatIsNull();
 	}
 	
+	public Groupe findByNameAndDeletedatIsNull(String name)
+	{
+		return groupeRepository.findByNameAndDeletedatIsNull(name);
+	}
+	
 	
 }
 

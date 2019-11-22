@@ -29,6 +29,14 @@ public class Message {
         return group_id;
     }
 
+    @Override
+    public String toString() {
+        return "{user_id:" + user_id +
+                ", group_id:" + group_id +
+                ", message:'" + message + "\"" +
+                '}';
+    }
+
     public String getMessage() {
         return message;
     }
