@@ -27,14 +27,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        final String requestTokenHeader = httpServletRequest.getHeader("Login");
+        final String requestTokenHeader = httpServletRequest.getHeader("user_key");
         String username = null;
-        String jwtToken = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")){
-            jwtToken = requestTokenHeader.substring(7);
+        if (requestTokenHeader != null){
             try{
-                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+                username = jwtTokenUtil.getUsernameFromToken(requestTokenHeader);
             } catch (IllegalArgumentException e){
                 System.out.println("Impossible de récupérer le JWT");
             } catch (ExpiredJwtException e) {
@@ -43,13 +41,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         }
         else {
-            logger.warn("Le JWT ne commence pas par Bearer");
+            logger.warn("Le JWT n'existe pas");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 
-            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+            if (jwtTokenUtil.validateToken(requestTokenHeader, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
