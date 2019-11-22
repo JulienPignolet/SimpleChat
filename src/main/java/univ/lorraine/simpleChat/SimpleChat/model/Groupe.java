@@ -1,20 +1,12 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "groupe")
@@ -34,6 +26,7 @@ public class Groupe {
     @Temporal(TemporalType.DATE)
     private Date deletedat;
 
+    @JsonIgnore
 	@OneToMany(mappedBy = "groupe")
 	private Collection<Message> messages;
     
@@ -41,13 +34,20 @@ public class Groupe {
     @Temporal(TemporalType.DATE)
     private Date createdat;
     
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "groupe")
 	private  Collection<GroupeUser> groupeUsers;
+
+    @JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "groupe")
+	private Collection<Sondage> listSondage;
+
 
 	public Groupe() {
 		this.setCreatedat(new Date());
 		this.setDeletedat(null);
 		this.groupeUsers = new ArrayList<>(); 
+		this.messages = new ArrayList<>(); 
 	}
 
 	public Collection<Message> getMessages() {
@@ -123,14 +123,26 @@ public class Groupe {
 	@Override
 	public String toString() {
 		return "Groupe [id=" + id + ", name=" + name + ", isPrivateChat=" + isPrivateChat + ", deletedat=" + deletedat
-				+ ", createdat=" + createdat + ", groupeUsers=" + groupeUsers + "]";
+				+ ", messages=" + messages + ", createdat=" + createdat + ", groupeUsers=" + groupeUsers + "]";
 	}
 
+	public Collection<Sondage> getListSondage() {
+		return listSondage;
+	}
 
+	public void setListSondage(Collection<Sondage> listSondage) {
+		this.listSondage = listSondage;
+	}
 
+	public void addSondage(Sondage sondage) {
+		if(!this.listSondage.contains(sondage)) {
+			this.listSondage.add(sondage);
+		}
+	}
 
-
-    
-    
-
+	public void removeSondage(Sondage sondage) {
+		if(this.listSondage.contains(sondage)) {
+			this.listSondage.remove(sondage);
+		}
+	}
 }

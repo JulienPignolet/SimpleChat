@@ -2,6 +2,8 @@ package univ.lorraine.simpleChat.SimpleChat.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Set;
 
 @Entity
@@ -12,8 +14,9 @@ public class Role {
     private Long id;
 
     private String name;
-
-    @ManyToMany(mappedBy = "roles")
+    
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<User> users;
     
     
