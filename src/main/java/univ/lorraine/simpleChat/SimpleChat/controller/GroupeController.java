@@ -236,7 +236,11 @@ public class GroupeController {
 			return response.ok(sb.toString());
 		}
 		
-		Groupe gp = this.groupeService.findByNameAndDeletedatIsNull(addGroupeAndMembersTemplate.getGroupeName());
+		int nbElementTab = 4; 
+		int positionIdGroupe = 2; 
+		String [] tabResponseBody = response.getBody().toString().split(" ", nbElementTab);
+		String idGroupe = tabResponseBody[positionIdGroupe]; 
+		Groupe gp = this.groupeService.findByIdAndDeletedatIsNull(idGroupe);
 		for (Object userId : addGroupeAndMembersTemplate.getMembers()) {
 			response = this.addMemberFct(addGroupeAndMembersTemplate.getAdminGroupeId(), userId.toString(), gp.getId().toString());
 			sb.append("\n");
