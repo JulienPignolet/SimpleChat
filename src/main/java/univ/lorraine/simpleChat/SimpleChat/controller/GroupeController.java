@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.bytebuddy.asm.Advice.Exit;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
@@ -166,6 +167,7 @@ public class GroupeController {
 	 * @param groupeTemplate
 	 * @return Groupe créé ou un message d'erreur
 	 */
+    @ApiOperation(value = "Créé un groupe avec les données envoyées en post. L'utilisateur envoyé dans le post en devient Admin.")
 	@PostMapping("/add/groupe")
 	public ResponseEntity add(@RequestBody GroupeTemplate groupeTemplate) 
 	{
@@ -178,6 +180,7 @@ public class GroupeController {
 	 * @param groupeId
 	 * @return Un groupe qui n'est pas supprimé et dont l'id égal à groupeId 
 	 */
+    @ApiOperation(value = "Retourne le groupe non supprimé (suppression logique) dont l'id est envoyé en get")
 	@GetMapping("/find/groupe/{groupeId}")
 	public ResponseEntity<Groupe> findGroupe(HttpServletRequest request, @PathVariable String groupeId) 
 	{
@@ -191,6 +194,7 @@ public class GroupeController {
 	 * @param addMemberTemplate
 	 * @return  Un message de confirmation d'ajout ou un message d'erreur
 	 */
+    @ApiOperation(value = "Ajoute un membre (user) à un groupe. Seul l'admin du groupe (Celui qui a créé le groupe) ou un superadmin peuvent ajouter un membre à ce dernier.")
 	@PostMapping("/add/member")
 	public ResponseEntity addMember(@RequestBody AddMemberTemplate addMemberTemplate)
 	{
@@ -202,6 +206,7 @@ public class GroupeController {
 	 * @param request
 	 * @return Tous les groupes non supprimés
 	 */
+    @ApiOperation(value = "Retourne tous les groupes non supprimés (suppression logique)")
 	@GetMapping("/findAll/groupe")
 	public ResponseEntity<Collection<Groupe>> findAllGroupe(HttpServletRequest request) 
 	{
@@ -215,6 +220,7 @@ public class GroupeController {
 	 * @param groupeId
 	 * @return Tous les membres d'un groupe
 	 */
+    @ApiOperation(value = "Retourne tous les membres non supprimés (suppression logique) d'un groupe.")
 	@GetMapping("/find/Members/groupe/{groupeId}")
 	public ResponseEntity<Collection<User>> findMembersGroupe(HttpServletRequest request, @PathVariable String groupeId)
 	{
@@ -224,6 +230,12 @@ public class GroupeController {
 	}
 	
 	
+    /**
+     * 
+     * @param addGroupeAndMembersTemplate
+     * @return
+     */
+    @ApiOperation(value = "Créé un groupe et y ajoute tous les users dont les id sont envoyés en post.  Seul l'admin du groupe (Celui qui a créé le groupe) ou un superadmin peuvent ajouter des membres à ce dernier.")
 	@PostMapping("/add/groupe-and-members")
 	public ResponseEntity addGroupeAndMembers(@RequestBody AddGroupAndMembersTemplate addGroupeAndMembersTemplate) 
 	{

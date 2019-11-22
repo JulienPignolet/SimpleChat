@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
@@ -37,6 +38,7 @@ public class RoleController {
 	 * @param roleTemplate : La classe qui stoke le json envoyé en post
 	 * @return le rôle créé ou un message d'erreur
 	 */
+	@ApiOperation(value = "Créé le rôle dont le name est envoyé en post. ex : ROLE_USER ou ROLE_SUPER_ADMIN ou ROLE_ADMIN_GROUP. Seul un superadmin peut créer un rôle.")
     @PostMapping("/add/role")
     public ResponseEntity addRole(@RequestBody RoleTemplate roleTemplate) {
         try {
