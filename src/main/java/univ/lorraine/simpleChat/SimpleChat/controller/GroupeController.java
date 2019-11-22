@@ -225,7 +225,7 @@ public class GroupeController {
 	
 	
 	@PostMapping("/add/groupe-and-members")
-	public ResponseEntity add(@RequestBody AddGroupAndMembersTemplate addGroupeAndMembersTemplate) 
+	public ResponseEntity addGroupeAndMembers(@RequestBody AddGroupAndMembersTemplate addGroupeAndMembersTemplate) 
 	{
 		StringBuilder sb = new StringBuilder();
 		ResponseEntity response = this.createGroupe(addGroupeAndMembersTemplate.getAdminGroupeId(), addGroupeAndMembersTemplate.getGroupeName(), addGroupeAndMembersTemplate.getIsPrivateChat()); 
