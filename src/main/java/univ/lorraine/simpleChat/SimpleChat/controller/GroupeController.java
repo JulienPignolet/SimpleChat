@@ -263,6 +263,13 @@ public class GroupeController {
 		
 	}
 	
-	
+    @ApiOperation(value = "Retourne tous les groupes non supprimés (Suppression logique) d'un user dont l'id est envoyé en get")
+	@GetMapping("/find/groups/user/{userId}")
+	public ResponseEntity<Collection<Groupe>> findGroupsUser(HttpServletRequest request, @PathVariable String userId)
+	{
+		Long uid = Long.parseLong(userId); 
+		Collection<Groupe> groups = groupeService.findGroupsByUser(uid); 
+		return ResponseEntity.ok(groups); 
+	}
 	
 }

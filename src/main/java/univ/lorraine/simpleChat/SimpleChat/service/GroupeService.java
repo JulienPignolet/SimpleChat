@@ -113,6 +113,11 @@ public class GroupeService {
 	{
 		return groupeRepository.findByNameAndDeletedatIsNull(name);
 	}
+
+
+	public Collection<Groupe> findGroupsByUser(Long uid) {
+		return groupeRepository.findGroupsByUser(uid);
+	}
 	
 	
 }
