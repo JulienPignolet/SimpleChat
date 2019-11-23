@@ -65,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                  .logout()
 //                  .permitAll().and().httpBasic().disable();
 //
-        http.csrf().disable().authorizeRequests().antMatchers("/registration", "/authentication").permitAll().
+        http.csrf().disable().authorizeRequests().antMatchers("/registration", "/authentication", "/h2-console/").permitAll().
                 anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
