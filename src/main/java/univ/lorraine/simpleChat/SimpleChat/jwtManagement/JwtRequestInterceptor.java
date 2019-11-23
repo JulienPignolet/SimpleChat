@@ -7,18 +7,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import univ.lorraine.simpleChat.SimpleChat.service.UserDetailsServiceImpl;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter {
-
+public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private UserDetailsServiceImpl jwtUserDetailsService;
 
@@ -26,8 +25,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtTokenUtil jwtTokenUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        final String requestTokenHeader = httpServletRequest.getHeader("user_key");
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
+        final String requestTokenHeader = request.getHeader("user_key");
         String username = null;
 
         if (requestTokenHeader != null){
@@ -38,10 +37,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 System.out.println("Le JWT a expiré");
             }
-
         }
         else {
-            logger.warn("Le JWT n'existe pas");
+            System.out.println("Le JWT n'existe pas");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -51,21 +49,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
-        //HttpServletRequest request = (HttpServletRequest) httpServletRequest;
-        //final String val = request.getMethod() + " " + request.getRequestURI();
 
-        //if(val == null || !val.equals("")) {
-        //    httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
-        //}
-        //else
-        //{
-        //    filterChain.doFilter(httpServletRequest, httpServletResponse);
-        //}
-
+        return true;
     }
 }
