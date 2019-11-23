@@ -1,3 +1,4 @@
+
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import univ.lorraine.simpleChat.SimpleChat.adapter.UserAdapter;
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
@@ -27,6 +25,7 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 import javax.validation.Valid;
 import java.util.HashMap;
 
+@CrossOrigin
 @Controller
 public class UserController {
 
@@ -76,11 +75,11 @@ public class UserController {
         }
 
         User user = UserAdapter.AdaptUserFormToUser(userForm);
-        
-        Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
+
+        Role role = roleService.findByName(EnumRole.USER.getRole());
         if(role == null)
         {
-        	return "registration";
+            return "registration";
         }
         userService.addRole(user, role);
         userService.save(user);
@@ -100,44 +99,6 @@ public class UserController {
             model.addAttribute("message", "You have been logged out successfully.");
 
         return "authentication";
-    }
-
-    @PostMapping("/message")
-    public ResponseEntity<Object> sendMessage(@RequestBody String msg)
-    {
-        try {
-            Message JSON = new Message(msg);
-            User user = userService.findById(JSON.getUser_id());
-            if(!clientPool.containsKey(JSON.getUser_id()))
-            {
-                clientPool.put(JSON.getUser_id(), new ClientRunnable(JSON.getUser_id()));
-                clientPool.get(JSON.getUser_id()).start();
-            }
-            clientPool.get(JSON.getUser_id()).sendMsg(msg);
-
-            // sauvegarde
-            Groupe groupe = groupeService.find(JSON.getGroup_id());
-            messageService.save(
-                    new univ.lorraine.simpleChat.SimpleChat.model.Message(
-                            JSON.getMessage(),user,groupe));
-//            user.sendMsg(msg);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/messages")
-    public ResponseEntity<Object> byName(@PathVariable(value = "id") Long id)
-    {
-        User user = userService.findById(id);
-        if(!clientPool.containsKey(id))
-            return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
-        String messages = clientPool.get(id).getMessagesEnAttente();
-        return new ResponseEntity<Object>(messages, HttpStatus.OK);
     }
 
     @GetMapping({"/"})
