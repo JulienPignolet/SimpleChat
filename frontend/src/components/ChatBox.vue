@@ -1,5 +1,5 @@
 <template>
-  <v-flex md8 offset-md2 class="pa-1" @submit.prevent="sendMessage(message)">
+  <v-flex @submit.prevent="sendMessage(message)">
     <v-form style="width:100%">
     <v-text-field
       label="Solo"
@@ -11,7 +11,6 @@
     </v-text-field>
     </v-form>
   </v-flex>
-
 </template>
 
 <script>

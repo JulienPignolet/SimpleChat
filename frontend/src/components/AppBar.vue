@@ -1,7 +1,5 @@
 <template>
-  <v-app-bar app color="primary">
-    <!-- TODO : Activer ce bouton après connexion -->
-    <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+  <v-app-bar app color="primary" :clipped-left="$vuetify.breakpoint.lgAndUp" >
     <img src="../../public/images/logo.svg" alt="logo simple chat" class="logo" height="40" />
     <v-spacer></v-spacer>
 
