@@ -1,5 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.service;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import univ.lorraine.simpleChat.SimpleChat.model.User;
+
+import java.security.Key;
+import java.util.Base64;
 
 @Service
 public class SecurityService {
+
+    private static final String jwtkey = "AesWOgsVInu5PQSqz53cqoZzOhcrZaIIYfUh/phYU4Y=";
 
     private final AuthenticationManager authenticationManager;
 
@@ -45,5 +53,16 @@ public class SecurityService {
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             logger.debug(String.format("Auto login %s successfully!", username));
         }
+    }
+
+    /**
+     * Génère un JWT avec la clé du fichier key.txt
+     * @param user utilise le username de l'utilisateur pour générer le token
+     * @return String of JWT
+     */
+    public static String getJWT(User user){
+        byte[] bytekey = Base64.getDecoder().decode(jwtkey);
+        Key key = Keys.hmacShaKeyFor(bytekey);
+        return Jwts.builder().setSubject(user.getUsername()).signWith(key).compact();
     }
 }

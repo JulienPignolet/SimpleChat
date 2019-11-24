@@ -1,3 +1,4 @@
+
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
 import org.json.simple.JSONObject;
@@ -80,7 +81,7 @@ public class UserController {
     }
 
     //We don't define /login POST controller, it is provided by Spring Security
-    @GetMapping("/login")
+    @GetMapping("/authentication")
     public String login(Model model, String error, String logout) {
         if (error != null)
             model.addAttribute("error", "Your username and password is invalid.");
@@ -88,45 +89,7 @@ public class UserController {
         if (logout != null)
             model.addAttribute("message", "You have been logged out successfully.");
 
-        return "login";
-    }
-
-    @PostMapping("/message")
-    public ResponseEntity<Object> sendMessage(@RequestBody String msg)
-    {
-        try {
-            Message JSON = new Message(msg);
-            User user = userService.findById(JSON.getUser_id());
-            if(!clientPool.containsKey(JSON.getUser_id()))
-            {
-                clientPool.put(JSON.getUser_id(), new ClientRunnable(JSON.getUser_id()));
-                clientPool.get(JSON.getUser_id()).start();
-            }
-            clientPool.get(JSON.getUser_id()).sendMsg(msg);
-
-            // sauvegarde
-            Groupe groupe = groupeService.find(JSON.getGroup_id());
-            messageService.save(
-                    new univ.lorraine.simpleChat.SimpleChat.model.Message(
-                            JSON.getMessage(),user,groupe));
-//            user.sendMsg(msg);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/messages")
-    public ResponseEntity<Object> byName(@PathVariable(value = "id") Long id)
-    {
-        User user = userService.findById(id);
-        if(!clientPool.containsKey(id))
-            return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
-        String messages = clientPool.get(id).getMessagesEnAttente();
-        return new ResponseEntity<Object>(messages, HttpStatus.OK);
+        return "authentication";
     }
 
     @GetMapping({"/"})
