@@ -1,6 +1,11 @@
 export class User {
-    constructor (username, password) {
-      this.username = username
-      this.password = password
+    constructor (username, token, id) {
+      this.username = username;
+      this.token = token;
+      this.id = id;
     }
-  }
+
+    isStillConnected() {
+      return this.token != null && (Date.now() > JSON.parse(atob(this.token.split('.')[1]))['exp']);
+    }
+}

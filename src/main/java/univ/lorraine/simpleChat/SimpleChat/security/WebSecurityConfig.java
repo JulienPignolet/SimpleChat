@@ -54,6 +54,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable()
                 .logout()
                 .permitAll();
+
+        http.csrf().disable().authorizeRequests().antMatchers("/registration", "/authentication", "/h2-console/**").permitAll().
+                anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Bean
@@ -65,30 +69,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
     }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-//          http.csrf().disable().anonymous().authorities("ROLE_ANONYMOUS").and()
-//                  .authorizeRequests()
-//                  //.antMatchers("/resources/**", "/registration","/h2-console/**", "/login", "/registration").permitAll() // Allow to disable authentication security for matching URL .anyRequest().authenticated()
-//                  .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow to disable authentication security for matching URL .anyRequest().authenticated()
-//  //                .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
-//                  .and().headers().frameOptions().sameOrigin().and().//allow use of frame to same origin urls
-//                  //.and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().
-//                  sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//                  .formLogin()
-//                  .loginPage("/login").defaultSuccessUrl("/welcome").failureUrl("/login")
-//                  .permitAll()
-//                  .and().csrf().disable()
-//                  .logout()
-//                  .permitAll().and().httpBasic().disable();
-//
-        http.csrf().disable().authorizeRequests().antMatchers("/registration", "/authentication", "/h2-console/**").permitAll().
-                anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        //http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
-    }
-
 }

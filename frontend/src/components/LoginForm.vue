@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class="elevation-12">
             <v-toolbar dense color="primary" dark flat>
-              <v-toolbar-title><v-icon>mdi-rocket</v-icon></v-toolbar-title>
+              <v-toolbar-title>Connexion</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <v-form>
@@ -28,7 +28,7 @@
               <v-spacer></v-spacer>
               <v-btn
                 color="primary"
-                @click="connexion({username, password}).then(() => {$router.push('/chat')}) "
+                @click="connexion({username, password}) "
               >Me connecter</v-btn>
             </v-card-actions>
           </v-card>
@@ -41,7 +41,7 @@
 <script>
 import { call } from "vuex-pathify";
 import * as types from "@/store/types.js";
-import { loginForm } from "@/store/modules/loginForm";
+import { user } from "@/store/modules/user";
 export default {
   data() {
     return {
@@ -50,10 +50,10 @@ export default {
     };
   },
   beforeCreate() {
-    this.$store.registerModule("loginForm", loginForm);
+    this.$store.registerModule("user", user);
   },
   methods: {
-    connexion: call(`loginForm/${types.connexion}`)
+    connexion: call(`user/${types.connexion}`)
   }
 };
 </script>

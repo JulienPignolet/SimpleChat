@@ -57,7 +57,7 @@
 
 <script>
 import { call } from "vuex-pathify";
-import { register } from "@/store/modules/register";
+import { user } from "@/store/modules/user";
 import * as types from "@/store/types.js";
 
 export default {
@@ -69,10 +69,10 @@ export default {
     };
   },
   beforeCreate() {
-    this.$store.registerModule("register", register);
+    this.$store.registerModule("user", user);
   },
   methods: {
-    register: call(`register/${types.register}`)
+    register: call(`user/${types.register}`)
   }
 };
 </script>
