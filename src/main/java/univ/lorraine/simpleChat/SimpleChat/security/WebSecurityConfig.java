@@ -65,7 +65,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                  .logout()
 //                  .permitAll().and().httpBasic().disable();
 //
-        http.csrf().disable().authorizeRequests().antMatchers("/swagger-ui.html","/swagger-resources/**","/v2/api-docs","webjars/**","/registration", "/authentication", "/h2-console/**").permitAll().
+        http.csrf().disable().authorizeRequests().antMatchers("/v2/api-docs",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/configuration/ui",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/registration",
+                "/authentication",
+                "/h2-console/**").permitAll().
                 anyRequest().authenticated().and().headers().frameOptions().sameOrigin().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
