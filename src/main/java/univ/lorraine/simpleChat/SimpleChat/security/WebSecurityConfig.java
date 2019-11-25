@@ -83,8 +83,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 "/registration",
                 "/authentication/**",
                 "/h2-console/**").permitAll().
-                anyRequest().authenticated().and().headers().frameOptions().sameOrigin().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                anyRequest().authenticated().and().headers().frameOptions().sameOrigin()
+                .and().cors()
+                .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
