@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 @Component
+//public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
 public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private UserDetailsServiceImpl jwtUserDetailsService;
@@ -27,6 +28,7 @@ public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         final String requestTokenHeader = request.getHeader("user_key");
+        System.out.println("Le token : "+ requestTokenHeader);
         String username = null;
 
         if (requestTokenHeader != null){
