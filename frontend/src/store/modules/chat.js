@@ -6,33 +6,7 @@ import * as constants from "../../constants/constants";
 
 const state = () => ({
   message: {},
-  messageList: [
-    { header: "Aujourd'hui" },
-    {
-      pseudonyme: "Etudiant #1",
-      message: "Test"
-    },
-    { divider: true, inset: true },
-    {
-      pseudonyme: "Etudiant #2",
-      message: "Test"
-    },
-    { divider: true, inset: true },
-    {
-      pseudonyme: "Etudiant #3",
-      message: "Test"
-    },
-    { divider: true, inset: true },
-    {
-      pseudonyme: "Etudiant #4",
-      message: "Test"
-    },
-    { divider: true, inset: true },
-    {
-      pseudonyme: "Etudiant #5",
-      message: "Test"
-    }
-  ]
+  messageList: []
 });
 
 const mutations = make.mutations(state);
@@ -43,11 +17,10 @@ const actions = {
     dispatch(types.setMessage, new Message(rootState.user.user.username, message)
     );
 
-    /*TODO : Recuperer vrai user*/
-    axios.post(constants.API_URL+"/message", {
-      user_id: 5,
-      group_id: 2,
-      message: message
+    axios.post(constants.API_URL+"api/message/", {
+      "group_id": rootState.groupe.groupe.id,
+      "message": message,
+      "user_id": rootState.user.user.id
     })
     .then(function (response) {
       console.log(response)
@@ -55,9 +28,9 @@ const actions = {
     state.messageList.push(state.message);
   },
   async [types.getMessages]({ rootState}){
-    axios.get(`${constants.API_URL}/message/${rootState.user}`, {
-      user_id: 5,
-      group_id: 2,
+    axios.get(`${constants.API_URL}/message/${rootState.groupe.groupe.id}/${rootState.user.user.id}`, {
+      userId: 5,
+      groupId: rootState.groupe.groupe.id
     })
     .then(function (response) {
       console.log(response)

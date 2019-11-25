@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/message")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api( value="Simple Chat")
 public class MessageController {
     private final UserService userService;

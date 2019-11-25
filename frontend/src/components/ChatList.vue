@@ -18,11 +18,13 @@
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-subheader>
-      <v-list-item v-for="groupe in groupes" :key="groupe.id" link>
+      <v-list-item-group>
+      <v-list-item v-for="groupe in groupes" :key="groupe.id" @click="chooseGroup(groupe)">
         <v-list-item-content>
           <v-list-item-title>{{ groupe.name }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -44,12 +46,14 @@ export default {
     this.getGroupes()
   },
   computed: {
+    currentGroup: sync("groupe/groupe"),
     groupes: sync("groupe/groupeList")
   },
   methods: {
     activateNewGroupDialog: call(`interfaceControl/${types.setGroupDialog}`),
     getGroupes: call(`groupe/${types.getGroupes}`),
-    createGroupe: call(`groupe/${types.createGroupe}`)
+    createGroupe: call(`groupe/${types.createGroupe}`),
+    chooseGroup:  call(`groupe/${types.chooseGroup}`)
   }
 };
 </script>

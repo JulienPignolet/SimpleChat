@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-import ChatHome from "./views/ChatHome.vue";
+import Chat from "./views/Chat.vue";
 import Register from "./components/RegisterForm.vue";
 
 Vue.use(Router);
@@ -15,10 +15,11 @@ export default new Router({
       component: Home
     },
     {
-      path: "/chatHome",
-      name: "chatHome",
-      component: ChatHome
+      path: "/chat",
+      name: "chat",
+      component: Chat
     },
+    { path: '/chat/group/:groupId', component: Chat },
     {
       path: "/register",
       name: "register",

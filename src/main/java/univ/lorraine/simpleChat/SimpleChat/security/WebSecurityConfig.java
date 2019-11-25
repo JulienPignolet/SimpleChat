@@ -40,22 +40,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/resources/**", "/registration","/h2-console/**").permitAll() // Allow to disable authentication security for matching URL
-                //.anyRequest().authenticated()
-//                .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
-                .and().headers().frameOptions().sameOrigin()//allow use of frame to same origin urls
-                .and()
-                .cors().and()
-                .formLogin()
-                .loginPage("/login").defaultSuccessUrl("/welcome").failureUrl("/login")
-                .permitAll()
-                .and().csrf().disable()
-                .logout()
-                .permitAll();
 
-        http.csrf().disable().authorizeRequests().antMatchers("/registration", "/authentication", "/h2-console/**").permitAll().
+
+        http.csrf().disable().authorizeRequests().antMatchers("/*","/registration", "/authentication", "/h2-console/**").permitAll().
                 anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
