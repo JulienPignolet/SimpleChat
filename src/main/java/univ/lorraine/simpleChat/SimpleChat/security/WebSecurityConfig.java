@@ -18,12 +18,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtAuthenticationEntryPoint;
+import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtRequestFilter;
 import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtRequestInterceptor;
+import univ.lorraine.simpleChat.SimpleChat.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     //@Qualifier("userDetailsServiceImpl")
 
@@ -31,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     //@Autowired
     //private JwtRequestFilter jwtRequestFilter;
@@ -81,12 +86,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 anyRequest().authenticated().and().headers().frameOptions().sameOrigin().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        //http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
-    @Override
-    public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(new JwtRequestInterceptor()).excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/v2/api-docs","webjars/**","/authentication/**","/registration", "/h2-console/**");
-    }
+
+    //@Override
+    //public void addInterceptors(InterceptorRegistry registry){
+    //    registry.addInterceptor(new JwtRequestInterceptor()).excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/v2/api-docs","webjars/**","/authentication/**","/registration", "/h2-console/**");
+    //}
 
 }

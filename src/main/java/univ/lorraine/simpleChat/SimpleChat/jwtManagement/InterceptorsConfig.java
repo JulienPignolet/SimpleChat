@@ -16,14 +16,14 @@ public class InterceptorsConfig implements WebMvcConfigurer{
     @Autowired
     private JwtRequestInterceptor jwtRequestInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(new JwtRequestInterceptor()).excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/v2/api-docs","webjars/**","/authentication","/registration", "/h2-console/**").pathMatcher(new AntPathMatcher());
-    }
+    //@Override
+    //public void addInterceptors(InterceptorRegistry registry){
+    //    registry.addInterceptor(jwtRequestInterceptor).excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/v2/api-docs","webjars/**","/authentication","/registration", "/h2-console/**").pathMatcher(new AntPathMatcher());
+    //}
     @Bean
     public MappedInterceptor myInterceptor()
     {
         String [] excludePatterns = new String[] {"/swagger-ui.html","/swagger-resources/**","/v2/api-docs","webjars/**","/authentication/**","/registration", "/h2-console/**"};
-        return new MappedInterceptor(null, excludePatterns, new JwtRequestInterceptor());
+        return new MappedInterceptor(null, excludePatterns, jwtRequestInterceptor);
     }
 }

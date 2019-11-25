@@ -7,18 +7,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
 import univ.lorraine.simpleChat.SimpleChat.service.UserDetailsServiceImpl;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Component
-//public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
-public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
+public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
@@ -26,8 +28,10 @@ public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
     private JwtTokenUtil jwtTokenUtil;
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
-        final String requestTokenHeader = request.getHeader("user_key");
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+
+        final String requestTokenHeader = httpServletRequest.getHeader("user_key");
+        System.out.println("Coucou");
         System.out.println("Le token : "+ requestTokenHeader);
         String username = null;
         jwtTokenUtil = new JwtTokenUtil();
@@ -47,18 +51,35 @@ public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-        //if (username != null) {
+            //if (username != null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             if (jwtTokenUtil.validateToken(requestTokenHeader, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
 
-        return true;
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+         Collection<String> excludeUrlPatterns = new ArrayList<>();
+         excludeUrlPatterns.add("/authentication/**");
+        excludeUrlPatterns.add("/authentication");
+        excludeUrlPatterns.add("/swagger-resources/**");
+         excludeUrlPatterns.add("/configuration/ui");
+         excludeUrlPatterns.add("/configuration/security");
+         excludeUrlPatterns.add("/swagger-ui.html");
+         excludeUrlPatterns.add("/webjars/**");
+         excludeUrlPatterns.add("/registration");
+         excludeUrlPatterns.add("/v2/api-docs");
+         excludeUrlPatterns.add("/h2-console/**");
+        return excludeUrlPatterns.stream()
+                .anyMatch(p -> antPathMatcher.match(p, request.getRequestURI())); }
 }
