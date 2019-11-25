@@ -17,11 +17,10 @@
 <script>
 import { call } from "vuex-pathify";
 import * as types from "@/store/types.js";
-import { user } from "@/store/modules/user";
 
 export default {
   beforeCreate() {
-    this.$store.registerModule("user", user);
+ 
   },
 
   methods: {
