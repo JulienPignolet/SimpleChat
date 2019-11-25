@@ -30,12 +30,14 @@ public class JwtRequestInterceptor extends HandlerInterceptorAdapter {
         final String requestTokenHeader = request.getHeader("user_key");
         System.out.println("Le token : "+ requestTokenHeader);
         String username = null;
+        jwtTokenUtil = new JwtTokenUtil();
 
         if (requestTokenHeader != null){
             try{
                 username = jwtTokenUtil.getUsernameFromToken(requestTokenHeader);
+                System.out.println("Username = " + username);
             } catch (IllegalArgumentException e){
-                System.out.println("Impossible de récupérer le JWT");
+                System.out.println("Impossible de récupérer le JWT" + e.getMessage());
             } catch (ExpiredJwtException e) {
                 System.out.println("Le JWT a expiré");
             }
