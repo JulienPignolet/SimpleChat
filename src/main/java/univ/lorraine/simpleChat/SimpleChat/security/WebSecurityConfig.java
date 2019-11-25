@@ -15,12 +15,20 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtAuthenticationEntryPoint;
+import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtRequestFilter;
+import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtRequestInterceptor;
+import univ.lorraine.simpleChat.SimpleChat.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     //@Qualifier("userDetailsServiceImpl")
 
@@ -28,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     //@Autowired
     //private JwtRequestFilter jwtRequestFilter;
@@ -65,12 +73,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                  .logout()
 //                  .permitAll().and().httpBasic().disable();
 //
-        http.csrf().disable().authorizeRequests().antMatchers("/registration", "/authentication", "/h2-console/**").permitAll().
-                anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+        http.csrf().disable().authorizeRequests().antMatchers("/v2/api-docs",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/configuration/ui",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/registration",
+                "/authentication/**",
+                "/h2-console/**").permitAll().
+                anyRequest().authenticated().and().headers().frameOptions().sameOrigin().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        //http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
+
+    //@Override
+    //public void addInterceptors(InterceptorRegistry registry){
+    //    registry.addInterceptor(new JwtRequestInterceptor()).excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/v2/api-docs","webjars/**","/authentication/**","/registration", "/h2-console/**");
+    //}
 
 }
