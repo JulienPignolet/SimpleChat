@@ -55,6 +55,10 @@ public class UserService {
         user.removeBuddy(buddy);
         userRepository.save(user);
     }
+
+    public boolean usernameAlreadyExist(User user) {
+        return this.findByUsername(user.getUsername()) != null;
+    }
     
     public void addRole(User user, Role role)
     {
