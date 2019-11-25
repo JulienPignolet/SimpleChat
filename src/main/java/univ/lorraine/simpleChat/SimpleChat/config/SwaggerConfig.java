@@ -20,7 +20,6 @@ import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import static springfox.documentation.builders.PathSelectors.regex;
-import springfox.documentation.swagger.web.ApiKeyVehicle;
 
 import java.util.List;
 
