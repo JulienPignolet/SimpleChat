@@ -28,7 +28,7 @@ public class BuddyController {
      * @return liste des amis (entite user)
      */
     @GetMapping("/{userId}")
-    public ResponseEntity findGroupe(@PathVariable Long userId) {
+    public ResponseEntity findBuddies(@PathVariable Long userId) {
         User user = userService.findById(userId);
         if (user != null) {
             return ResponseEntity.ok(user.getBuddyList());
