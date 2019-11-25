@@ -1,6 +1,7 @@
 // action module loginForm
 export const connexion = 'connexion'
 export const deconnexion = 'deconnexion'
+export const getUsers = 'getUsers'
 
 // action module chat
 export const sendMessage = 'sendMessage'

@@ -34,16 +34,18 @@ import { sync, call } from "vuex-pathify";
 import * as types from "@/store/types.js";
 import { groupe } from "@/store/modules/groupe";
 import { interfaceControl } from "@/store/modules/interfaceControl";
+import RegisterStoreModule from '@/mixins/RegisterStoreModule'
 export default {
+  mixins: [ RegisterStoreModule ],
   data() {
     return {};
   },
-  beforeCreate() {
-    this.$store.registerModule("groupe", groupe);
-    this.$store.registerModule("interfaceControl", interfaceControl);
-  },
-  created: function() {
-    this.getGroupes()
+  created() {
+    this.registerStoreModule("groupe", groupe);
+    this.registerStoreModule("interfaceControl", interfaceControl);
+    this.getGroupes();
+    this.getUsers();
+    
   },
   computed: {
     currentGroup: sync("groupe/groupe"),
@@ -52,6 +54,7 @@ export default {
   methods: {
     activateNewGroupDialog: call(`interfaceControl/${types.setGroupDialog}`),
     getGroupes: call(`groupe/${types.getGroupes}`),
+    getUsers: call(`user/${types.getUsers}`),
     createGroupe: call(`groupe/${types.createGroupe}`),
     chooseGroup:  call(`groupe/${types.chooseGroup}`)
   }

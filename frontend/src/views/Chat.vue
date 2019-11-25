@@ -11,7 +11,6 @@ import ChatList from "../components/ChatList";
 import ChatMessages from "../components/ChatMessages";
 import ChatBox from "../components/ChatBox";
 import NewGroupDialog from "../components/NewGroupDialog"
-import { chat } from "../store/modules/chat";
 export default {
   components: {
     ChatList,
@@ -20,7 +19,7 @@ export default {
     NewGroupDialog
   },
   beforeCreate() {
-    this.$store.registerModule("chat", chat);
+
   }
 };
 </script>

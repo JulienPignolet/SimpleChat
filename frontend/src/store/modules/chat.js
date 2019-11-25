@@ -13,27 +13,27 @@ const mutations = make.mutations(state);
 
 const actions = {
   ...make.actions("message"),
-  async [types.sendMessage]({ state, dispatch, rootState }, message) {
+  async [types.sendMessage]({ dispatch, rootState }, message) {
     dispatch(types.setMessage, new Message(rootState.user.user.username, message)
     );
-
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.post(constants.API_URL+"api/message/", {
       "group_id": rootState.groupe.groupe.id,
       "message": message,
       "user_id": rootState.user.user.id
+    }).then(function (){
+    dispatch((`chat/${types.getMessages}`), null, { root: true })
     })
-    .then(function (response) {
-      console.log(response)
-    })
-    state.messageList.push(state.message);
   },
   async [types.getMessages]({ rootState}){
-    axios.get(`${constants.API_URL}/message/${rootState.groupe.groupe.id}/${rootState.user.user.id}`, {
-      userId: 5,
-      groupId: rootState.groupe.groupe.id
-    })
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}api/message/${rootState.groupe.groupe.id}/${rootState.user.user.id}/`)
     .then(function (response) {
-      console.log(response)
+      console.log(response.data)
+      let messageList = JSON.parse(response.data)
+      messageList.forEach(message => {
+        state.messageList.push({"pseudonyme": message.user_id, "message": message.message})
+      })
     })
   }
 };

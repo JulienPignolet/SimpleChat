@@ -41,16 +41,18 @@
 <script>
 import { call } from "vuex-pathify";
 import * as types from "@/store/types.js";
+import RegisterStoreModule from '@/mixins/RegisterStoreModule'
 import { user } from "@/store/modules/user";
 export default {
+  mixins: [ RegisterStoreModule ],
   data() {
     return {
       username: "",
       password: ""
     };
   },
-  beforeCreate() {
-    this.$store.registerModule("user", user);
+  created() {
+    this.registerStoreModule("user", user);
   },
   methods: {
     connexion: call(`user/${types.connexion}`)

@@ -57,9 +57,11 @@
 
 <script>
 import { call } from "vuex-pathify";
+import RegisterStoreModule from '@/mixins/RegisterStoreModule'
 import * as types from "@/store/types.js";
-
+import { user } from "@/store/modules/user";
 export default {
+  mixins: [ RegisterStoreModule ],
   data() {
     return {
       username: "",
@@ -67,7 +69,8 @@ export default {
       passwordConfirm: "",
     };
   },
-  beforeCreate() {
+  created() {
+    this.registerStoreModule("user", user);
   },
   methods: {
     register: call(`user/${types.register}`)

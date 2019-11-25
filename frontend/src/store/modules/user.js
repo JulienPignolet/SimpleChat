@@ -8,7 +8,9 @@ import Router from "../../router"
 
 
 const state = () => ({
-  user: new User()
+  user: new User(),
+  userList: [],
+  selectedUserList: []
 })
 
 const mutations = {
@@ -16,7 +18,7 @@ const mutations = {
 }
 
 const actions = {
-  ...make.actions('user'),
+  ...make.actions(state),
 
   // Connexion
   async [types.connexion]({ state, dispatch }, user) {
@@ -27,7 +29,6 @@ const actions = {
     .then(response => {
       dispatch(types.setUser, new User(user.username, response.data.user_key, response.data.user_id));
       dispatch((`alerte/${types.setAlerte}`), new Alerte('success', `L'utilisateur ${state.user.username} est bien connecté`), { root: true });
-      console.log(state.user);
       Router.push('/chat');
     })
     .catch(() => {
@@ -57,7 +58,16 @@ const actions = {
       let errorMessage = error.response.data.errorMessage || "une erreur est survenue";
       dispatch((`alerte/${types.setAlerte}`), new Alerte('error', errorMessage), { root: true })
     });
-  }
+  },
+
+  // Récupération liste utilisateur
+  async [types.getUsers]({dispatch, rootState}){
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}api/buddy/findAll/user`)
+    .then(function (response) {
+      dispatch("user/setUserList", response.data, {root: true})
+    })
+  },
 
 
 }
