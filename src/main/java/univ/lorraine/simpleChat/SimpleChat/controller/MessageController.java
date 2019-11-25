@@ -83,7 +83,16 @@ public class MessageController {
 
         // verifie si idGroupe n´existe pas dans dans clientPool)
         if (!clientPool.containsKey(idGroupe))
-            return new ResponseEntity<Object>("{}", HttpStatus.NO_CONTENT);
+        {
+            try {
+                if(groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser))
+                    clientPool.get(idGroupe).addUserToGroup(idUser);
+            } catch (AutorisationException e) {
+                e.printStackTrace();
+                return new ResponseEntity<Object>("{}", HttpStatus.UNAUTHORIZED);
+            }
+                //Il faudra vérifier que le user appartient au groupe
+        }
 
         // on récupere le clientRunnable
         ClientRunnable clientRunnable = clientPool.get(idGroupe);
