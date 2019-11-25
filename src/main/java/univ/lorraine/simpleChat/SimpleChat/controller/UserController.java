@@ -1,6 +1,7 @@
 
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 import javax.validation.Valid;
 import java.util.HashMap;
 
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 public class UserController {
 
@@ -56,37 +57,27 @@ public class UserController {
         return "registration";
     }
 
-
     @PostMapping("/registration")
-    public String registration(@Valid UserForm userForm, BindingResult bindingResult, Model model) {
-        //userValidator.validate(userForm, bindingResult);
+    public ResponseEntity<String> registration(@RequestBody User user) {
+        System.out.println(user.getUsername() + user.getPassword() + user.getPasswordConfirm());
+        //TODO CHECK FORM ERROR
+        Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
+        JSONObject json = new JSONObject();
+        boolean success = (role != null);
 
-        if (bindingResult.hasErrors()) {
-            return "registration";
+        if(userService.usernameAlreadyExist(user)) {
+            success = false;
+            json.put("errorMessage", "Le pseudonyme est déjà utilisé");
         }
-        if(!userForm.getPasswordConfirm().equals(userForm.getPassword())){
-            model.addAttribute("error","Password don't match");
-            return "registration";
+        json.put("success", success);
+
+        if(success) {
+            userService.addRole(user, role);
+            userService.save(user);
+            securityService.autoLogin(user.getUsername(), user.getPasswordConfirm());
         }
 
-        if(userService.findByUsername(userForm.getUsername()) != null){
-            model.addAttribute("error","Username already exist");
-            return "registration";
-        }
-
-        User user = UserAdapter.AdaptUserFormToUser(userForm);
-
-        Role role = roleService.findByName(EnumRole.USER.getRole());
-        if(role == null)
-        {
-            return "registration";
-        }
-        userService.addRole(user, role);
-        userService.save(user);
-
-        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
-
-        return "welcome";
+        return new ResponseEntity<>(json.toString(), (success ? HttpStatus.OK : HttpStatus.BAD_REQUEST));
     }
 
     //We don't define /login POST controller, it is provided by Spring Security
