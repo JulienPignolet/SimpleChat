@@ -38,7 +38,7 @@ public class UserBuffer {
 			json.append(msgBuffer.get(i).toString()).append(",");
 		json.append(msgBuffer.get(msgBuffer.size()-1).toString());
 		msgBuffer.clear();
-		return json.append("}").toString();
+		return json.append("]}").toString();
 	}
 	
 	/**
