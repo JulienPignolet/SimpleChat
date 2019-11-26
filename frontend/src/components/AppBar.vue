@@ -41,7 +41,8 @@ export default {
   mounted: function() {
     window.setInterval(() => {
       this.getGroupes();
-    }, 3000);
+      this.getMessages();
+    }, 5000);
   }
 };
 </script>
