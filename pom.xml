@@ -150,12 +150,6 @@
 								<ports>
 									<port>${port_prefix}080:8080</port>
 								</ports>
-								<wait>
-									<http>
-										<url>http://simlplechat.fun:${port_prefix}080/</url>
-									</http>
-									<time>10000</time>
-								</wait>
 							</run>
 						</image>
 					</images>
