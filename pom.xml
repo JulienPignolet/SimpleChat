@@ -138,7 +138,7 @@
                   <verbose>true</verbose>
                   <images>
                      <image>
-                        <name>simplechat-test</name>
+                        <name>simplechat-${env.GIT_BRANCH}</name>
                         <build>
                            <from>java:8-jdk-alpine</from>
                            <entryPoint>
