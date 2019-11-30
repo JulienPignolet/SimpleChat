@@ -152,9 +152,9 @@
 								</ports>
 								  <wait>
     <http>
-      <url>http://simplechat.fun:${port_prefix}/authentication</url>
+      <url>http://simplechat.fun:${port_prefix}080/authentication</url>
     </http>
-    <time>50000</time>
+    <time>60000</time>
   </wait>
 							</run>
 						</image>
