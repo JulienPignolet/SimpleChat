@@ -150,6 +150,12 @@
 								<ports>
 									<port>${port_prefix}080:8080</port>
 								</ports>
+								  <wait>
+    <http>
+      <url>http://simplechat.fun:${port_prefix}/authentication</url>
+    </http>
+    <time>50000</time>
+  </wait>
 							</run>
 						</image>
 					</images>
