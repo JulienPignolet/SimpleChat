@@ -59,6 +59,10 @@ public class UserService {
     public boolean usernameAlreadyExist(User user) {
         return this.findByUsername(user.getUsername()) != null;
     }
+
+    public Collection<User> findAll(){
+        return userRepository.findAll();
+    }
     
     public void addRole(User user, Role role)
     {

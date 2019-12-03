@@ -1,10 +1,8 @@
 package univ.lorraine.simpleChat.SimpleChat.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,14 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtAuthenticationEntryPoint;
 import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtRequestFilter;
-import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtRequestInterceptor;
 import univ.lorraine.simpleChat.SimpleChat.service.UserDetailsServiceImpl;
 
 @Configuration
@@ -83,16 +78,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 "/registration",
                 "/authentication/**",
                 "/h2-console/**").permitAll().
-                anyRequest().authenticated().and().headers().frameOptions().sameOrigin().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                anyRequest().authenticated().and().headers().frameOptions().sameOrigin()
+                .and().cors()
+                .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
-
-    //@Override
-    //public void addInterceptors(InterceptorRegistry registry){
-    //    registry.addInterceptor(new JwtRequestInterceptor()).excludePathPatterns("/swagger-ui.html","/swagger-resources/**","/v2/api-docs","webjars/**","/authentication/**","/registration", "/h2-console/**");
-    //}
 
 }

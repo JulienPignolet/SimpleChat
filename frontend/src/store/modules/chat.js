@@ -25,13 +25,11 @@ const actions = {
     dispatch((`chat/${types.getMessages}`), null, { root: true })
     })
   },
-  async [types.getMessages]({ rootState}){
+  async [types.getMessages]({ state, rootState}){
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
     axios.get(`${constants.API_URL}api/message/${rootState.groupe.groupe.id}/${rootState.user.user.id}/`)
     .then(function (response) {
-      console.log(response.data)
-      let messageList = JSON.parse(response.data)
-      messageList.forEach(message => {
+      response.data.buffer.forEach(message => {
         state.messageList.push({"pseudonyme": message.user_id, "message": message.message})
       })
     })

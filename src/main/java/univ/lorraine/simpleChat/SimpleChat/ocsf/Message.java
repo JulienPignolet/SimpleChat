@@ -14,8 +14,8 @@ public class Message {
         this.message = message;
     }
 
-    public Message(String JSON) {
-        JsonObject objet = new JsonParser().parse(JSON).getAsJsonObject();
+    public Message(String json) {
+		JsonObject objet = new JsonParser().parse(json).getAsJsonObject();
         this.user_id = objet.get("user_id").getAsLong();
         this.group_id = objet.get("group_id").getAsLong();
         this.message = objet.get("message").getAsString();
@@ -31,10 +31,9 @@ public class Message {
 
     @Override
     public String toString() {
-        return "{user_id:" + user_id +
-                ", group_id:" + group_id +
-                ", message:'" + message + "\"" +
-                '}';
+        return "{\"user_id\":" + user_id +
+                ", \"group_id\":" + group_id +
+                ", \"message\":\"" + message + "\"}";
     }
 
     public String getMessage() {

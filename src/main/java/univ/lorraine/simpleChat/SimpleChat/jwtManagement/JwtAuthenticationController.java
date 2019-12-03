@@ -1,16 +1,19 @@
 package univ.lorraine.simpleChat.SimpleChat.jwtManagement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtTokenUtil;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.service.UserDetailsServiceImpl;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
@@ -35,8 +38,8 @@ public class JwtAuthenticationController {
     @PostMapping("/authentication")
     public ResponseEntity<String> createAutentificationToken(@RequestBody User user) throws Exception {
         try {
-            authenticate(user.getUsername(), user.getPassword());
             final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+            authenticate(user.getUsername(), user.getPassword(),userDetails);
             final String token = jwtTokenUtil.generateToken(userDetails);
             user = userService.findByUsername(user.getUsername());
 
@@ -53,9 +56,16 @@ public class JwtAuthenticationController {
         }
     }
 
-    private void authenticate(String username, String password) throws Exception {
+    private void authenticate(String username, String password, UserDetails userDetails) throws Exception {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            //authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+//            usernamePasswordAuthenticationToken
+//                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
