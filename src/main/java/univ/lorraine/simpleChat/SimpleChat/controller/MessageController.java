@@ -41,15 +41,12 @@ public class MessageController {
 //            User user = userService.findById(message.getGroup_id());
             if(groupeUserService.CountByGroupeIdAndUserId(message.getGroup_id(), message.getUser_id())) {
                 if (!clientPool.containsKey(message.getGroup_id())) {
-                    /**
-                     *  ATTENTION : Il faut informer la BDD que nous créons un nouveau groupe
-                     */
                     clientPool.put(message.getGroup_id(), new ClientRunnable(message.getGroup_id()));
                     clientPool.get(message.getGroup_id()).start();
                 }
                 //Il faudra vérifier que le user appartient au groupe
                 clientPool.get(message.getGroup_id()).addUserToGroup(message.getUser_id());
-                clientPool.get(message.getGroup_id()).sendMsg(message.toString());
+                clientPool.get(message.getGroup_id()).sendMsg(message.toString(), userService.findById(message.getUser_id()).getUsername());
 
                 // Sauvegarde
 //            Groupe groupe = groupeService.find(message.getGroup_id());
@@ -68,7 +65,6 @@ public class MessageController {
      *
      * @param idGroupe
      * @param  idUser
-     * TODO rajouter l idUser comme parametre dans le front
      * @return
      */
     @GetMapping("/{idGroupe}/{idUser}")
