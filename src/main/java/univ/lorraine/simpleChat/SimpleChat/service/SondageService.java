@@ -40,13 +40,13 @@ public class SondageService {
 		return sondageRepository.findAll(); 
 	}
 
-    public void addReponse(Sondage sondage, ReponseSondage reponse){
-        sondage.addReponse(reponse);
+    public void addReponse(Sondage sondage, ReponseSondage reponseSondage){
+        sondage.addReponse(reponseSondage);
         sondageRepository.save(sondage);
     }
 
-    public void removeReponse(Sondage sondage, ReponseSondage reponse){
-        sondage.removeReponse(reponse);
+    public void removeReponse(Sondage sondage, ReponseSondage reponseSondage){
+        sondage.removeReponse(reponseSondage);
         sondageRepository.save(sondage);
     }
    
