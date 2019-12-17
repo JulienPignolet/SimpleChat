@@ -1,13 +1,12 @@
 package univ.lorraine.simpleChat.SimpleChat.repository;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @Repository

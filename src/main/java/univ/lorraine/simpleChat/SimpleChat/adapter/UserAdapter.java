@@ -2,6 +2,7 @@ package univ.lorraine.simpleChat.SimpleChat.adapter;
 
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.service.SecurityService;
 
 public class UserAdapter {
 

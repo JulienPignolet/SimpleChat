@@ -20,14 +20,14 @@ public class User {
 
     private String username;
 
-    @JsonIgnore
+//    @JsonIgnore
     private String password;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    @JsonIgnore
+//    @JsonIgnore
     @Transient
     private String passwordConfirm;
 
@@ -48,7 +48,7 @@ public class User {
 	private Collection<User> buddyMaster;
 
 	@JsonIgnore
-	@ManyToMany(cascade={CascadeType.ALL})
+	@ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
 	@JoinTable(name="BUDDYMASTER_BUDDY",
 			joinColumns={@JoinColumn(name="BUDDY_ID")},
 			inverseJoinColumns={@JoinColumn(name="id")})

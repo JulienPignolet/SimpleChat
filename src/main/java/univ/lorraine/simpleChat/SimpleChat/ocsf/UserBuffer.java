@@ -33,6 +33,9 @@ public class UserBuffer {
 	 * @return JSON
 	 */
 	public String getMsgBuffer() {
+		if(msgBuffer.isEmpty())
+			return "{\"buffer\":[]}";
+
 		StringBuilder json = new StringBuilder("{ \"buffer\":[");
 		for(int i = 0; i < msgBuffer.size()-1; i++)
 			json.append(msgBuffer.get(i).toString()).append(",");

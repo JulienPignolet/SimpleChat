@@ -1,16 +1,14 @@
 
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import univ.lorraine.simpleChat.SimpleChat.adapter.UserAdapter;
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
@@ -28,6 +26,7 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 import javax.validation.Valid;
 import java.util.HashMap;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 public class UserController {
 
@@ -58,41 +57,31 @@ public class UserController {
         return "registration";
     }
 
-
     @PostMapping("/registration")
-    public String registration(@Valid UserForm userForm, BindingResult bindingResult, Model model) {
-        //userValidator.validate(userForm, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            return "registration";
-        }
-        if(!userForm.getPasswordConfirm().equals(userForm.getPassword())){
-            model.addAttribute("error","Password don't match");
-            return "registration";
-        }
-
-        if(userService.findByUsername(userForm.getUsername()) != null){
-            model.addAttribute("error","Username already exist");
-            return "registration";
-        }
-
-        User user = UserAdapter.AdaptUserFormToUser(userForm);
-
+    public ResponseEntity<String> registration(@RequestBody User user) {
+        System.out.println(user.getUsername() + user.getPassword() + user.getPasswordConfirm());
+        //TODO CHECK FORM ERROR
         Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
-        if(role == null)
-        {
-            return "registration";
+        JSONObject json = new JSONObject();
+        boolean success = (role != null);
+
+        if(userService.usernameAlreadyExist(user)) {
+            success = false;
+            json.put("errorMessage", "Le pseudonyme est déjà utilisé");
         }
-        userService.addRole(user, role);
-        userService.save(user);
+        json.put("success", success);
 
-        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
+        if(success) {
+            userService.addRole(user, role);
+            userService.save(user);
+            securityService.autoLogin(user.getUsername(), user.getPasswordConfirm());
+        }
 
-        return "welcome";
+        return new ResponseEntity<>(json.toString(), (success ? HttpStatus.OK : HttpStatus.BAD_REQUEST));
     }
 
     //We don't define /login POST controller, it is provided by Spring Security
-    @GetMapping("/login")
+    @GetMapping("/authentication")
     public String login(Model model, String error, String logout) {
         if (error != null)
             model.addAttribute("error", "Your username and password is invalid.");
@@ -100,7 +89,7 @@ public class UserController {
         if (logout != null)
             model.addAttribute("message", "You have been logged out successfully.");
 
-        return "login";
+        return "authentication";
     }
 
     @GetMapping({"/"})

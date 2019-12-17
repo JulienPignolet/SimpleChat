@@ -10,8 +10,12 @@ import io.swagger.annotations.Api;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+
 @RestController
 @RequestMapping("/api/buddy")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api( value="Simple Chat")
 public class BuddyController {
 
@@ -28,7 +32,7 @@ public class BuddyController {
      * @return liste des amis (entite user)
      */
     @GetMapping("/{userId}")
-    public ResponseEntity findGroupe(@PathVariable Long userId) {
+    public ResponseEntity findBuddies(@PathVariable Long userId) {
         User user = userService.findById(userId);
         if (user != null) {
             return ResponseEntity.ok(user.getBuddyList());
@@ -94,5 +98,12 @@ public class BuddyController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id should be sent as String or error in JSON. Just send the buddy's id.");
         }
+    }
+
+    @GetMapping("/findAll/user")
+    public ResponseEntity<Collection<User>> findAllGroupe(HttpServletRequest request)
+    {
+        Collection<User> listUser = this.userService.findAll();
+        return ResponseEntity.ok(listUser);
     }
 }
