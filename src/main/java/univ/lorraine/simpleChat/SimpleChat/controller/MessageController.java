@@ -43,16 +43,11 @@ public class MessageController {
             User user = userService.findById(message.getGroup_id());
             if(groupeUserService.CountByGroupeIdAndUserId(message.getGroup_id(), message.getUser_id())) {
                 if (!clientPool.containsKey(message.getGroup_id())) {
-                    /**
-                     *  ATTENTION : Il faut informer la BDD que nous créons un nouveau groupe
-                     */
                     clientPool.put(message.getGroup_id(), new ClientRunnable(message.getGroup_id()));
                     clientPool.get(message.getGroup_id()).start();
                 }
-                //Il faudra vérifier que le user appartient au groupe
                 clientPool.get(message.getGroup_id()).addUserToGroup(message.getUser_id());
                 clientPool.get(message.getGroup_id()).sendMsg(message.toString(), userService.findById(message.getUser_id()).getUsername());
-//                clientPool.get(message.getGroup_id()).sendMsg(message.toString());
 
                 // Sauvegarde
 //            Groupe groupe = groupeService.find(message.getGroup_id());
@@ -62,6 +57,7 @@ public class MessageController {
         }
         catch(Exception e)
         {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -71,46 +67,30 @@ public class MessageController {
      *
      * @param idGroupe
      * @param  idUser
-     * TODO rajouter l idUser comme parametre dans le front
      * @return
      */
     @GetMapping("/{idGroupe}/{idUser}")
     public ResponseEntity<Object> byName(@PathVariable(value = "idGroupe") Long idGroupe, @PathVariable(value="idUser") Long idUser)
     {
-    /*		/!\
-     *
-     * 		getMessagesEnAttentemessage(user_id) renvoie une exception si le user_id n'est pas présent dans la liste des
-     * 		users du groupe. Il faudra donc faire un try catch et renvoyer une erreur HTTP 401 pour lui dire qu'il
-     * 		n'est pas autorisé à consulter ce groupe.
-     */
-
-        // verifie si idGroupe n´existe pas dans dans clientPool)
-        if (!clientPool.containsKey(idGroupe))
-        {
-            try {
-                if(groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser))
-                    clientPool.get(idGroupe).addUserToGroup(idUser);
-            } catch (AutorisationException e) {
-                e.printStackTrace();
-                return new ResponseEntity<Object>("{}", HttpStatus.UNAUTHORIZED);
-            }
-                //Il faudra vérifier que le user appartient au groupe
-        }
-
-        // on récupere le clientRunnable
-        ClientRunnable clientRunnable = clientPool.get(idGroupe);
-
-        // on récupère les messages en attente
         try {
-        	
-            String messagesEnAttente = clientRunnable.getMessagesEnAttente(idUser);
-            clientRunnable.viderBuffer(idUser);	// /!\ NE SERT ACTUELLEMENT PAS
-            return new ResponseEntity<Object>(messagesEnAttente, HttpStatus.OK);
-        } catch (AutorisationException e) {
-            e.printStackTrace();
-            return new ResponseEntity<Object>("{}", HttpStatus.UNAUTHORIZED);
+            if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
+                if (!clientPool.containsKey(idGroupe)) {
+                    clientPool.put(idGroupe, new ClientRunnable(idGroupe));
+                    clientPool.get(idGroupe).start();
+                }
 
+                ClientRunnable clientRunnable = clientPool.get(idGroupe);
+                clientRunnable.addUserToGroup(idUser);
+                String messagesEnAttente = clientRunnable.getMessagesEnAttente(idUser);
+                clientRunnable.viderBuffer(idUser);    // /!\ NE SERT ACTUELLEMENT PAS
+                return new ResponseEntity<Object>(messagesEnAttente, HttpStatus.OK);
+            }
         }
-
+        catch (AutorisationException e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<Object>("{}", HttpStatus.UNAUTHORIZED);
+        }
+        System.out.println("Nope");
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

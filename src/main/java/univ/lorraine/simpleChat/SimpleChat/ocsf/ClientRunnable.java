@@ -65,7 +65,7 @@ public class ClientRunnable implements Runnable {
     public void sendMsg(String message, String name) {
         JsonObject json = new JsonParser().parse(message).getAsJsonObject();
         json.addProperty("user_name", name);
-        this.msgToSend = message;
+        this.msgToSend = json.toString();
     }
 
     public void addUserToGroup(long user_id) {

@@ -40,7 +40,8 @@ class ClientImpl extends AbstractClient {
 	 * @param user_id
 	 */
 	public void addUserToGroup(long user_id) {
-		users.put(user_id, new UserBuffer(user_id));
+	    if(!users.containsKey(user_id))
+		    users.put(user_id, new UserBuffer(user_id));
 	}
 
 	protected void connectionClosed() {
@@ -49,7 +50,7 @@ class ClientImpl extends AbstractClient {
     }
 
     protected void connectionException(Exception exception) {
-        System.out.println("Client exception: " + exception);
+        exception.printStackTrace();
     }
 
     protected void connectionEstablished() {
