@@ -1,5 +1,8 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.IOException;
 
 public class ClientRunnable implements Runnable {
@@ -58,9 +61,11 @@ public class ClientRunnable implements Runnable {
             this.thread = null;
         }
     }
-    
-    public void sendMsg(String msg) {
-        this.msgToSend = msg;
+
+    public void sendMsg(String message, String name) {
+        JsonObject json = new JsonParser().parse(message).getAsJsonObject();
+        json.addProperty("user_name", name);
+        this.msgToSend = message;
     }
 
     public void addUserToGroup(long user_id) {

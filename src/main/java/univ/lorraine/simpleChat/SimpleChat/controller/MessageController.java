@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.MessageTemplate;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
@@ -39,7 +40,7 @@ public class MessageController {
     public ResponseEntity<Object> sendMessage(@RequestBody MessageTemplate message)
     {
         try {
-//            User user = userService.findById(message.getGroup_id());
+            User user = userService.findById(message.getGroup_id());
             if(groupeUserService.CountByGroupeIdAndUserId(message.getGroup_id(), message.getUser_id())) {
                 if (!clientPool.containsKey(message.getGroup_id())) {
                     /**
@@ -50,7 +51,8 @@ public class MessageController {
                 }
                 //Il faudra vérifier que le user appartient au groupe
                 clientPool.get(message.getGroup_id()).addUserToGroup(message.getUser_id());
-                clientPool.get(message.getGroup_id()).sendMsg(message.toString());
+                clientPool.get(message.getGroup_id()).sendMsg(message.toString(), userService.findById(message.getUser_id()).getUsername());
+//                clientPool.get(message.getGroup_id()).sendMsg(message.toString());
 
                 // Sauvegarde
 //            Groupe groupe = groupeService.find(message.getGroup_id());
