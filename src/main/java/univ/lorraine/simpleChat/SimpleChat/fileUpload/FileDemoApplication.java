@@ -1,18 +1,17 @@
-package univ.lorraine.simpleChat.SimpleChat;
+package univ.lorraine.simpleChat.SimpleChat.fileUpload;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import univ.lorraine.simpleChat.SimpleChat.fileUpload.FileStorageProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
-		FileStorageProperties.class
-})
-public class SimpleChatApplication {
+	FileStorageProperties.class
+		})
+public class FileDemoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SimpleChatApplication.class, args);
+		SpringApplication.run(FileDemoApplication.class, args);
 	}
 
 }
