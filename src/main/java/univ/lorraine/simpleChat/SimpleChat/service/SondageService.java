@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
 import univ.lorraine.simpleChat.SimpleChat.model.ReponseSondage;
 import univ.lorraine.simpleChat.SimpleChat.model.Sondage;
@@ -25,6 +26,25 @@ public class SondageService {
 
     public void save(Sondage sondage) {
         sondageRepository.save(sondage);
+    }
+    
+	/**
+	 * 
+	 * @param name : Le nom du sondage
+	 * @param isVotesAnonymes (ce parametre est un string. les valeurs possibles sont 0 ou 1)
+	 * @return Le sondage créé
+	 */
+	public Sondage create(String question, String groupe_id) {
+		
+		Sondage sondage = new Sondage();
+		sondage.setQuestion(question);
+		//boolean	sondagePrive = false;
+		//int tmp = Integer.parseInt(isVotesAnonymes);
+		//if(tmp == 1) sondagePrive = true;
+		//sondage.setVotesAnonymes(sondagePrive);
+		//sondage.setIsVotesAnonymes(sondagePrive);
+		
+        return sondage;
     }
 
     public Sondage findById(Long sondage_id) {
