@@ -30,20 +30,20 @@ public class SondageService {
     
 	/**
 	 * 
-	 * @param name : Le nom du sondage
-	 * @param isVotesAnonymes (ce parametre est un string. les valeurs possibles sont 0 ou 1)
+	 * @param question question du sondage
+	 * @param groupe groupe où le sondage est lancé
+	 * @param voteAnonyme definit si les votes sont anonymes
+	 * @param user initiateur du sondage
 	 * @return Le sondage créé
 	 */
-	public Sondage create(String question, String groupe_id) {
+	public Sondage create(String question, Groupe groupe, boolean voteAnonyme, User user) {
 		
 		Sondage sondage = new Sondage();
 		sondage.setQuestion(question);
-		//boolean	sondagePrive = false;
-		//int tmp = Integer.parseInt(isVotesAnonymes);
-		//if(tmp == 1) sondagePrive = true;
-		//sondage.setVotesAnonymes(sondagePrive);
-		//sondage.setIsVotesAnonymes(sondagePrive);
-		
+		sondage.setGroupe(groupe);
+        sondage.setVotesAnonymes(voteAnonyme);
+        sondage.setInitiateur(user);
+
         return sondage;
     }
 

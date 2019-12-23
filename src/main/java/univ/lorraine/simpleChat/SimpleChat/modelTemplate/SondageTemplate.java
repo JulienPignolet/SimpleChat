@@ -16,85 +16,70 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class SondageTemplate {
 
-	///**
-	// * Est l'id du user qui souhaite ajouter le sondage
-	// */
-	//@JsonProperty("userId")
-	//private String userId;
-	
 	/**
-	 * Est l'id du sondage
+	 * Est l'id du user qui souhaite ajouter le sondage
 	 */
-	@JsonProperty("sondageId")
-	private String sondageId;
-	
+	@JsonProperty("userId")
+	private String userId;
+
+	// TODO ajouter date debut, date fin
 	/**
 	 * Est le nom de la question du sondage qu'on souhaite ajouter
 	 */
 	@JsonProperty("question")
 	private String question;
 	
-	//@JsonProperty("isVotesAnonymes")
-	//private String isVotesAnonymes;
+	@JsonProperty("isVotesAnonymes")
+	private String isVotesAnonymes;
 	
-	///**
-	// * Est le nom du groupe qu'on souhaite ajouter
-	// */
-	//@JsonProperty("groupe")
-	//private String groupe;
-	
+	/**
+	 * Est l'id du groupe où l'on ajoute le sondage
+	 */
+	@JsonProperty("groupeId")
+	private String groupeId;
+
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-	
-	//@JsonProperty("userId")
-	//public String getUserId() {
-	//	return userId;
-	//}
-	
-	//@JsonProperty("userId")
-	//public void setUserId(String userId) {
-	//	this.userId = userId;
-	//}
-	
-	@JsonProperty("sondageId")
-	public String getSondageId() {
-		return sondageId;
+
+	@JsonProperty("userId")
+	public String getUserId() {
+		return userId;
 	}
-	
-	@JsonProperty("sondageId")
-	public void setSondageId(String sondageId) {
-		this.sondageId = sondageId;
+
+	@JsonProperty("userId")
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
-	
+
 	@JsonProperty("question")
 	public String getQuestion() {
 		return question;
 	}
-	
+
 	@JsonProperty("question")
 	public void setQuestion(String question) {
 		this.question = question;
 	}
 	
-	//@JsonProperty("isVotesAnonymes")
-	//public String getIsVotesAnonymes() {
-	//	return isVotesAnonymes;
-	//}
+	@JsonProperty("isVotesAnonymes")
+	public String getIsVotesAnonymes() {
+		return isVotesAnonymes;
+	}
 	
-	//@JsonProperty("isVotesAnonymes")
-	//public void setIsVotesAnonymes(String isVotesAnonymes) {
-	//	this.isVotesAnonymes = isVotesAnonymes;
-	//}
+	@JsonProperty("isVotesAnonymes")
+	public void setIsVotesAnonymes(String isVotesAnonymes) {
+		this.isVotesAnonymes = isVotesAnonymes;
+	}
 	
-	//@JsonProperty("groupe")
-	//public String getGroupe() {
-	//	return groupe;
-	//}
+	@JsonProperty("groupe")
+	public String getGroupeId() {
+		return groupeId;
+	}
 	
-	//@JsonProperty("groupe")
-	//public void setGroupe(String groupe) {
-	//	this.groupe = groupe;
-	//}
+	@JsonProperty("groupe")
+	public void setGroupeId(String groupeId) {
+		this.groupeId = groupeId;
+	}
 	
 	@JsonAnyGetter
 	public Map<String, Object> getAdditionalProperties() {

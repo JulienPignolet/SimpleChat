@@ -28,23 +28,24 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
 @RestController
 @RequestMapping("/api/sondage")
-@Api( value="Simple Chat")
+@Api(value = "Simple Chat")
 public class SondageController {
-	private final GroupeService groupeService;
-	private final UserService userService;
-	private final SondageService sondageService;
-	private final ReponseSondageService reponseSondageService;
-	
+    private final GroupeService groupeService;
+    private final UserService userService;
+    private final SondageService sondageService;
+    private final ReponseSondageService reponseSondageService;
+
     @Autowired
     public SondageController(GroupeService groupeService, UserService userService, SondageService sondageService, ReponseSondageService reponseSondageService) {
-    	this.groupeService = groupeService;
-    	this.userService = userService;
+        this.groupeService = groupeService;
+        this.userService = userService;
         this.sondageService = sondageService;
         this.reponseSondageService = reponseSondageService;
     }
-    
+
     /**
      * Recupere la question d'un sondage
+     *
      * @param sondageId id du sondage
      * @return la question
      */
@@ -57,9 +58,10 @@ public class SondageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Poll not found");
         }
     }
-    
+
     /**
      * Recupere les reponses d'un sondage
+     *
      * @param sondageId id du sondage
      * @return liste des reponses du sondage
      */
@@ -72,66 +74,58 @@ public class SondageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Poll not found");
         }
     }
-    
-    /**
-   	 * 
-   	 * @param user_id
-   	 * @param groupeName
-   	 * @param isPrivateChat
-   	 * @return Une reponse
-   	 */
-   	public ResponseEntity createSondage(String question, String groupe_id)
-   	{
-   		try {
-   			Long groupeId = Long.parseLong(groupe_id);
-               /*Long userId = Long.parseLong(user_id);
-               User user = this.userService.findById(userId);
-       		if(user == null)
-       		{
-       			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userId+" n'a pas été trouvé. Nous ne pouvons pas créer un sondage sans initiateur.");
-       		}*/
 
-       		/*Role role = this.roleService.findByName(EnumRole.ADMIN_GROUP.getRole()); 
-       		if(role == null)
-       		{
-       			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il faut d'abord créer un role "+EnumRole.ADMIN_GROUP.getRole()+" pour pouvoir créer un groupe.");
-       		}*/
-       		
-       		if( question == null || question == "")
-       		{
-       			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Json invalide ! Veuillez envoyer un json avec la question !");
-       		}
-       		//this.groupeService.create(groupeName, isPrivateChat); 
-       		//Groupe groupe = this.groupeService.create(question, isVotesAnonymes); 
-       		//GroupeUser groupeUser = this.groupeUserService.create(groupe, user); 
-       		//groupeUser = this.groupeUserService.roleGroupeUser(groupeUser, role);
-       		
-       		Sondage sondage = this.sondageService.create(question, groupe_id);
-       		//this.userService.save(user);
-       		this.sondageService.save(sondage);
-       		//this.groupeUserService.save(groupeUser);
-               
-       		return ResponseEntity.ok("sondage d'id "+sondage.getId()+" créé !");
-           } catch (NumberFormatException  e) {
-   		    e.printStackTrace();
-               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
-           }
-   	}
-       
-   	/**
-   	 * 
-   	 * @param sondageTemplate
-   	 * @return Sondage créé ou un message d'erreur
-   	 */
-       @ApiOperation(value = "Créé un sondage avec les données envoyées en post. L'utilisateur envoyé dans le post en devient Admin.")
-   	@PostMapping("/add")
-   	public ResponseEntity add(@RequestBody SondageTemplate sondageTemplate) 
-   	{
-   		return this.createSondage(sondageTemplate.getQuestion(), "1"); 
-   	}
-    
     /**
-     * @param sondageId  id du sondage auquel on ajoute la reponse
+     * Créer un sondage
+     *
+     * @param question    questin du sondage
+     * @param groupe_id   groupe où le sondage est envoyé
+     * @param user_id     initiateur du sondage
+     * @param voteAnonyme définit si les votes sont anonymes
+     * @return reponse selon le statut de création
+     */
+    public ResponseEntity createSondage(String question, String groupe_id, String user_id, String voteAnonyme) {
+        try {
+            Long groupeId = Long.parseLong(groupe_id);
+            Groupe groupe = this.groupeService.find(groupeId);
+
+            if (groupe == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'id " + groupeId + " n'a pas été trouvé. Nous ne pouvons pas créer un sondage sans l'associer à un groupe.");
+            }
+
+            Long userId = Long.parseLong(user_id);
+            User user = this.userService.findById(userId);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id " + userId + " n'a pas été trouvé. Nous ne pouvons pas créer un sondage sans initiateur.");
+            }
+
+            if (question == null || question == "") {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Json invalide ! Veuillez envoyer un json avec la question !");
+            }
+
+            Sondage sondage = this.sondageService.create(question, groupe,Boolean.parseBoolean(voteAnonyme),user);
+
+            this.sondageService.save(sondage);
+
+            return ResponseEntity.ok("sondage d'id " + sondage.getId() + " créé !");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+    }
+
+    /**
+     * @param sondageTemplate
+     * @return Sondage créé ou un message d'erreur
+     */
+    @ApiOperation(value = "Créé un sondage avec les données envoyées en post. L'utilisateur envoyé dans le post en devient Admin.")
+    @PostMapping("/add")
+    public ResponseEntity add(@RequestBody SondageTemplate sondageTemplate) {
+        return this.createSondage(sondageTemplate.getQuestion(), sondageTemplate.getGroupeId(), sondageTemplate.getUserId(), sondageTemplate.getIsVotesAnonymes());
+    }
+
+    /**
+     * @param sondageId        id du sondage auquel on ajoute la reponse
      * @param reponseSondageId id de la reponsesondage
      * @return response avec le statut de la requete
      */
@@ -143,24 +137,24 @@ public class SondageController {
 
             Sondage sondage = sondageService.find(sId);
             ReponseSondage reponseSondage = reponseSondageService.find(rsId);
-            
-            if(sondage != null && reponseSondage != null){
-                if(sondage.getReponseSondages().contains(reponseSondage)){
+
+            if (sondage != null && reponseSondage != null) {
+                if (sondage.getReponseSondages().contains(reponseSondage)) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This is already an answer of your poll !");
-                }else {
-                    sondageService.addReponse(sondage,reponseSondage);
+                } else {
+                    sondageService.addReponse(sondage, reponseSondage);
                     return ResponseEntity.ok("Answer added !");
                 }
-            }else{
+            } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Poll or poll's answer not found");
             }
-        } catch (NumberFormatException  e) {
+        } catch (NumberFormatException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id should be sent in JSON. Just send the answer's id.");
         }
     }
 
     /**
-     * @param sondageId  id du sondage auquel on enleve la reponse
+     * @param sondageId        id du sondage auquel on enleve la reponse
      * @param reponseSondageId id de la reponse sondage
      * @return response avec le statut de la requete
      */
@@ -173,14 +167,14 @@ public class SondageController {
             Sondage sondage = sondageService.find(sId);
             ReponseSondage reponseSondage = reponseSondageService.find(rsId);
 
-            if(sondage != null && reponseSondage != null){
+            if (sondage != null && reponseSondage != null) {
                 if (sondage.getReponseSondages().contains(reponseSondage)) {
-                    sondageService.removeReponse(sondage,reponseSondage);
+                    sondageService.removeReponse(sondage, reponseSondage);
                     return ResponseEntity.ok("Reponse removed !");
                 } else {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Poll or answer not found");
                 }
-            }else{
+            } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Poll or answer not found");
             }
 
@@ -188,6 +182,6 @@ public class SondageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id should be sent as String or error in JSON. Just send the answer's id.");
         }
     }
-    
+
 
 }
