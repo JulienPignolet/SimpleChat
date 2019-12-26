@@ -1,5 +1,8 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import java.util.Collection;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +56,7 @@ public class SondageController {
     public ResponseEntity findSondage(@PathVariable Long sondageId) {
         Sondage sondage = sondageService.findById(sondageId);
         if (sondage != null) {
-            return ResponseEntity.ok(sondage.getQuestion());
+            return ResponseEntity.ok(sondage);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Poll not found");
         }
@@ -84,7 +87,7 @@ public class SondageController {
      * @param voteAnonyme définit si les votes sont anonymes
      * @return reponse selon le statut de création
      */
-    public ResponseEntity createSondage(String question, String groupe_id, String user_id, String voteAnonyme) {
+    public ResponseEntity createSondage(String question, String groupe_id, String user_id, String voteAnonyme) { // , Collection<String> reponses,String dateDebut, String dateFin
         try {
             Long groupeId = Long.parseLong(groupe_id);
             Groupe groupe = this.groupeService.find(groupeId);
@@ -102,9 +105,13 @@ public class SondageController {
             if (question == null || question == "") {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Json invalide ! Veuillez envoyer un json avec la question !");
             }
-
-            Sondage sondage = this.sondageService.create(question, groupe,Boolean.parseBoolean(voteAnonyme),user);
-
+            /*
+            if(reponses.size() < 2)
+            {
+            	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il faut que le sondage ait au moins deux reponses possibles !");
+            }
+             */
+            Sondage sondage = this.sondageService.create(question, groupe,Boolean.parseBoolean(voteAnonyme),user); // , null, null
             this.sondageService.save(sondage);
 
             return ResponseEntity.ok("sondage d'id " + sondage.getId() + " créé !");
@@ -121,7 +128,7 @@ public class SondageController {
     @ApiOperation(value = "Créé un sondage avec les données envoyées en post. L'utilisateur envoyé dans le post en devient Admin.")
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody SondageTemplate sondageTemplate) {
-        return this.createSondage(sondageTemplate.getQuestion(), sondageTemplate.getGroupeId(), sondageTemplate.getUserId(), sondageTemplate.getIsVotesAnonymes());
+        return this.createSondage(sondageTemplate.getQuestion(), sondageTemplate.getGroupeId(), sondageTemplate.getUserId(), sondageTemplate.getIsVotesAnonymes()); //, sondageTemplate.getReponsesSondage(), sondageTemplate.getDateDebut(), sondageTemplate.getDateFin()
     }
 
     /**

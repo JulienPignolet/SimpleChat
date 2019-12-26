@@ -1,5 +1,6 @@
 package univ.lorraine.simpleChat.SimpleChat.modelTemplate;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -12,7 +13,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 "sondageId",
-"question"
+"question",
+"isVotesAnonymes",
+"groupeId"
 })
 public class SondageTemplate {
 
@@ -37,7 +40,16 @@ public class SondageTemplate {
 	 */
 	@JsonProperty("groupeId")
 	private String groupeId;
+	
+	/*@JsonProperty("dateDebut")
+	private String dateDebut;
+	
+	@JsonProperty("dateFin")
+	private String dateFin;
 
+	@JsonProperty("reponsesSondage")
+	private Collection<String> reponsesSondage;
+	*/
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -80,7 +92,42 @@ public class SondageTemplate {
 	public void setGroupeId(String groupeId) {
 		this.groupeId = groupeId;
 	}
+	/*
+	@JsonProperty("dateDebut")
+	public String getDateDebut()
+	{
+		return dateDebut;
+	}
+
+	@JsonProperty("dateDebut")
+	public void setDateDebut(String dateDebut)
+	{
+		this.dateDebut = dateDebut;
+	}
 	
+	@JsonProperty("dateFin")
+	public String getDateFin()
+	{
+		return dateFin;
+	}
+	
+	@JsonProperty("dateFin")
+	public void setDateFin(String dateFin)
+	{
+		this.dateFin = dateFin;
+	}
+	
+	@JsonProperty("reponsesSondage")
+	public Collection<String> getReponsesSondage() {
+		return reponsesSondage;
+	}
+	
+	@JsonProperty("reponsesSondage")
+	public void setReponsesSondage(Collection<String> reponsesSondage)
+	{
+		this.reponsesSondage = reponsesSondage;
+	}
+	*/
 	@JsonAnyGetter
 	public Map<String, Object> getAdditionalProperties() {
 		return this.additionalProperties;

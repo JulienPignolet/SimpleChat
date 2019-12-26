@@ -1,5 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.service;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +39,14 @@ public class SondageService {
 	 * @return Le sondage créé
 	 */
 	public Sondage create(String question, Groupe groupe, boolean voteAnonyme, User user) {
-		
+		// , Date dateDebut, Date dateFin
 		Sondage sondage = new Sondage();
 		sondage.setQuestion(question);
 		sondage.setGroupe(groupe);
         sondage.setVotesAnonymes(voteAnonyme);
+        //sondage.setReponseSondages(reponseSondages);
+        //sondage.setDateDebut(dateDebut);
+        //sondage.setDateFin(dateFin);
         sondage.setInitiateur(user);
 
         return sondage;

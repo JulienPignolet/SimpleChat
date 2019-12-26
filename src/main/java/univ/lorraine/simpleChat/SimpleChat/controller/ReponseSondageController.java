@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import univ.lorraine.simpleChat.SimpleChat.model.ReponseSondage;
 import univ.lorraine.simpleChat.SimpleChat.model.Sondage;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.modelTemplate.SondageTemplate;
 import univ.lorraine.simpleChat.SimpleChat.service.ReponseSondageService;
 import univ.lorraine.simpleChat.SimpleChat.service.SondageService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
