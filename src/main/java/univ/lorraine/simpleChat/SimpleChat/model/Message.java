@@ -78,6 +78,18 @@ public class Message {
         return contenu;
     }
 
+    public String toJSON() {
+        return "{\n" +
+                "    \"user_id\":" + author.getId() + ", \n" +
+//                "    \"user_name\":" + author.getUsername() + ", \n" +
+                "    \"group_id\": " + groupe.getId() + ", \n" +
+                "    \"message\": \"" + contenu + "\"" +
+                "}";
+    }
+
+    public Message() {
+    }
+
     public void setContenu(String contenu) {
         this.contenu = contenu;
     }

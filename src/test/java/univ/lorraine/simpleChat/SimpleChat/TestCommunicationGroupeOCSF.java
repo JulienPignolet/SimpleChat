@@ -1,45 +1,54 @@
 package univ.lorraine.simpleChat.SimpleChat;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import univ.lorraine.simpleChat.SimpleChat.controller.MessageController;
+import univ.lorraine.simpleChat.SimpleChat.modelTemplate.MessageTemplate;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class TestCommunicationGroupeOCSF {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private GroupeService groupeService;
-
-    @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private GroupeUserService groupeUserService;
+    MessageController messageController;
     @Test
     public void commEntre2Users() {
-        String msg = "{\n" +
-                "        \"user_id\": 10,\n" +
-                "        \"group_id\": 1,\n" +
-                "        \"message\": \"blablabla\"" +
-                "}";
-        MessageController messageController = new MessageController(userService, groupeService, messageService, groupeUserService);
-//        messageController.sendMessage(msg);
-        msg = "{\n" +
-                "        \"user_id\": 11,\n" +
-                "        \"group_id\": 1,\n" +
-                "        \"message\": \"blablabla\"" +
-                "}";
-//        messageController.sendMessage(msg);
-        String response1 = String.valueOf(messageController.byName(1L, 10L));
-        System.out.println(response1);
-        String response2 = String.valueOf(messageController.byName(1L, 11L));
-        System.out.println(response2);
-        System.out.println(response1);
+        messageController.addUserToOCSFClient(78L, 104L);
+        messageController.addUserToOCSFClient(77L, 104L);
+
+        MessageTemplate msg = new MessageTemplate();
+        msg.setUser_id(103L);
+        msg.setGroup_id(77L);
+        msg.setMessage("Message 1");
+
+        messageController.sendMessage(msg);
+
+        String response1 = String.valueOf(messageController.getLiveMessages(77L, 103L));
+        assertEquals("<200 OK OK,{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\"}]},[]>", response1);
+        String response2 = String.valueOf(messageController.getLiveMessages(77L, 104L));
+        assertEquals("<200 OK OK,{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\"}]},[]>", response2);
+
+        msg.setUser_id(104L);
+        msg.setMessage("Message 2");
+
+        messageController.sendMessage(msg);
+
+        response1 = String.valueOf(messageController.getLiveMessages(77L, 103L));
+        assertEquals("<200 OK OK,{ \"buffer\":[{\"user_id\":104, \"group_id\":77, \"message\":\"Message 2\"}]},[]>", response1);
+        response2 = String.valueOf(messageController.getLiveMessages(77L, 104L));
+        assertEquals("<200 OK OK,{ \"buffer\":[{\"user_id\":104, \"group_id\":77, \"message\":\"Message 2\"}]},[]>", response2);
+
+        System.out.println(messageController.getSavedMessages(77L, 103L));
     }
 }
