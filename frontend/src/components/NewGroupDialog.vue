@@ -7,7 +7,7 @@
           v-model="selectedUserList"
           placeholder="Entre le nom d'un utilisateur"
           :items="userList"
-          item-text="id"
+          item-text="username"
           chips
           deletable-chips
           multiple
