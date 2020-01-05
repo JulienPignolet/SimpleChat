@@ -5,7 +5,7 @@
         <v-icon>{{ "mdi-account-heart" }}</v-icon>
       </v-list-item-icon>
       <v-list-item-content>
-        <v-list-item-title>Amis</v-list-item-title>
+        <v-list-item-title @click="getUserFriends()">Amis</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
 
@@ -56,7 +56,8 @@ export default {
     getGroupes: call(`groupe/${types.getGroupes}`),
     getUsers: call(`user/${types.getUsers}`),
     createGroupe: call(`groupe/${types.createGroupe}`),
-    chooseGroup:  call(`groupe/${types.chooseGroup}`)
+    chooseGroup:  call(`groupe/${types.chooseGroup}`),
+    getUserFriends: call (`user/${types.getUserFriends}`)
   }
 };
 </script>

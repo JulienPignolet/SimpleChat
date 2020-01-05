@@ -10,6 +10,7 @@ import Router from "../../router/router"
 const state = () => ({
   user: new User(),
   userList: [],
+  friendList: [],
   selectedUserList: [],
 })
 
@@ -73,14 +74,20 @@ const actions = {
     })
   },
   
-  async [types.getUser]({dispatch, rootState}, userId){
+  async [types.getUserFriends]({dispatch, rootState}){
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
-    return axios.get(`${constants.API_URL}api/buddy/${userId}`)
+    axios.get(`${constants.API_URL}api/buddy/${rootState.user.user.id}`)
     .then(function (response) { 
-      console.log(response.data)
-      /*TO DO : Fix niveau back aucun utilisateur retourné avec cette requête
-      dispatch("user/setUserList", response.data, {root: true})*/
-      dispatch("chat/setTempUserPseudonyme", `AUCUN_USER_RETOURNE (id : ${userId})`, {root : true})
+      dispatch("user/setFriendList", response.data, {root : true})
+    })
+    Router.push('/chat/friends')
+  },
+
+  async [types.deleteFriend]({dispatch, rootState}, friendId){
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/remove`, friendId)
+    .then(function () {
+      dispatch("user/getUserFriends", null, {root : true})
     })
   },
 

@@ -2,7 +2,8 @@
 export const connexion = 'connexion'
 export const deconnexion = 'deconnexion'
 export const getUsers = 'getUsers'
-export const getUser = 'getUser'
+export const getUserFriends = 'getUserFriends'
+export const deleteFriend = 'deleteFriend'
 
 // action module chat
 export const sendMessage = 'sendMessage'

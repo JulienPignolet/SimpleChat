@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Home from "@/views/Home.vue";
 import Chat from "@/views/Chat.vue";
 import Register from "@/components/RegisterForm.vue";
+import FriendList from '@/components/FriendList'
 import store from "../store/index";
 import auth from "./middleware/auth";
 
@@ -19,17 +20,35 @@ const router = new Router({
       path: "/chat",
       name: "chat",
       component: Chat,
+      children: [
+        {
+          path: 'friends',
+          name: "friends",
+          component: FriendList,
+          meta: {
+            middleware: [auth]
+          }
+        },
+        {
+          path: "group/:groupId",
+          name: "groupe",
+          component: Chat,
+          meta: {
+            middleware: [auth]
+          }
+        },
+      ],
       meta: {
         middleware: [auth]
       }
     },
-    {
-      path: "/chat/group/:groupId",
-      component: Chat,
-      meta: {
-        middleware: [auth]
-      }
-    },
+    // {
+    //   path: "/chat/group/:groupId",
+    //   component: Chat,
+    //   meta: {
+    //     middleware: [auth]
+    //   }
+    // },
     {
       path: "/register",
       name: "register",
