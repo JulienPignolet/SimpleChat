@@ -18,11 +18,11 @@
           @click="getUsers()"
         ></v-autocomplete>
 
-        <v-text-field label="Nom du groupe" v-model="groupName" outlined></v-text-field>
+        <v-text-field label="Nom du groupe" v-model="groupeName" outlined></v-text-field>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="dialog = false">Annuler</v-btn>
-          <v-btn text @click="createGroupe({groupName})">Créer un groupe</v-btn>
+          <v-btn text @click="createGroupe()">Créer un groupe</v-btn>
         </v-card-actions>
       </v-container>
     </v-card>
@@ -43,6 +43,7 @@ export default {
   },
   computed: {
     selectedUserList: sync("user/selectedUserList"),
+    groupeName: sync("groupe/groupeName"),
     dialog: sync("interfaceControl/groupDialog"),
     userList: get("user/userList")
   },

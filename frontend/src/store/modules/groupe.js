@@ -7,7 +7,8 @@ import Router from "../../router/router"
 
 const state = () => ({
   groupe:{},
-  groupeList: []
+  groupeList: [],
+  groupeName: ""
 });
 
 const mutations = make.mutations(state);
@@ -15,10 +16,10 @@ const mutations = make.mutations(state);
 const actions = {
   ...make.actions(state),
   
-  async [types.createGroupe]({ dispatch, rootState }, group) {
+  async [types.createGroupe]({ state, dispatch, rootState }) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     if(rootState.user.selectedUserList && rootState.user.selectedUserList.length > 0){
-      let request = { "adminGroupeId": rootState.user.user.id, "groupeName": group.groupName, "isPrivateChat": 0, "members": rootState.user.selectedUserList}; 
+      let request = { "adminGroupeId": rootState.user.user.id, "groupeName": state.groupeName, "isPrivateChat": 0, "members": rootState.user.selectedUserList}; 
       axios
       .post(constants.API_URL + 'api/groupe/add/groupe-and-members', request).
       then(function(response){
@@ -27,7 +28,7 @@ const actions = {
         dispatch((`alerte/${types.setAlerte}`), new Alerte('success', response.data), { root: true })
       })
     }else {
-      let request = { "groupe": group.groupName, "isPrivateChat": 0, "userId": rootState.user.user.id};
+      let request = { "groupe": state.groupeName, "isPrivateChat": 0, "userId": rootState.user.user.id};
       axios
       .post(constants.API_URL + 'api/groupe/add/groupe', request).
       then(function(response){
@@ -36,6 +37,8 @@ const actions = {
         dispatch((`alerte/${types.setAlerte}`), new Alerte('success', response.data), { root: true })
       })
     }
+    dispatch('user/setSelectedUserList', [], { root: true})
+    dispatch('groupe/setGroupeName', "", {root: true})
 
   },
   async [types.getGroupes]({dispatch, rootState}){
