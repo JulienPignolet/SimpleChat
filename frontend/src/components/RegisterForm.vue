@@ -1,6 +1,11 @@
 <template>
   <v-container fluid fill-height>
-    <v-layout justify-center align-center>
+    <v-layout
+      justify-center
+      align-center
+      @keydown.enter="register({username, password, passwordConfirm})"
+      @keydown.escape="$router.push('/login')"
+    >
       <v-flex text-xs-center>
         <v-content>
           <v-container fluid fill-height>
@@ -39,11 +44,7 @@
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
-                    <v-btn
-                      color="green"
-                      dark
-                      @click="$router.push('/login')"
-                    >Annuler</v-btn>
+                    <v-btn color="green" dark @click="$router.push('/login')">Annuler</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
                       color="primary"
