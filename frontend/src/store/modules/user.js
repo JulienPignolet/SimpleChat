@@ -13,14 +13,19 @@ const state = () => ({
   selectedUserList: []
 })
 
+const getters = {
+  ...make.getters(state),
+  userList: state => {
+    return state.userList.filter(user => user.id != state.user.id)
+  }
+}
+
 const mutations = {
     ...make.mutations(state)
 }
 
 const actions = {
   ...make.actions(state),
-
-  // Connexion
   async [types.connexion]({ state, dispatch }, user) {
     let request = { "username": user.username,"password": user.password };
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
@@ -36,7 +41,6 @@ const actions = {
     });
   },
 
-    // Deconnexion
     async [types.deconnexion]({ state, dispatch}) {
         dispatch((`alerte/${types.setAlerte}`), new Alerte('error', `L'utilisateur ${state.user.username} est bien déconnecté`), { root: true });
         dispatch(types.setUser, new User());
@@ -75,6 +79,7 @@ const actions = {
 export const user = {
   namespaced: true,
   state,
+  getters,
   mutations,
   actions
 }

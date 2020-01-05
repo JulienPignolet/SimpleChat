@@ -29,21 +29,21 @@
 </template>
 
 <script>
-import { sync, call } from "vuex-pathify";
+import { sync, call, get } from "vuex-pathify";
 import * as types from "@/store/types.js";
 export default {
   data() {
     return {
-      groupName: "",
+      groupName: ""
     };
   },
   created: function() {
-  //  this.getFriends();
+    //  this.getFriends();
   },
   computed: {
     selectedUserList: sync("user/selectedUserList"),
-    userList: sync("user/userList"),
-    dialog: sync("interfaceControl/groupDialog")
+    dialog: sync("interfaceControl/groupDialog"),
+    userList: get("user/userList")
   },
   methods: {
     getUsers: call(`user/${types.getUsers}`),
