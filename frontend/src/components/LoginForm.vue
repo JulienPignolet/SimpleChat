@@ -25,11 +25,9 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
+              <v-btn color="green" dark @click="$router.push('/register')">Créer un compte</v-btn>
               <v-spacer></v-spacer>
-              <v-btn
-                color="primary"
-                @click="connexion({username, password}) "
-              >Me connecter</v-btn>
+              <v-btn color="primary" @click="connexion({username, password}) ">Me connecter</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -41,10 +39,10 @@
 <script>
 import { call } from "vuex-pathify";
 import * as types from "@/store/types.js";
-import RegisterStoreModule from '@/mixins/RegisterStoreModule'
+import RegisterStoreModule from "@/mixins/RegisterStoreModule";
 import { user } from "@/store/modules/user";
 export default {
-  mixins: [ RegisterStoreModule ],
+  mixins: [RegisterStoreModule],
   data() {
     return {
       username: "",
