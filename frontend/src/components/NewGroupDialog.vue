@@ -8,6 +8,7 @@
           placeholder="Entre le nom d'un utilisateur"
           :items="userList"
           item-text="username"
+          item-value="id"
           chips
           deletable-chips
           multiple

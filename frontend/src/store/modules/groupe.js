@@ -45,10 +45,19 @@ const actions = {
       dispatch("groupe/setGroupeList", response.data, {root: true})
     })
   },
-  async [types.chooseGroup]({dispatch}, group){
+  async [types.chooseGroup]({dispatch, rootState}, group){
     Router.push(`/chat/group/${group.id}`);
     dispatch(types.setGroupe, group);
-    dispatch((`chat/${types.getMessages}`), null, { root: true })
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/message/add/${group.id}/${rootState.user.user.id}/`)
+    // .then(function (response) {
+    //   console.log(response.data)
+    //   response.data.buffer.forEach(message => {
+    //     state.messageList.push({"pseudonyme": message.user_id, "message": message.message})
+    //   })
+    // })
+    dispatch('chat/setMessageList', [], {root: true})
+    dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   }
 };
 

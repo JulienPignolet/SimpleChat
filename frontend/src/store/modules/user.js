@@ -10,7 +10,7 @@ import Router from "../../router"
 const state = () => ({
   user: new User(),
   userList: [],
-  selectedUserList: []
+  selectedUserList: [],
 })
 
 const getters = {
@@ -72,7 +72,17 @@ const actions = {
       dispatch("user/setUserList", response.data, {root: true})
     })
   },
-
+  
+  async [types.getUser]({dispatch, rootState}, userId){
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    return axios.get(`${constants.API_URL}api/buddy/${userId}`)
+    .then(function (response) { 
+      console.log(response.data)
+      /*TO DO : Fix niveau back aucun utilisateur retourné avec cette requête
+      dispatch("user/setUserList", response.data, {root: true})*/
+      dispatch("chat/setTempUserPseudonyme", `AUCUN_USER_RETOURNE (id : ${userId})`, {root : true})
+    })
+  },
 
 }
 

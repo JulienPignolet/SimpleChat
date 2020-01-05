@@ -25,12 +25,12 @@ export default {
   created() {
     this.registerStoreModule("groupe", groupe);
     this.registerStoreModule("chat", chat);
-    this.getMessages();
+    //this.getMessages();
   },
   methods: {
     deconnexion: call(`user/${types.deconnexion}`),
     getGroupes: call(`groupe/${types.getGroupes}`),
-    getMessages: call(`chat/${types.getMessages}`),
+    getMessages: call(`chat/${types.getLiveMessages}`),
     userIsConnected: function() {
       return (
         this.$store.state.user != null &&

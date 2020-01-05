@@ -2,10 +2,12 @@
 export const connexion = 'connexion'
 export const deconnexion = 'deconnexion'
 export const getUsers = 'getUsers'
+export const getUser = 'getUser'
 
 // action module chat
 export const sendMessage = 'sendMessage'
-export const getMessage = 'getMessage'
+export const getLiveMessages = 'getLiveMessages'
+export const getSavedMessages = 'getSavedMessages'
 
 // action module groupe
 export const createGroupe = 'createGroupe'
