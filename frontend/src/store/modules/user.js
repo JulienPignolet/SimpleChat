@@ -4,7 +4,7 @@ import { Alerte } from "../../models/Alerte";
 import { make } from "vuex-pathify";
 import axios from "axios";
 import * as constants from "../../constants/constants";
-import Router from "../../router"
+import Router from "../../router/router"
 
 
 const state = () => ({
