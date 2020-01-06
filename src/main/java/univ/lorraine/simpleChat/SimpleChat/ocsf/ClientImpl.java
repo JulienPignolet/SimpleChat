@@ -54,15 +54,18 @@ class ClientImpl extends AbstractClient {
     }
 
     protected void connectionEstablished() {
-        System.out.println("Client: Connected");
-        System.out.println("Client.isConnected()="+isConnected());
+        System.out.println("Client " + id +" : Connected");
+//        System.out.println("Client.isConnected()="+isConnected());
     }
 
     protected void handleMessageFromServer(Object msg) {
-        System.out.println("Client: Message received = " + msg);
-        for (Map.Entry<Long, UserBuffer> user : users.entrySet()) {
-    		user.getValue().addMessageToBuffer(new Message((String) msg));
-    	}
+        System.out.println("Client " + id + ": Message received = " + msg);
+        Message message = new Message((String) msg);
+        if(message.getGroup_id().equals(id)) {
+            for (Map.Entry<Long, UserBuffer> user : users.entrySet()) {
+                user.getValue().addMessageToBuffer(new Message((String) msg));
+            }
+        }
     }
     
     /**

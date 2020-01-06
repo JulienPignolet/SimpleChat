@@ -24,8 +24,12 @@ public class TestCommunicationGroupeOCSF {
     MessageController messageController;
     @Test
     public void commEntre2Users() {
-        messageController.addUserToOCSFClient(78L, 104L);
+        messageController.addUserToOCSFClient(77L, 103L);
         messageController.addUserToOCSFClient(77L, 104L);
+        messageController.addUserToOCSFClient(78L, 103L);
+        messageController.addUserToOCSFClient(78L, 104L);
+        messageController.addUserToOCSFClient(79L, 103L);
+        messageController.addUserToOCSFClient(79L, 104L);
 
         MessageTemplate msg = new MessageTemplate();
         msg.setUser_id(103L);
@@ -34,21 +38,24 @@ public class TestCommunicationGroupeOCSF {
 
         messageController.sendMessage(msg);
 
-        String response1 = String.valueOf(messageController.getLiveMessages(77L, 103L));
-        assertEquals("<200 OK OK,{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\"}]},[]>", response1);
-        String response2 = String.valueOf(messageController.getLiveMessages(77L, 104L));
-        assertEquals("<200 OK OK,{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\"}]},[]>", response2);
+        String response1 = String.valueOf(messageController.getLiveMessages(77L, 103L).getBody());
+        assertEquals("{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\"}]}", response1);
+        String response2 = String.valueOf(messageController.getLiveMessages(78L, 104L).getBody());
+        assertEquals("{\"buffer\":[]}", response2);
+        String response3 = String.valueOf(messageController.getLiveMessages(79L, 104L).getBody());
+        assertEquals("{\"buffer\":[]}", response3);
 
         msg.setUser_id(104L);
+        msg.setGroup_id(78L);
         msg.setMessage("Message 2");
 
         messageController.sendMessage(msg);
 
-        response1 = String.valueOf(messageController.getLiveMessages(77L, 103L));
-        assertEquals("<200 OK OK,{ \"buffer\":[{\"user_id\":104, \"group_id\":77, \"message\":\"Message 2\"}]},[]>", response1);
-        response2 = String.valueOf(messageController.getLiveMessages(77L, 104L));
-        assertEquals("<200 OK OK,{ \"buffer\":[{\"user_id\":104, \"group_id\":77, \"message\":\"Message 2\"}]},[]>", response2);
+        response1 = String.valueOf(messageController.getLiveMessages(78L, 103L).getBody());
+        assertEquals("{ \"buffer\":[{\"user_id\":104, \"group_id\":78, \"message\":\"Message 2\"}]}", response1);
+        response2 = String.valueOf(messageController.getLiveMessages(78L, 104L).getBody());
+        assertEquals("{ \"buffer\":[{\"user_id\":104, \"group_id\":78, \"message\":\"Message 2\"}]}", response2);
 
-        System.out.println(messageController.getSavedMessages(77L, 103L));
+//        System.out.println(messageController.getSavedMessages(77L, 103L));
     }
 }
