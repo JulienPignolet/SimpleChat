@@ -1,11 +1,11 @@
 <template>
   <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" app>
-    <v-list-item link>
+    <v-list-item link @click="getUserFriends()" @mousedown.stop @touchstart.native.stop>
       <v-list-item-icon>
         <v-icon>{{ "mdi-account-heart" }}</v-icon>
       </v-list-item-icon>
       <v-list-item-content>
-        <v-list-item-title @click="getUserFriends()">Amis</v-list-item-title>
+        <v-list-item-title>Amis</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
 
