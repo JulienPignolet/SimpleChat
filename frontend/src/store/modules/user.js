@@ -84,8 +84,16 @@ const actions = {
   },
 
   async [types.deleteFriend]({dispatch, rootState}, friendId){
-    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/remove`, friendId)
+    .then(function () {
+      dispatch("user/getUserFriends", null, {root : true})
+    })
+  },
+
+  async [types.addFriend]({dispatch, rootState}, friendId){
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/add`, friendId)
     .then(function () {
       dispatch("user/getUserFriends", null, {root : true})
     })

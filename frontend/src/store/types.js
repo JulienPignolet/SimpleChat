@@ -4,6 +4,7 @@ export const deconnexion = 'deconnexion'
 export const getUsers = 'getUsers'
 export const getUserFriends = 'getUserFriends'
 export const deleteFriend = 'deleteFriend'
+export const addFriend = 'addFriend'
 
 // action module chat
 export const sendMessage = 'sendMessage'

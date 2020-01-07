@@ -1,16 +1,46 @@
 <template>
-  <v-data-table :headers="headers" :items="friendList" class="elevation-1" hide-default-footer>
-    <template v-slot:item.action="{ item }">
-      <v-icon small @click="deleteFriend(item.id)">mdi-delete</v-icon>
-    </template>
-  </v-data-table>
+  <div>
+    <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on">Ajouter un ami</v-btn>
+      </template>
+
+      <!-- TO DO : Bouger ça dans un autre composants, flemme là -->
+      <v-card>
+        <v-autocomplete
+          v-model="friendId"
+          placeholder="Entre le nom d'un utilisateur"
+          :items="userList.filter(user => !friendList.some(friend => friend.id === user.id))"
+          item-text="username"
+          item-value="id"
+          single-line
+          filled
+        ></v-autocomplete>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn text @click="menu = false">Annuler</v-btn>
+          <v-btn color="primary" text @click="clickToAddFriend()">Ajouter</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-menu>
+
+    <v-data-table :headers="headers" :items="friendList" class="elevation-1" hide-default-footer>
+      <template v-slot:item.action="{ item }">
+        <v-icon small @click="deleteFriend(item.id)">mdi-delete</v-icon>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
-import { sync, call} from "vuex-pathify";
+import { sync, get, call } from "vuex-pathify";
 import * as types from "@/store/types.js";
 export default {
   data: () => ({
+    friendId: '',
+    menu: false,
     headers: [
       {
         text: "Nom",
@@ -23,10 +53,18 @@ export default {
     ]
   }),
   computed: {
-    friendList: sync("user/friendList")
+    friendList: sync("user/friendList"),
+    userList: get("user/userList")
   },
   methods: {
-     deleteFriend: call(`user/${types.deleteFriend}`)
+    deleteFriend: call(`user/${types.deleteFriend}`),
+    addFriend: call(`user/${types.addFriend}`),
+    clickToAddFriend: function() {
+      console.log(this.friendId)
+      this.addFriend(this.friendId);
+      this.menu = false;
+      this.friendId = ''
+    }
   }
 };
 </script>
