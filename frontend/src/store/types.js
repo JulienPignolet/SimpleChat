@@ -15,6 +15,7 @@ export const getSavedMessages = 'getSavedMessages'
 export const createGroupe = 'createGroupe'
 export const getGroupes = 'getGroupes'
 export const chooseGroup = 'chooseGroup'
+export const getGroupesCommun = 'getGroupesCommun'
 
 // action module register 
 export const register = 'register'

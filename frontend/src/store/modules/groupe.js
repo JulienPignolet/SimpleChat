@@ -8,7 +8,8 @@ import Router from "../../router/router"
 const state = () => ({
   groupe:{},
   groupeList: [],
-  groupeName: ""
+  groupeName: "",
+  groupeCommunList: []
 });
 
 const mutations = make.mutations(state);
@@ -47,6 +48,28 @@ const actions = {
     .then(function (response) {
       dispatch("groupe/setGroupeList", response.data, {root: true})
     })
+  },
+  // Nul nul nul, voir avec front si jpeux avoir une requête déjà plutôt
+  async [types.getGroupesCommun]({state, rootState, rootGetters}){
+    console.log(rootGetters['user/friendList'])
+    console.log(rootState.user.friendList)
+    for(const friend of rootState.user.friendList){
+      let userGroups = []
+      let friendGroups = []
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      await axios.get(`${constants.API_URL}api/groupe/find/groups/user/${rootState.user.user.id}`)
+      .then(function (response) {
+        userGroups = response.data
+       
+      })
+      await axios.get(`${constants.API_URL}api/groupe/find/groups/user/${friend.id}`)
+      .then(function (response) {
+        friendGroups = response.data
+      })
+      state.groupeCommunList[friend.id] = userGroups.filter(userGroup => friendGroups.some(friendGroup => userGroup.id === friendGroup.id))
+    }
+
+    
   },
   async [types.chooseGroup]({dispatch, rootState}, group){
     Router.push(`/chat/group/${group.id}`);
