@@ -7,7 +7,8 @@
           v-model="selectedUserList"
           placeholder="Entre le nom d'un utilisateur"
           :items="userList"
-          item-text="id"
+          item-text="username"
+          item-value="id"
           chips
           deletable-chips
           multiple
@@ -17,11 +18,11 @@
           @click="getUsers()"
         ></v-autocomplete>
 
-        <v-text-field label="Nom du groupe" v-model="groupName" outlined></v-text-field>
+        <v-text-field label="Nom du groupe" v-model="groupeName" outlined></v-text-field>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="dialog = false">Annuler</v-btn>
-          <v-btn text @click="createGroupe({groupName})">Créer un groupe</v-btn>
+          <v-btn text @click="createGroupe()">Créer un groupe</v-btn>
         </v-card-actions>
       </v-container>
     </v-card>
@@ -29,21 +30,22 @@
 </template>
 
 <script>
-import { sync, call } from "vuex-pathify";
+import { sync, call, get } from "vuex-pathify";
 import * as types from "@/store/types.js";
 export default {
   data() {
     return {
-      groupName: "",
+      groupName: ""
     };
   },
   created: function() {
-  //  this.getFriends();
+    //  this.getFriends();
   },
   computed: {
     selectedUserList: sync("user/selectedUserList"),
-    userList: sync("user/userList"),
-    dialog: sync("interfaceControl/groupDialog")
+    groupeName: sync("groupe/groupeName"),
+    dialog: sync("interfaceControl/groupDialog"),
+    userList: get("user/userList")
   },
   methods: {
     getUsers: call(`user/${types.getUsers}`),

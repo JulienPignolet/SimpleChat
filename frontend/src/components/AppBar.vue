@@ -2,11 +2,6 @@
   <v-app-bar app color="primary" :clipped-left="$vuetify.breakpoint.lgAndUp">
     <img src="../../public/images/logo.svg" alt="logo simple chat" class="logo" height="40" />
     <v-spacer></v-spacer>
-
-    <v-btn v-if="!userIsConnected()" icon @click="$router.push('/login')">
-      <v-icon large color="white">mdi-login</v-icon>
-    </v-btn>
-
     <v-btn v-if="userIsConnected()" icon @click="deconnexion()">
       <v-icon large color="white">mdi-power</v-icon>
     </v-btn>
@@ -25,12 +20,12 @@ export default {
   created() {
     this.registerStoreModule("groupe", groupe);
     this.registerStoreModule("chat", chat);
-    this.getMessages();
+    //this.getMessages();
   },
   methods: {
     deconnexion: call(`user/${types.deconnexion}`),
     getGroupes: call(`groupe/${types.getGroupes}`),
-    getMessages: call(`chat/${types.getMessages}`),
+    getMessages: call(`chat/${types.getLiveMessages}`),
     userIsConnected: function() {
       return (
         this.$store.state.user != null &&

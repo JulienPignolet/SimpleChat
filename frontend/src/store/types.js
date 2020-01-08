@@ -2,15 +2,20 @@
 export const connexion = 'connexion'
 export const deconnexion = 'deconnexion'
 export const getUsers = 'getUsers'
+export const getUserFriends = 'getUserFriends'
+export const deleteFriend = 'deleteFriend'
+export const addFriend = 'addFriend'
 
 // action module chat
 export const sendMessage = 'sendMessage'
-export const getMessage = 'getMessage'
+export const getLiveMessages = 'getLiveMessages'
+export const getSavedMessages = 'getSavedMessages'
 
 // action module groupe
 export const createGroupe = 'createGroupe'
 export const getGroupes = 'getGroupes'
 export const chooseGroup = 'chooseGroup'
+export const getGroupesCommun = 'getGroupesCommun'
 
 // action module register 
 export const register = 'register'
