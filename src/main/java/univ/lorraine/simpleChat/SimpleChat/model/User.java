@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.persistence.*;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @ApplicationScope
 @Entity
@@ -41,14 +38,14 @@ public class User {
 
     //
 	@JsonIgnore
-	@ManyToMany(cascade={CascadeType.ALL})
+	@ManyToMany(cascade={CascadeType.REMOVE})
 	@JoinTable(name="BUDDYMASTER_BUDDY",
 			joinColumns={@JoinColumn(name="id")},
 			inverseJoinColumns={@JoinColumn(name="BUDDY_ID")})
 	private Collection<User> buddyMaster;
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
+	@ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.REMOVE})
 	@JoinTable(name="BUDDYMASTER_BUDDY",
 			joinColumns={@JoinColumn(name="BUDDY_ID")},
 			inverseJoinColumns={@JoinColumn(name="id")})
@@ -162,9 +159,11 @@ public class User {
 	}
 
 	public void removeBuddy(User buddy) {
-		if(this.buddyList.contains(buddy)) {
-			this.buddyList.remove(buddy);
-		}
+		List<User> operatedList = new ArrayList<>();
+		this.buddyList.stream()
+				.filter(item -> item.getId() == buddy.getId())
+				.forEach(operatedList::add);
+		buddyList.removeAll(operatedList);
 	}
 
 	public void addVote(Vote vote) {
