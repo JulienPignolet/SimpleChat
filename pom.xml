@@ -154,17 +154,6 @@
 									<descriptorRef>artifact</descriptorRef>
 								</assembly>
 							</build>
-							<run>
-								<ports>
-									<port>${port_prefix}080:8080</port>
-								</ports>
-								  <wait>
-    <http>
-      <url>http://simplechat.fun:${port_prefix}080/authentication</url>
-    </http>
-    <time>60000</time>
-  </wait>
-							</run>
 						</image>
 					</images>
 				</configuration>
