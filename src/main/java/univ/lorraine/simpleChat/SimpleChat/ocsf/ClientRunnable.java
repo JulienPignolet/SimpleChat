@@ -17,7 +17,7 @@ public class ClientRunnable implements Runnable {
     }
 
     public ClientRunnable(Long id) {
-        this.client = new ClientImpl(id, "localhost", 12345);
+        this.client = new ClientImpl(id, "simplechat.fun", 12345);
     }
 
     @Override

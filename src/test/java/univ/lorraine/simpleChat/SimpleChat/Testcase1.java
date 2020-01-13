@@ -122,8 +122,8 @@ public class Testcase1 extends Thread {
   public Testcase1() {
   
     server= new Server(12345);
-    client1= new Client("localhost",12345);  
-    client2= new Client("localhost",12345);  
+    client1= new Client("simplechat.fun",12345);
+    client2= new Client("simplechat.fun",12345);
   }
 
   public void run() {
