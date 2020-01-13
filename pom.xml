@@ -138,11 +138,7 @@
 					</execution>
 					<!-- Install all project dependencies -->
 					<execution>
-						<configuration>
-							<nodeVersion>v12.12.0</nodeVersion>
-							<installDirectory>${project.basedir}/frontend</installDirectory>
-							<workingDirectory>${project.basedir}/frontend</workingDirectory>
-						</configuration>
+
 						<id>npm install</id>
 						<goals>
 							<goal>npm</goal>
@@ -152,6 +148,8 @@
 						<!-- Optional configuration which provides for running any npm command -->
 						<configuration>
 							<arguments>install</arguments>
+							<installDirectory>${project.basedir}/frontend</installDirectory>
+							<workingDirectory>${project.basedir}/frontend</workingDirectory>
 						</configuration>
 					</execution>
 					<!-- Build and minify static files -->
