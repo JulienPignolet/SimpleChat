@@ -223,7 +223,7 @@
 								<image>
 									<name>simplechat-${env.GIT_BRANCH}</name>
 									<build>
-										<dockerFileDir>demo</dockerFileDir>
+										<dockerFileDir>${project.basedir}/frontend</dockerFileDir>
 										<filter>@</filter>
 									</build>
 								</image>
