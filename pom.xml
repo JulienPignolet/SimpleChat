@@ -160,6 +160,8 @@
 						</goals>
 						<configuration>
 							<arguments>run build</arguments>
+							<installDirectory>${project.basedir}/frontend</installDirectory>
+							<workingDirectory>${project.basedir}/frontend</workingDirectory>
 						</configuration>
 					</execution>
 				</executions>
