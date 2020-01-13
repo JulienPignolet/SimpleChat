@@ -138,6 +138,11 @@
 					</execution>
 					<!-- Install all project dependencies -->
 					<execution>
+						<configuration>
+							<nodeVersion>v12.12.0</nodeVersion>
+							<installDirectory>${project.basedir}/frontend</installDirectory>
+							<workingDirectory>${project.basedir}/frontend</workingDirectory>
+						</configuration>
 						<id>npm install</id>
 						<goals>
 							<goal>npm</goal>
