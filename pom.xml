@@ -132,6 +132,7 @@
 						</goals>
 						<configuration>
 							<nodeVersion>v12.12.0</nodeVersion>
+							<installDirectory>${project.basedir}/frontend</installDirectory>
 							<workingDirectory>${project.basedir}/frontend</workingDirectory>
 						</configuration>
 					</execution>
