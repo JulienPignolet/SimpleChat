@@ -119,53 +119,53 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.9.0</version>
-				<executions>
-					<!-- Install our node and npm version to run npm/node scripts-->
-					<execution>
-						<id>install node and npm</id>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<configuration>
-							<nodeVersion>v12.12.0</nodeVersion>
-							<installDirectory>${project.basedir}/frontend</installDirectory>
-							<workingDirectory>${project.basedir}/frontend</workingDirectory>
-						</configuration>
-					</execution>
-					<!-- Install all project dependencies -->
-					<execution>
+			<!--			<plugin>-->
+			<!--				<groupId>com.github.eirslett</groupId>-->
+			<!--				<artifactId>frontend-maven-plugin</artifactId>-->
+			<!--				<version>1.9.0</version>-->
+			<!--				<executions>-->
+			<!--					&lt;!&ndash; Install our node and npm version to run npm/node scripts&ndash;&gt;-->
+			<!--					<execution>-->
+			<!--						<id>install node and npm</id>-->
+			<!--						<goals>-->
+			<!--							<goal>install-node-and-npm</goal>-->
+			<!--						</goals>-->
+			<!--						<configuration>-->
+			<!--							<nodeVersion>v12.12.0</nodeVersion>-->
+			<!--							<installDirectory>${project.basedir}/frontend</installDirectory>-->
+			<!--							<workingDirectory>${project.basedir}/frontend</workingDirectory>-->
+			<!--						</configuration>-->
+			<!--					</execution>-->
+			<!--					&lt;!&ndash; Install all project dependencies &ndash;&gt;-->
+			<!--					<execution>-->
 
-						<id>npm install</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<!-- optional: default phase is "generate-resources" -->
-						<phase>generate-resources</phase>
-						<!-- Optional configuration which provides for running any npm command -->
-						<configuration>
-							<arguments>install</arguments>
-							<installDirectory>${project.basedir}/frontend</installDirectory>
-							<workingDirectory>${project.basedir}/frontend</workingDirectory>
-						</configuration>
-					</execution>
-					<!-- Build and minify static files -->
-					<execution>
-						<id>npm run build</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>run build</arguments>
-							<installDirectory>${project.basedir}/frontend</installDirectory>
-							<workingDirectory>${project.basedir}/frontend</workingDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+			<!--						<id>npm install</id>-->
+			<!--						<goals>-->
+			<!--							<goal>npm</goal>-->
+			<!--						</goals>-->
+			<!--						&lt;!&ndash; optional: default phase is "generate-resources" &ndash;&gt;-->
+			<!--						<phase>generate-resources</phase>-->
+			<!--						&lt;!&ndash; Optional configuration which provides for running any npm command &ndash;&gt;-->
+			<!--						<configuration>-->
+			<!--							<arguments>install</arguments>-->
+			<!--							<installDirectory>${project.basedir}/frontend</installDirectory>-->
+			<!--							<workingDirectory>${project.basedir}/frontend</workingDirectory>-->
+			<!--						</configuration>-->
+			<!--					</execution>-->
+			<!--					&lt;!&ndash; Build and minify static files &ndash;&gt;-->
+			<!--					<execution>-->
+			<!--						<id>npm run build</id>-->
+			<!--						<goals>-->
+			<!--							<goal>npm</goal>-->
+			<!--						</goals>-->
+			<!--						<configuration>-->
+			<!--							<arguments>run build</arguments>-->
+			<!--							<installDirectory>${project.basedir}/frontend</installDirectory>-->
+			<!--							<workingDirectory>${project.basedir}/frontend</workingDirectory>-->
+			<!--						</configuration>-->
+			<!--					</execution>-->
+			<!--				</executions>-->
+			<!--			</plugin>-->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -182,27 +182,6 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.26.0</version>
 				<extensions>true</extensions>
-				<configuration>
-					<verbose>true</verbose>
-					<images>
-						<image>
-							<name>simplechat-${env.GIT_BRANCH}</name>
-							<build>
-								<from>java:8-jdk-alpine</from>
-								<entryPoint>
-									<exec>
-										<args>java</args>
-										<args>-jar</args>
-										<args>/maven/${project.artifactId}-${project.version}.jar</args>
-									</exec>
-								</entryPoint>
-								<assembly>
-									<descriptorRef>artifact</descriptorRef>
-								</assembly>
-							</build>
-						</image>
-					</images>
-				</configuration>
 				<executions>
 					<execution>
 						<id>build</id>
@@ -210,6 +189,46 @@
 						<goals>
 							<goal>build</goal>
 						</goals>
+						<configuration>
+							<verbose>true</verbose>
+							<images>
+								<image>
+									<name>simplechat-${env.GIT_BRANCH}</name>
+									<build>
+										<from>java:8-jdk-alpine</from>
+										<entryPoint>
+											<exec>
+												<args>java</args>
+												<args>-jar</args>
+												<args>/maven/${project.artifactId}-${project.version}.jar</args>
+											</exec>
+										</entryPoint>
+										<assembly>
+											<descriptorRef>artifact</descriptorRef>
+										</assembly>
+									</build>
+								</image>
+							</images>
+						</configuration>
+					</execution>
+					<execution>
+						<id>build-front</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+						<configuration>
+							<verbose>true</verbose>
+							<images>
+								<image>
+									<name>simplechat-${env.GIT_BRANCH}</name>
+									<build>
+										<dockerFileDir>demo</dockerFileDir>
+										<filter>@</filter>
+									</build>
+								</image>
+							</images>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
