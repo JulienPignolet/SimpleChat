@@ -221,7 +221,7 @@
 							<verbose>true</verbose>
 							<images>
 								<image>
-									<name>simplechat-${env.GIT_BRANCH}</name>
+									<name>chat-${env.GIT_BRANCH}</name>
 									<build>
 										<dockerFileDir>${project.basedir}/frontend</dockerFileDir>
 										<filter>@</filter>
