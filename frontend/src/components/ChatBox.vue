@@ -1,14 +1,27 @@
 <template>
   <v-flex @submit.prevent="sendMessage(message)">
-    <v-form style="width:100%">
-    <v-text-field
-      label="Solo"
-      placeholder="Saisir un message..."
-      v-model="message"
-      solo
-      ref="message"
+    <v-form style="width:90%" class="ma-auto pt-3">
+      <v-text-field
+        ref="message"
+        v-model="message"
+        label="Solo"
+        placeholder="Saisir un message..."
+        solo
+        append-icon="mdi-send"
+        @click:append="sendMessage(message)"
       >
-    </v-text-field>
+        <template v-slot:prepend>
+          <v-btn icon>
+            <v-icon>mdi-vector-polygon</v-icon>
+          </v-btn>
+          <v-btn icon>
+            <v-icon>mdi-file-plus</v-icon>
+          </v-btn>
+          <v-btn icon>
+            <v-icon>mdi-clipboard-list-outline</v-icon>
+          </v-btn>
+        </template>
+      </v-text-field>
     </v-form>
   </v-flex>
 </template>
