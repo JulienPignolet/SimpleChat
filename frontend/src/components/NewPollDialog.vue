@@ -58,7 +58,8 @@
                 <v-date-picker
                   v-model="dateFin"
                   :min="today"
-                  no-title
+                  :first-day-of-week="1"
+                  locale="fr-fr"
                   scrollable
                 >
                   <v-spacer />
