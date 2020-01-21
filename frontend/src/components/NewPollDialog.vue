@@ -144,6 +144,7 @@
 
 <script>
     import {ReponseSondage} from "../models/ReponseSondage";
+    import * as types from "../store/types";
 
     export default {
         name: "NewPollDialog",
@@ -152,7 +153,6 @@
             menuDateFin: false,
             today: new Date().toISOString().substr(0, 10),
             question: "",
-            dateDebut: "",
             dateFin: new Date().toISOString().substr(0, 10),
             dateFinFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
             votesAnonymes: false,
@@ -174,21 +174,25 @@
         methods: {
             submit() {
                 this.dialog = false;
-                // TODO: compléter le json et l'envoyer à l'API
-                let json = {
+                let sondage = {
                     question: this.question,
                     dateFin: this.dateFin,
-                    reponseSondages: this.reponseSondages,
-                    groupe: "",
-                    initiateur: "",
+                    reponseSondages: this.reponseSondages.map(r => r.reponse),
                     votesAnonymes: this.votesAnonymes
                 };
-                console.log(json);
+                this.$store.dispatch(`sondage/${types.sendSondage}`, sondage);
+
+                // Reset the form
+                this.question = "";
+                this.reponseSondages = new Array(new ReponseSondage(1, "", 0));
+                this.dateFin = new Date().toISOString().substr(0, 10);
+                this.dateFinFormatted = this.formatDate(new Date().toISOString().substr(0, 10));
+                this.votesAnonymes = false;
             },
             canSubmit() {
                 let isQuestionEmpty = this.question === "";
-                let hasAtLeastTwoResponses = this.reponseSondages.filter(response => response.reponse !== "").length > 1;
-                return !isQuestionEmpty && hasAtLeastTwoResponses;
+                let hasAtLeastOneResponses = this.reponseSondages.filter(response => response.reponse !== "").length > 0;
+                return !isQuestionEmpty && hasAtLeastOneResponses;
             },
             addReponse() {
                 this.reponseSondages.push(new ReponseSondage(this.reponseSondages.length + 1, "", 0));

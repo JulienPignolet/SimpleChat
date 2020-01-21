@@ -14,12 +14,15 @@ import * as types from "@/store/types.js";
 import { groupe } from "@/store/modules/groupe";
 import { chat } from "@/store/modules/chat"
 import RegisterStoreModule from "@/mixins/RegisterStoreModule";
+import {sondage} from "../store/modules/sondage";
+
 export default {
   mixins: [RegisterStoreModule],
   beforeCreate() {},
   created() {
     this.registerStoreModule("groupe", groupe);
     this.registerStoreModule("chat", chat);
+    this.registerStoreModule("sondage", sondage);
     //this.getMessages();
   },
   methods: {

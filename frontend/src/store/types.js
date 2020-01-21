@@ -20,6 +20,10 @@ export const getGroupesCommun = 'getGroupesCommun'
 // action module register 
 export const register = 'register'
 
+// action module sondage
+export const sendSondage = 'sendSondage'
+export const getLiveSondage = 'getLiveSondage'
+
 // setters vuex-pathify
 export const setAlerte = 'setAlerte'
 export const setUser = 'setUser'
