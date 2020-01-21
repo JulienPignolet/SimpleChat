@@ -38,16 +38,14 @@ public class SondageService {
 	 * @param user initiateur du sondage
 	 * @return Le sondage créé
 	 */
-	public Sondage create(String question, Groupe groupe, boolean voteAnonyme, User user) {
-		// , Date dateDebut, Date dateFin
+	public Sondage create(String question, Groupe groupe, boolean voteAnonyme, User user, String[] reponses, Date dateFin) {
+
 		Sondage sondage = new Sondage();
 		sondage.setQuestion(question);
 		sondage.setGroupe(groupe);
         sondage.setVotesAnonymes(voteAnonyme);
-        //sondage.setReponseSondages(reponseSondages);
-        //sondage.setDateDebut(dateDebut);
-        //sondage.setDateFin(dateFin);
         sondage.setInitiateur(user);
+        sondage.setDateFin(dateFin);
 
         return sondage;
     }
