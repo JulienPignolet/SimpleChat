@@ -4,14 +4,23 @@ import axios from "axios";
 import * as constants from "../../constants/constants";
 
 const state = () => ({
-  sondage: {}
+  sondage: {},
+  sondageList: []
 });
+
+const getters = {
+  ...make.getters(state),
+  sondages: state => {
+    console.log("toto");
+    return state.sondageList;
+  }
+};
 
 const mutations = make.mutations(state);
 
 const actions = {
   ...make.actions(state),
-  async [types.sendSondage]({ rootState }, sondage) {
+  async [types.sendSondage]({ dispatch, rootState }, sondage) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.post(constants.API_URL+"api/sondage/add", {
       "question": sondage.question,
@@ -21,15 +30,23 @@ const actions = {
       "userId": rootState.user.user.id,
       "votesAnonymes": sondage.votesAnonymes
     }).then(function (){
-      console.log('sondage envoyé');
-      // TODO
+      dispatch((`chat/${types.getLiveMessages}`), null, { root: true })
     })
-  }
+  },
+  async [types.getSondage]({ state, rootState}, sondageId){
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}api/sondage/${sondageId}`)
+      .then(function (response) {
+        state.sondageList.push(response.data);
+        console.log(state.sondageList);
+      })
+  },
 };
 
 export const sondage = {
   namespaced: true,
   state,
+  getters,
   mutations,
   actions
 };
