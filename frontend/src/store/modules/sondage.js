@@ -11,7 +11,6 @@ const state = () => ({
 const getters = {
   ...make.getters(state),
   sondages: state => {
-    console.log("toto");
     return state.sondageList;
   }
 };
@@ -37,9 +36,20 @@ const actions = {
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
     axios.get(`${constants.API_URL}api/sondage/${sondageId}`)
       .then(function (response) {
-        state.sondageList.push(response.data);
-        console.log(state.sondageList);
+        state.sondageList = [
+            ...state.sondageList.filter(sondage => sondage.id !== sondageId),
+          response.data
+        ];
       })
+  },
+  async [types.sendVote]({ dispatch, rootState }, payload) {
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/sondage/${payload.sondageId}/reponse/${payload.reponseId}/vote`, {
+      "userId": rootState.user.user.id
+    })
+      .then(function (){
+        dispatch((types.getSondage), payload.sondageId)
+    })
   },
 };
 

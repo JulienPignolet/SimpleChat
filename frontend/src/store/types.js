@@ -23,6 +23,7 @@ export const register = 'register'
 // action module sondage
 export const sendSondage = 'sendSondage'
 export const getSondage = 'getSondage'
+export const sendVote = 'sendVote'
 
 // setters vuex-pathify
 export const setAlerte = 'setAlerte'
