@@ -31,11 +31,15 @@ public class ReponseSondage {
     public void addVote(Vote vote) {
         if(!this.listVotes.contains(vote)) {
             this.listVotes.add(vote);
+            this.nbVote++;
         }
     }
 
     public void removeVote(Vote vote) {
-        this.listVotes.remove(vote);
+        if(this.listVotes.contains(vote)) {
+            this.listVotes.remove(vote);
+            this.nbVote--;
+        }
     }
 
     public Collection<Vote> getListVotes() {
