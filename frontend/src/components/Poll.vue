@@ -59,7 +59,7 @@
                   :value="nbVotes() > 0 ? (reponse.nbVote / nbVotes()) * 100 : 0"
                   :color="reponse.nbVote === maxVotes() ? 'green' : 'grey'"
                   class="my-2"
-                  style="text-align: left"
+                  style="text-align: left; font-style: italic"
                 >
                   {{ reponse.reponse }}
                 </v-progress-linear>
@@ -69,7 +69,16 @@
                 sm="2"
                 class="ml-2 align-self-center"
               >
-                {{ reponse.nbVote }} vote{{ reponse.nbVote !== 1 ? 's' : '' }}
+                <v-tooltip
+                  v-if="!sondage().votesAnonymes && reponse.nbVote > 0"
+                  right
+                >
+                  <template v-slot:activator="{ on }">
+                    <span v-on="on">{{ reponse.nbVote }} vote{{ reponse.nbVote !== 1 ? 's' : '' }}</span>
+                  </template>
+                  <span>{{ reponse.listVotes.map(vote => vote.user.username).join(", ") }}</span>
+                </v-tooltip>
+                <span v-else>{{ reponse.nbVote }} vote{{ reponse.nbVote !== 1 ? 's' : '' }}</span>
               </v-col>
             </v-row>
           </div>
@@ -147,8 +156,14 @@ export default {
       return userVote !== undefined;
     },
     showResults() {
-      // TODO Prendre en compte la date de fin et ajouter une heure de fin
-      return this.hasUserVoted();
+      let hasPollEnded = false;
+      if (this.sondage() !== undefined) {
+        const dateFin = new Date(this.sondage().dateFin);
+        // TODO prendre en compte une heure de fin
+        const today = new Date(new Date().setHours(0,0,0,0));
+        hasPollEnded = dateFin < today;
+      }
+      return hasPollEnded || this.hasUserVoted();
     },
     nbVotes() {
         let nb = 0;
