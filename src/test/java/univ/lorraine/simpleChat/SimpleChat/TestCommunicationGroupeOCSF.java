@@ -60,5 +60,8 @@ public class TestCommunicationGroupeOCSF {
         assertEquals("{\"buffer\":[]}", response1);
         response2 = String.valueOf(messageController.getLiveMessages(79L, 104L).getBody());
         assertEquals("{\"buffer\":[]}", response2);
+
+        response1 = String.valueOf(messageController.getLiveMessagesAdmin().getBody());
+        assertEquals("{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\"},{\"user_id\":104, \"group_id\":78, \"message\":\"Message 2\"}]}", response1);
     }
 }
