@@ -115,8 +115,7 @@ export default {
   },
   data () {
     return {
-      reponseId: undefined,
-      sondage_: undefined
+      reponseId: undefined
     }
   },
   computed: {
@@ -127,10 +126,7 @@ export default {
   },
   methods: {
     sondage() {
-      if (this.sondage_ === undefined) {
-          this.sondage_ = this.sondages.find(sondage => sondage.id === this.pollId);
-      }
-      return this.sondage_;
+      return this.sondages.find(sondage => sondage.id === this.pollId);
     },
     vote() {
         console.log(this.reponseId);
