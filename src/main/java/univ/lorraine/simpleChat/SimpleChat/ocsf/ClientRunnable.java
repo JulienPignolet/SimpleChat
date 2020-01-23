@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 
 public class ClientRunnable implements Runnable {
-    private ClientImpl client;
+    private final ClientImpl client;
     private String msgToSend;
     private Thread thread;
     
@@ -21,27 +21,30 @@ public class ClientRunnable implements Runnable {
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
 
 		// ATTENTION : Il faut demander au serveur d'enregistrer le message dans la BDD
-    	
+
         try {
             client.isConnected();
             client.openConnection();
             while (true) {
                 try {
-                    client.isConnected();
-                    if (msgToSend != null) {
+                    synchronized (this.client) {
+                        client.isConnected();
+                        if (msgToSend == null) {
+                            wait();
+                        }
                         client.sendToServer(msgToSend);
                         msgToSend = null;
                         Thread.sleep(1);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    this.stop();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                this.stop();
             }
         }
+    }
         catch (InterruptedException | IOException e)
         {
             System.out.println(e.getMessage());
@@ -62,10 +65,11 @@ public class ClientRunnable implements Runnable {
         }
     }
 
-    public void sendMsg(String message, String name) {
+    public synchronized void sendMsg(String message, String name) {
         JsonObject json = new JsonParser().parse(message).getAsJsonObject();
         json.addProperty("user_name", name);
         this.msgToSend = json.toString();
+        notify();
     }
 
     public void addUserToGroup(long user_id) {
