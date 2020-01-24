@@ -73,4 +73,18 @@ public class UserService {
     {
     	return userRepository.findMembersGroupe(groupe_id);
     }
+    
+    public String addBlockUser(User user, User bUser)
+    {
+    	String msg = user.addUserToMyBlocklist(bUser);
+    	userRepository.save(user);
+    	return msg; 
+    }
+    
+    public String removeBlockUser(User user, User bUser)
+    {
+    	String msg = user.removeUserToMyBlocklist(bUser);
+    	userRepository.save(user);
+    	return msg;
+    }
 }
