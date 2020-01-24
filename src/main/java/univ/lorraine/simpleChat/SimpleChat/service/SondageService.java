@@ -18,12 +18,10 @@ import univ.lorraine.simpleChat.SimpleChat.repository.SondageRepository;
 @Service
 public class SondageService {
     private final SondageRepository sondageRepository;
-    private final GroupeUserRepository groupeUserRepository;
 
     @Autowired
-    public SondageService(SondageRepository sondageRepository, GroupeUserRepository groupeUserRepository) {
+    public SondageService(SondageRepository sondageRepository) {
         this.sondageRepository = sondageRepository;
-        this.groupeUserRepository = groupeUserRepository;
     }
 
     public void save(Sondage sondage) {
@@ -38,23 +36,20 @@ public class SondageService {
 	 * @param user initiateur du sondage
 	 * @return Le sondage créé
 	 */
-	public Sondage create(String question, Groupe groupe, boolean voteAnonyme, User user) {
-		// , Date dateDebut, Date dateFin
+	public Sondage create(String question, Groupe groupe, boolean voteAnonyme, User user, String[] reponses, Date dateFin) {
+
 		Sondage sondage = new Sondage();
 		sondage.setQuestion(question);
 		sondage.setGroupe(groupe);
         sondage.setVotesAnonymes(voteAnonyme);
-        //sondage.setReponseSondages(reponseSondages);
-        //sondage.setDateDebut(dateDebut);
-        //sondage.setDateFin(dateFin);
         sondage.setInitiateur(user);
+        sondage.setDateFin(dateFin);
 
         return sondage;
     }
 
     public Sondage findById(Long sondage_id) {
-        Sondage sondage = sondageRepository.findById(sondage_id).isPresent() ? sondageRepository.findById(sondage_id).get() : null;
-        return sondage;
+        return sondageRepository.findById(sondage_id).isPresent() ? sondageRepository.findById(sondage_id).get() : null;
     }
 
     public Sondage find(Long sondage_id) {
@@ -64,15 +59,4 @@ public class SondageService {
 	public List<Sondage> findAll(){
 		return sondageRepository.findAll(); 
 	}
-
-    public void addReponse(Sondage sondage, ReponseSondage reponseSondage){
-        sondage.addReponse(reponseSondage);
-        sondageRepository.save(sondage);
-    }
-
-    public void removeReponse(Sondage sondage, ReponseSondage reponseSondage){
-        sondage.removeReponse(reponseSondage);
-        sondageRepository.save(sondage);
-    }
-   
 }

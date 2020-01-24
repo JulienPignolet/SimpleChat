@@ -15,7 +15,7 @@ public class ReponseSondage {
     private Long id;
 
     @Column
-    private String question;
+    private String reponse;
 
     @Column
     private int nbVote;
@@ -28,16 +28,17 @@ public class ReponseSondage {
     @JsonBackReference
     private Sondage sondage;
 
-
     public void addVote(Vote vote) {
         if(!this.listVotes.contains(vote)) {
             this.listVotes.add(vote);
+            this.nbVote++;
         }
     }
 
     public void removeVote(Vote vote) {
         if(this.listVotes.contains(vote)) {
             this.listVotes.remove(vote);
+            this.nbVote--;
         }
     }
 
@@ -57,12 +58,12 @@ public class ReponseSondage {
         this.id = id;
     }
 
-    public String getQuestion() {
-        return question;
+    public String getReponse() {
+        return reponse;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setReponse(String reponse) {
+        this.reponse = reponse;
     }
 
     public int getNbVote() {
@@ -71,5 +72,13 @@ public class ReponseSondage {
 
     public void setNbVote(int nbVote) {
         this.nbVote = nbVote;
+    }
+
+    public Sondage getSondage() {
+        return sondage;
+    }
+
+    public void setSondage(Sondage sondage) {
+        this.sondage = sondage;
     }
 }

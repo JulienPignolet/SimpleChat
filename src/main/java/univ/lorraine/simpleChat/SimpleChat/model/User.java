@@ -17,14 +17,14 @@ public class User {
 
     private String username;
 
-//    @JsonIgnore
+    @JsonIgnore
     private String password;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-//    @JsonIgnore
+    @JsonIgnore
     @Transient
     private String passwordConfirm;
 

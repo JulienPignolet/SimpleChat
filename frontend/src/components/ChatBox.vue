@@ -10,16 +10,14 @@
         append-icon="mdi-send"
         @click:append="sendMessage(message)"
       >
-        <template v-slot:prepend>
+        <template v-slot:prepend-inner>
           <v-btn icon>
             <v-icon>mdi-vector-polygon</v-icon>
           </v-btn>
           <v-btn icon>
             <v-icon>mdi-file-plus</v-icon>
           </v-btn>
-          <v-btn icon>
-            <v-icon>mdi-clipboard-list-outline</v-icon>
-          </v-btn>
+          <new-poll-dialog />
         </template>
       </v-text-field>
     </v-form>
@@ -28,8 +26,10 @@
 
 <script>
 import * as types from "@/store/types.js";
+import NewPollDialog from "./NewPollDialog";
 export default {
-  data () {
+    components: {NewPollDialog},
+    data () {
     return {
       message : ""
     }
