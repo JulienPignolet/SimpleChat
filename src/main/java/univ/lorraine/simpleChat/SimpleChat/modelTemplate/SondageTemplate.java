@@ -19,37 +19,24 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class SondageTemplate {
 
-	/**
-	 * Est l'id du user qui souhaite ajouter le sondage
-	 */
 	@JsonProperty("userId")
 	private String userId;
 
-	// TODO ajouter date debut, date fin
-	/**
-	 * Est le nom de la question du sondage qu'on souhaite ajouter
-	 */
 	@JsonProperty("question")
 	private String question;
 	
-	@JsonProperty("isVotesAnonymes")
-	private String isVotesAnonymes;
-	
-	/**
-	 * Est l'id du groupe où l'on ajoute le sondage
-	 */
+	@JsonProperty("votesAnonymes")
+	private String votesAnonymes;
+
 	@JsonProperty("groupeId")
 	private String groupeId;
-	
-	/*@JsonProperty("dateDebut")
-	private String dateDebut;
 	
 	@JsonProperty("dateFin")
 	private String dateFin;
 
 	@JsonProperty("reponsesSondage")
-	private Collection<String> reponsesSondage;
-	*/
+	private String[] reponsesSondage;
+
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -73,36 +60,24 @@ public class SondageTemplate {
 		this.question = question;
 	}
 	
-	@JsonProperty("isVotesAnonymes")
-	public String getIsVotesAnonymes() {
-		return isVotesAnonymes;
+	@JsonProperty("votesAnonymes")
+	public String getVotesAnonymes() {
+		return votesAnonymes;
 	}
 	
-	@JsonProperty("isVotesAnonymes")
-	public void setIsVotesAnonymes(String isVotesAnonymes) {
-		this.isVotesAnonymes = isVotesAnonymes;
+	@JsonProperty("votesAnonymes")
+	public void setIsVotesAnonymes(String votesAnonymes) {
+		this.votesAnonymes = votesAnonymes;
 	}
 	
-	@JsonProperty("groupe")
+	@JsonProperty("groupeId")
 	public String getGroupeId() {
 		return groupeId;
 	}
 	
-	@JsonProperty("groupe")
+	@JsonProperty("groupeId")
 	public void setGroupeId(String groupeId) {
 		this.groupeId = groupeId;
-	}
-	/*
-	@JsonProperty("dateDebut")
-	public String getDateDebut()
-	{
-		return dateDebut;
-	}
-
-	@JsonProperty("dateDebut")
-	public void setDateDebut(String dateDebut)
-	{
-		this.dateDebut = dateDebut;
 	}
 	
 	@JsonProperty("dateFin")
@@ -118,16 +93,16 @@ public class SondageTemplate {
 	}
 	
 	@JsonProperty("reponsesSondage")
-	public Collection<String> getReponsesSondage() {
+	public String[] getReponsesSondage() {
 		return reponsesSondage;
 	}
 	
 	@JsonProperty("reponsesSondage")
-	public void setReponsesSondage(Collection<String> reponsesSondage)
+	public void setReponsesSondage(String[] reponsesSondage)
 	{
 		this.reponsesSondage = reponsesSondage;
 	}
-	*/
+
 	@JsonAnyGetter
 	public Map<String, Object> getAdditionalProperties() {
 		return this.additionalProperties;

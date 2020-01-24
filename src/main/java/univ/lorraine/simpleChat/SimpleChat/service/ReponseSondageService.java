@@ -14,26 +14,19 @@ import univ.lorraine.simpleChat.SimpleChat.repository.SondageRepository;
 @Service
 public class ReponseSondageService {
     private final ReponseSondageRepository reponseSondageRepository;
-    private final SondageRepository sondageRepository;
 
     @Autowired
-    public ReponseSondageService(ReponseSondageRepository reponseSondageRepository, SondageRepository sondageRepository) {
+    public ReponseSondageService(ReponseSondageRepository reponseSondageRepository) {
         this.reponseSondageRepository = reponseSondageRepository;
-        this.sondageRepository = sondageRepository;
     }
 
     public void save(ReponseSondage reponseSondage) {
         reponseSondageRepository.save(reponseSondage);
     }
-    
 
-    /*public ReponseSondage findByReponse(String reponse) {
-        return reponseSondageRepository.findByReponse(reponse);
-    }*/
 
 	public ReponseSondage findById(Long reponsesondage_id) {
-		ReponseSondage reponseSondage = reponseSondageRepository.findById(reponsesondage_id).isPresent() ? reponseSondageRepository.findById(reponsesondage_id).get() : null;
-        return reponseSondage;
+		return reponseSondageRepository.findById(reponsesondage_id).isPresent() ? reponseSondageRepository.findById(reponsesondage_id).get() : null;
 	}
 
     public ReponseSondage find(Long reponsesondage_id) {
@@ -43,10 +36,5 @@ public class ReponseSondageService {
 	public List<ReponseSondage> findAll(){
 		return reponseSondageRepository.findAll(); 
 	}
-    /*
-    public Collection<ReponseSondage> findReponsesSondage(Long sondage_id)
-    {
-    	return reponseSondageRepository.findReponsesSondage(sondage_id);
-    }
-    */
+
 }

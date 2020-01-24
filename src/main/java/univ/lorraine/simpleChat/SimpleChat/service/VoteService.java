@@ -6,18 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import univ.lorraine.simpleChat.SimpleChat.model.Sondage;
+import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.model.Vote;
-import univ.lorraine.simpleChat.SimpleChat.repository.SondageRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.VoteRepository;
 
 @Service
 public class VoteService {
-	private final SondageRepository sondageRepository;
     private final VoteRepository voteRepository;
     
     @Autowired
-    public VoteService(SondageRepository sondageRepository, VoteRepository voteRepository) {
-        this.sondageRepository = sondageRepository;
+    public VoteService(VoteRepository voteRepository) {
         this.voteRepository = voteRepository;
     }
     
@@ -38,4 +36,18 @@ public class VoteService {
 		return voteRepository.findAll(); 
 	}
 
+	public boolean hasUserVoted(User user, Sondage sondage) {
+        List<Vote> votes = voteRepository.findByUser(user);
+        if (votes.isEmpty()) {
+            return false;
+        }
+
+        for (Vote vote: votes) {
+            if (vote.getReponseSondage().getSondage().getId().equals(sondage.getId())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

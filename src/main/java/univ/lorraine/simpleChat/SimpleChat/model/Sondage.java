@@ -22,10 +22,6 @@ public class Sondage {
 
     @Basic
     @Temporal(TemporalType.DATE)
-    private Date dateDebut;
-
-    @Basic
-    @Temporal(TemporalType.DATE)
     private Date dateFin;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "sondage")
@@ -66,14 +62,6 @@ public class Sondage {
 
     public void setStatus(boolean status) {
         this.status = status;
-    }
-
-    public Date getDateDebut() {
-        return dateDebut;
-    }
-
-    public void setDateDebut(Date dateDebut) {
-        this.dateDebut = dateDebut;
     }
 
     public Date getDateFin() {
