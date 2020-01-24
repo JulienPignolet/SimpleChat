@@ -19,7 +19,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtAuthenticationEntryPoint;
 import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtRequestFilter;
-import univ.lorraine.simpleChat.SimpleChat.jwtManagement.JwtRequestInterceptor;
 import univ.lorraine.simpleChat.SimpleChat.service.UserDetailsServiceImpl;
 
 @Configuration

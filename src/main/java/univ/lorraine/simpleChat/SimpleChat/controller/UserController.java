@@ -1,31 +1,27 @@
 
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import univ.lorraine.simpleChat.SimpleChat.adapter.UserAdapter;
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
-import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
-import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
-import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.groupe.GroupeClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.RoleService;
 import univ.lorraine.simpleChat.SimpleChat.service.SecurityService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 public class UserController {
 
@@ -38,7 +34,7 @@ public class UserController {
     private final MessageService messageService;
     private final RoleService roleService;
 
-    private HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
+    private HashMap<Long, GroupeClientRunnable> clientPool = new HashMap<>();
 
     @Autowired
     public UserController(UserService userService, GroupeService groupeService, SecurityService securityService, MessageService messageService, RoleService roleService) {
@@ -56,37 +52,27 @@ public class UserController {
         return "registration";
     }
 
-
     @PostMapping("/registration")
-    public String registration(@Valid UserForm userForm, BindingResult bindingResult, Model model) {
-        //userValidator.validate(userForm, bindingResult);
+    public ResponseEntity<String> registration(@RequestBody User user) {
+        System.out.println(user.getUsername() + user.getPassword() + user.getPasswordConfirm());
+        //TODO CHECK FORM ERROR
+        Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
+        JSONObject json = new JSONObject();
+        boolean success = (role != null);
 
-        if (bindingResult.hasErrors()) {
-            return "registration";
+        if(userService.usernameAlreadyExist(user)) {
+            success = false;
+            json.put("errorMessage", "Le pseudonyme est déjà utilisé");
         }
-        if(!userForm.getPasswordConfirm().equals(userForm.getPassword())){
-            model.addAttribute("error","Password don't match");
-            return "registration";
+        json.put("success", success);
+
+        if(success) {
+            userService.addRole(user, role);
+            userService.save(user);
+            securityService.autoLogin(user.getUsername(), user.getPasswordConfirm());
         }
 
-        if(userService.findByUsername(userForm.getUsername()) != null){
-            model.addAttribute("error","Username already exist");
-            return "registration";
-        }
-
-        User user = UserAdapter.AdaptUserFormToUser(userForm);
-
-        Role role = roleService.findByName(EnumRole.USER.getRole());
-        if(role == null)
-        {
-            return "registration";
-        }
-        userService.addRole(user, role);
-        userService.save(user);
-
-        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
-
-        return "welcome";
+        return new ResponseEntity<>(json.toString(), (success ? HttpStatus.OK : HttpStatus.BAD_REQUEST));
     }
 
     //We don't define /login POST controller, it is provided by Spring Security

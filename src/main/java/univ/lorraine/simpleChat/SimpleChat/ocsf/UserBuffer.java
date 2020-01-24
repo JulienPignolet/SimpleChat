@@ -33,11 +33,15 @@ public class UserBuffer {
 	 * @return JSON
 	 */
 	public String getMsgBuffer() {
-		StringBuilder json = new StringBuilder("{");
-		for(Message msg: msgBuffer)
-			json.append(msg.toString()).append(',');
+		if(msgBuffer.isEmpty())
+			return "{\"buffer\":[]}";
+
+		StringBuilder json = new StringBuilder("{ \"buffer\":[");
+		for(int i = 0; i < msgBuffer.size()-1; i++)
+			json.append(msgBuffer.get(i).toString()).append(",");
+		json.append(msgBuffer.get(msgBuffer.size()-1).toString());
 		msgBuffer.clear();
-		return json.append('}').toString();
+		return json.append("]}").toString();
 	}
 	
 	/**

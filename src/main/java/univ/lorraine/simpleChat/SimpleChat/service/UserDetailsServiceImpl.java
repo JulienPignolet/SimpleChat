@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
-import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
 

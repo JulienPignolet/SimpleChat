@@ -1,0 +1,61 @@
+import * as types from "../types";
+import { make } from "vuex-pathify";
+import { Alerte } from "../../models/Alerte";
+import axios from "axios";
+import * as constants from "../../constants/constants";
+import Router from "../../router"
+
+const state = () => ({
+  groupe:{},
+  groupeList: []
+});
+
+const mutations = make.mutations(state);
+
+const actions = {
+  ...make.actions(state),
+  
+  async [types.createGroupe]({ dispatch, rootState }, group) {
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    if(rootState.user.selectedUserList && rootState.user.selectedUserList.length > 0){
+      let request = { "adminGroupeId": rootState.user.user.id, "groupeName": group.groupName, "isPrivateChat": 0, "members": rootState.user.selectedUserList}; 
+      axios
+      .post(constants.API_URL + 'api/groupe/add/groupe-and-members', request).
+      then(function(response){
+        dispatch((`interfaceControl/${types.setGroupDialog}`), false, { root: true })
+        dispatch((`groupe/${types.getGroupes}`), null, { root: true})
+        dispatch((`alerte/${types.setAlerte}`), new Alerte('success', response.data), { root: true })
+      })
+    }else {
+      let request = { "groupe": group.groupName, "isPrivateChat": 0, "userId": rootState.user.user.id};
+      axios
+      .post(constants.API_URL + 'api/groupe/add/groupe', request).
+      then(function(response){
+        dispatch((`interfaceControl/${types.setGroupDialog}`), false, { root: true })
+        dispatch((`groupe/${types.getGroupes}`), null, { root: true})
+        dispatch((`alerte/${types.setAlerte}`), new Alerte('success', response.data), { root: true })
+      })
+    }
+
+  },
+  async [types.getGroupes]({dispatch, rootState}){
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}api/groupe/find/groups/user/${rootState.user.user.id}`)
+    .then(function (response) {
+      dispatch("groupe/setGroupeList", response.data, {root: true})
+    })
+  },
+  async [types.chooseGroup]({dispatch}, group){
+    Router.push(`/chat/group/${group.id}`);
+    dispatch(types.setGroupe, group);
+    dispatch((`chat/${types.getMessages}`), null, { root: true })
+  }
+};
+
+
+export const groupe = {
+  namespaced: true,
+  state,
+  mutations,
+  actions
+};
