@@ -17,6 +17,8 @@ import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
+
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +56,12 @@ public class MessageController {
                     clientPool.get(message.getGroup_id()).start();
                 }
                 clientPool.get(message.getGroup_id()).addUserToGroup(message.getUser_id());
-                clientPool.get(message.getGroup_id()).sendMsg(message.toString(), userService.findById(message.getUser_id()).getUsername());
 
+                //on verifie egalement ici si le string est un url
+                message.setUrl( isValid(message.getMessage()) );
+
+                clientPool.get(message.getGroup_id()).sendMsg(message.toString(),
+                        userService.findById(message.getUser_id()).getUsername());
                 // Sauvegarde
                 Groupe groupe = groupeService.find(message.getGroup_id());
                 messageService.save( new Message(message.getMessage(), user, groupe));
@@ -71,7 +77,8 @@ public class MessageController {
 
     @ApiOperation(value = "Retourne tous les messages reçus par le client OCSF")
     @GetMapping("/live/{idGroupe}/{idUser}")
-    public ResponseEntity<Object> getLiveMessages(@PathVariable(value = "idGroupe") Long idGroupe, @PathVariable(value="idUser") Long idUser)
+    public ResponseEntity<Object> getLiveMessages(@PathVariable(value = "idGroupe") Long idGroupe
+            , @PathVariable(value="idUser") Long idUser)
     {
         try {
             if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
@@ -82,6 +89,7 @@ public class MessageController {
 
                 GroupeClientRunnable groupeClientRunnable = clientPool.get(idGroupe);
                 groupeClientRunnable.addUserToGroup(idUser);
+
                 String messagesEnAttente = groupeClientRunnable.getMessagesEnAttente(idUser);
                 groupeClientRunnable.viderBuffer(idUser);
                 return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
@@ -145,6 +153,21 @@ public class MessageController {
         catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public static boolean isValid(String url)
+    {
+        /* Try creating a valid URL */
+        try {
+            new URL(url).toURI();
+            return true;
+        }
+
+        // If there was an Exception
+        // while creating URL object
+        catch (Exception e) {
+            return false;
         }
     }
 }

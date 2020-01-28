@@ -14,7 +14,8 @@ import java.util.Map;
 @JsonPropertyOrder({
         "user_id",
         "groupe_id",
-        "message"
+        "message",
+        "is_url"
 })
 public class MessageTemplate {
     @JsonProperty("user_id")
@@ -25,6 +26,17 @@ public class MessageTemplate {
 
     @JsonProperty("message")
     private String message;
+
+    @JsonProperty("is_url")
+    private boolean is_url;
+
+    public boolean isUrl() {
+        return is_url;
+    }
+
+    public void setUrl(boolean is_url) {
+        this.is_url = is_url;
+    }
 
     @JsonProperty("user_id")
     public Long getUser_id() {
@@ -74,6 +86,7 @@ public class MessageTemplate {
         return "{user_id:" + user_id +
                 ", group_id:" + group_id +
                 ", message:\"" + message + "\"" +
+                ", is_url:\"" + is_url + "\"" +
                 '}';
     }
 }

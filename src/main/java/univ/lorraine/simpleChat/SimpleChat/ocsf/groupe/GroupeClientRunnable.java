@@ -76,8 +76,13 @@ public class GroupeClientRunnable implements Runnable {
     }
 
     public String getMessagesEnAttente(long user_id) throws AutorisationException {
-		return this.client.getBufferById(user_id);
+		    return this.client.getBufferById(user_id);
     }
+
+    public String getMessagesObjetsEnAttente(long user_id) throws AutorisationException {
+        return this.client.getBufferById(user_id);
+    }
+
     
     public void viderBuffer(long user_id) throws AutorisationException {
         this.client.viderBuffer(user_id);
