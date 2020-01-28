@@ -1,5 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf.groupe;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.lloseng.ocsf.client.ObservableClient;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
@@ -8,18 +10,25 @@ import univ.lorraine.simpleChat.SimpleChat.ocsf.UserBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
 /**
  * Représente un groupe de discussion
  */
 class GroupeClientImpl extends ObservableClient {
-
+	
     private Long id;
+    RestTemplate restTemplate;
     private Map<Long, UserBuffer> users;
+    final String URL_BLOCKLIST = "http://localhost:12345/blockList/{userId}";
 
     GroupeClientImpl(Long id, String host, int port) {
         super(host, port);
         setId(id);
         setUsers(new HashMap<>());
+        this.restTemplate = new RestTemplate();
     }
 
     public Long getId() {
@@ -66,15 +75,24 @@ class GroupeClientImpl extends ObservableClient {
         Message message = new Message((String) msg);
         if(message.getGroup_id().equals(id)) {
             for (Map.Entry<Long, UserBuffer> user : users.entrySet()) {
-                user.getValue().addMessageToBuffer(new Message((String) msg));
+            	// Vérifie si le membre du groupe a bloqué l'expéditeur
+            	String expeditor_id = user.getValue().getId() + "";
+            	ResponseEntity<String> response = this.restTemplate.getForEntity(this.URL_BLOCKLIST, String.class, expeditor_id);
+            	if(response.getStatusCode() == HttpStatus.OK) { // Si une blocklist existe
+            		JsonObject blocklist = new JsonParser().parse(response.getBody()).getAsJsonObject();
+            		if (!blocklist.has(expeditor_id)) // Si l'expéditeur n'est pas bloqué
+            			user.getValue().addMessageToBuffer(message);
+                }
+            	else
+            		user.getValue().addMessageToBuffer(message);
             }
         }
     }
     
     public String getBufferById(long user_id) throws AutorisationException {
-    if(users.containsKey(user_id))
-        return users.get(user_id).getMsgBuffer();
-    throw new AutorisationException(this.id, user_id);
+	    if(users.containsKey(user_id))
+	        return users.get(user_id).getMsgBuffer();
+	    throw new AutorisationException(this.id, user_id);
     }
 
 
