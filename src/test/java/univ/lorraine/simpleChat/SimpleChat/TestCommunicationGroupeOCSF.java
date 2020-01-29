@@ -35,11 +35,12 @@ public class TestCommunicationGroupeOCSF {
         msg.setUser_id(103L);
         msg.setGroup_id(77L);
         msg.setMessage("Message 1");
+        msg.setUrl(false);
 
         messageController.sendMessage(msg);
 
         String response1 = String.valueOf(messageController.getLiveMessages(77L, 103L).getBody());
-        assertEquals("{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\"}]}", response1);
+        assertEquals("{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\", \"is_url\":false}]}", response1);
         String response2 = String.valueOf(messageController.getLiveMessages(78L, 104L).getBody());
         assertEquals("{\"buffer\":[]}", response2);
         String response3 = String.valueOf(messageController.getLiveMessages(79L, 104L).getBody());
@@ -47,15 +48,21 @@ public class TestCommunicationGroupeOCSF {
 
         msg.setUser_id(104L);
         msg.setGroup_id(78L);
-        msg.setMessage("Message 2");
+        msg.setMessage("https://www.google.fr/");
 
         messageController.sendMessage(msg);
 
         response1 = String.valueOf(messageController.getLiveMessages(78L, 103L).getBody());
-        assertEquals("{ \"buffer\":[{\"user_id\":104, \"group_id\":78, \"message\":\"Message 2\"}]}", response1);
+        assertEquals("{ \"buffer\":[{\"user_id\":104, \"group_id\":78, \"message\":\"https://www.google.fr/\", \"is_url\":true}]}", response1);
         response2 = String.valueOf(messageController.getLiveMessages(78L, 104L).getBody());
-        assertEquals("{ \"buffer\":[{\"user_id\":104, \"group_id\":78, \"message\":\"Message 2\"}]}", response2);
+        assertEquals("{ \"buffer\":[{\"user_id\":104, \"group_id\":78, \"message\":\"https://www.google.fr/\", \"is_url\":true}]}", response2);
 
-//        System.out.println(messageController.getSavedMessages(77L, 103L));
+        response1 = String.valueOf(messageController.getLiveMessages(79L, 103L).getBody());
+        assertEquals("{\"buffer\":[]}", response1);
+        response2 = String.valueOf(messageController.getLiveMessages(79L, 104L).getBody());
+        assertEquals("{\"buffer\":[]}", response2);
+
+        response1 = String.valueOf(messageController.getLiveMessagesAdmin().getBody());
+        assertEquals("{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\", \"is_url\":false},{\"user_id\":104, \"group_id\":78, \"message\":\"https://www.google.fr/\", \"is_url\":true}]}", response1);
     }
 }
