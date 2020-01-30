@@ -22,7 +22,7 @@ class GroupeClientImpl extends ObservableClient {
     private Long id;
     RestTemplate restTemplate;
     private Map<Long, UserBuffer> users;
-    final String URL_BLOCKLIST = "http://localhost:12345/blockList/{userId}";
+    final String URL_BLOCKLIST = "http://localhost:8080/blockList/";
 
     GroupeClientImpl(Long id, String host, int port) {
         super(host, port);
@@ -75,16 +75,20 @@ class GroupeClientImpl extends ObservableClient {
         Message message = new Message((String) msg);
         if(message.getGroup_id().equals(id)) {
             for (Map.Entry<Long, UserBuffer> user : users.entrySet()) {
-            	// Vérifie si le membre du groupe a bloqué l'expéditeur
-            	String expeditor_id = user.getValue().getId() + "";
-            	ResponseEntity<String> response = this.restTemplate.getForEntity(this.URL_BLOCKLIST, String.class, expeditor_id);
-            	if(response.getStatusCode() == HttpStatus.OK) { // Si une blocklist existe
-            		JsonObject blocklist = new JsonParser().parse(response.getBody()).getAsJsonObject();
-            		if (!blocklist.has(expeditor_id)) // Si l'expéditeur n'est pas bloqué
-            			user.getValue().addMessageToBuffer(message);
-                }
-            	else
+            	try {
+	            	// Vérifie si le membre du groupe a bloqué l'expéditeur
+	            	String expeditor_id = user.getValue().getId() + "";
+	            	ResponseEntity<String> response = this.restTemplate.getForEntity(this.URL_BLOCKLIST + expeditor_id, String.class);
+	            	if(response.getStatusCode() == HttpStatus.OK) { // Si une blocklist existe
+	            		JsonObject blocklist = new JsonParser().parse(response.getBody()).getAsJsonObject();
+	            		if (!blocklist.has(expeditor_id)) // Si l'expéditeur n'est pas bloqué
+	            			user.getValue().addMessageToBuffer(message);
+	                }
+	            	/*else
+	            		user.getValue().addMessageToBuffer(message);*/
+            	} catch (Exception e) {
             		user.getValue().addMessageToBuffer(message);
+				}
             }
         }
     }
