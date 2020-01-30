@@ -29,6 +29,7 @@ export default {
     deconnexion: call(`user/${types.deconnexion}`),
     getGroupes: call(`groupe/${types.getGroupes}`),
     getMessages: call(`chat/${types.getLiveMessages}`),
+    getGroupeMembers: call(`groupe/${types.getGroupeMembers}`),
     userIsConnected: function() {
       return (
         this.$store.state.user != null &&
@@ -40,6 +41,7 @@ export default {
     window.setInterval(() => {
       this.getGroupes();
       this.getMessages();
+      this.getGroupeMembers();
     }, 5000);
   }
 };

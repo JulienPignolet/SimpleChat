@@ -99,6 +99,14 @@ const actions = {
     })
   },
 
+  async [types.blockUser]({rootState}, userId){
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/add`, userId)
+      .then(function () {
+        console.log('user bloqué');
+      })
+  },
+
 }
 
 export const user = {

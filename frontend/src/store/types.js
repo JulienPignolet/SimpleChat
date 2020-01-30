@@ -5,6 +5,7 @@ export const getUsers = 'getUsers'
 export const getUserFriends = 'getUserFriends'
 export const deleteFriend = 'deleteFriend'
 export const addFriend = 'addFriend'
+export const blockUser = 'blockUser'
 
 // action module chat
 export const sendMessage = 'sendMessage'
@@ -16,6 +17,7 @@ export const createGroupe = 'createGroupe'
 export const getGroupes = 'getGroupes'
 export const chooseGroup = 'chooseGroup'
 export const getGroupesCommun = 'getGroupesCommun'
+export const getGroupeMembers = 'getGroupeMembers'
 
 // action module register 
 export const register = 'register'

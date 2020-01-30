@@ -9,7 +9,8 @@ const state = () => ({
   groupe:{},
   groupeList: [],
   groupeName: "",
-  groupeCommunList: []
+  groupeCommunList: [],
+  groupeMembers: []
 });
 
 const mutations = make.mutations(state);
@@ -84,6 +85,14 @@ const actions = {
     // })
     dispatch('chat/setMessageList', [], {root: true})
     dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
+  },
+  async [types.getGroupeMembers]({dispatch, rootState}) {
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/${rootState.groupe.groupe.id}`)
+      .then(function (response) {
+        dispatch("groupe/setGroupeMembers", response.data, {root: true});
+        console.log(rootState.groupe.groupe.id, response.data);
+      })
   }
 };
 
