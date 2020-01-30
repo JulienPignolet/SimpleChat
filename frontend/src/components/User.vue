@@ -9,8 +9,16 @@
       <v-list-item-icon style="margin-right: 10px;" v-on="on">
         <v-icon>mdi-account-circle-outline</v-icon>
       </v-list-item-icon>
-      <v-list-item-content v-on="on">
-        <v-list-item-title>{{ user.username }}</v-list-item-title>
+      <v-list-item-content>
+        <v-list-item-title>
+          <div class="d-flex justify-space-between align-center">
+            <span v-on="on">{{ user.username }}</span>
+            <div class="d-flex align-center" style="margin-left: 40px;">
+              <v-icon class="amber--text">mdi-account-star</v-icon>
+              <v-icon class="delete-member" style="margin-left: 10px;">mdi-trash-can-outline</v-icon>
+            </div>
+          </div>
+        </v-list-item-title>
       </v-list-item-content>
     </template>
 
@@ -87,5 +95,11 @@
   }
 </script>
 
-<style lang="css">
+<style lang="scss">
+  .delete-member {
+    transition: all 0.3s ease-in-out;
+  }
+  .delete-member:hover {
+    color: red;
+  }
 </style>
