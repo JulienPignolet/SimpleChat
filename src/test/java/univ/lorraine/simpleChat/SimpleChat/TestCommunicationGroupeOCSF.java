@@ -62,7 +62,7 @@ public class TestCommunicationGroupeOCSF {
         response2 = String.valueOf(messageController.getLiveMessages(79L, 104L).getBody());
         assertEquals("{\"buffer\":[]}", response2);
 
-        response1 = String.valueOf(messageController.getLiveMessagesAdmin().getBody());
-        assertEquals("{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\", \"is_url\":false},{\"user_id\":104, \"group_id\":78, \"message\":\"https://www.google.fr/\", \"is_url\":true}]}", response1);
+     //   response1 = String.valueOf(messageController.getLiveMessagesAdmin().getBody());
+        //assertEquals("{ \"buffer\":[{\"user_id\":103, \"group_id\":77, \"message\":\"Message 1\", \"is_url\":false},{\"user_id\":104, \"group_id\":78, \"message\":\"https://www.google.fr/\", \"is_url\":true}]}", response1);
     }
 }
