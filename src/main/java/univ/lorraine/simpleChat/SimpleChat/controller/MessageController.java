@@ -10,13 +10,17 @@ import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.MessageTemplate;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
-import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.admin.AdminClientRunnable;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.groupe.GroupeClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.model.Message;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
+
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -29,13 +33,15 @@ public class MessageController {
     private final MessageService messageService;
     private final GroupeUserService groupeUserService;
 
-    public HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
+    private Map<Long, GroupeClientRunnable> clientPool = new HashMap<>();
+    private AdminClientRunnable adminClient = new AdminClientRunnable();
 
     public MessageController(UserService userService, GroupeService groupeService, MessageService messageService, GroupeUserService groupeUserService) {
         this.userService = userService;
         this.groupeService = groupeService;
         this.messageService = messageService;
         this.groupeUserService = groupeUserService;
+        adminClient.start();
     }
 
     @ApiOperation(value = "Envoie un message")
@@ -46,12 +52,16 @@ public class MessageController {
             User user = userService.findById(message.getUser_id());
             if(groupeUserService.CountByGroupeIdAndUserId(message.getGroup_id(), message.getUser_id())) {
                 if (!clientPool.containsKey(message.getGroup_id())) {
-                    clientPool.put(message.getGroup_id(), new ClientRunnable(message.getGroup_id()));
+                    clientPool.put(message.getGroup_id(), new GroupeClientRunnable(message.getGroup_id()));
                     clientPool.get(message.getGroup_id()).start();
                 }
                 clientPool.get(message.getGroup_id()).addUserToGroup(message.getUser_id());
-                clientPool.get(message.getGroup_id()).sendMsg(message.toString(), userService.findById(message.getUser_id()).getUsername());
 
+                //on verifie egalement ici si le string est un url
+                message.setUrl( isValid(message.getMessage()) );
+
+                clientPool.get(message.getGroup_id()).sendMsg(message.toString(),
+                        userService.findById(message.getUser_id()).getUsername());
                 // Sauvegarde
                 Groupe groupe = groupeService.find(message.getGroup_id());
                 messageService.save( new Message(message.getMessage(), user, groupe));
@@ -65,33 +75,29 @@ public class MessageController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /**
-     *
-     * @param idGroupe
-     * @param  idUser
-     * @return
-     */
     @ApiOperation(value = "Retourne tous les messages reçus par le client OCSF")
     @GetMapping("/live/{idGroupe}/{idUser}")
-    public ResponseEntity<Object> getLiveMessages(@PathVariable(value = "idGroupe") Long idGroupe, @PathVariable(value="idUser") Long idUser)
+    public ResponseEntity<Object> getLiveMessages(@PathVariable(value = "idGroupe") Long idGroupe
+            , @PathVariable(value="idUser") Long idUser)
     {
         try {
             if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
                 if (!clientPool.containsKey(idGroupe)) {
-                    clientPool.put(idGroupe, new ClientRunnable(idGroupe));
+                    clientPool.put(idGroupe, new GroupeClientRunnable(idGroupe));
                     clientPool.get(idGroupe).start();
                 }
 
-                ClientRunnable clientRunnable = clientPool.get(idGroupe);
-                clientRunnable.addUserToGroup(idUser);
-                String messagesEnAttente = clientRunnable.getMessagesEnAttente(idUser);
-                clientRunnable.viderBuffer(idUser);    // /!\ NE SERT ACTUELLEMENT PAS
-                return new ResponseEntity<Object>(messagesEnAttente, HttpStatus.OK);
+                GroupeClientRunnable groupeClientRunnable = clientPool.get(idGroupe);
+                groupeClientRunnable.addUserToGroup(idUser);
+
+                String messagesEnAttente = groupeClientRunnable.getMessagesEnAttente(idUser);
+                groupeClientRunnable.viderBuffer(idUser);
+                return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
             }
         }
         catch (AutorisationException e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<Object>("{}", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -103,11 +109,11 @@ public class MessageController {
         try {
             if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
                 String messagesEnAttente = messageService.get(idGroupe);
-                return new ResponseEntity<Object>(messagesEnAttente, HttpStatus.OK);
+                return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
             }
         }
         catch (AutorisationException e) {
-            return new ResponseEntity<Object>("{}", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -119,19 +125,49 @@ public class MessageController {
         try {
             if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
                 if (!clientPool.containsKey(idGroupe)) {
-                    clientPool.put(idGroupe, new ClientRunnable(idGroupe));
+                    clientPool.put(idGroupe, new GroupeClientRunnable(idGroupe));
                     clientPool.get(idGroupe).start();
                 }
 
-                ClientRunnable clientRunnable = clientPool.get(idGroupe);
-                clientRunnable.addUserToGroup(idUser);
-                return new ResponseEntity<Object>(HttpStatus.OK);
+                GroupeClientRunnable groupeClientRunnable = clientPool.get(idGroupe);
+                groupeClientRunnable.addUserToGroup(idUser);
+                return new ResponseEntity<>(HttpStatus.OK);
             }
         }
         catch (AutorisationException e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<Object>("{}", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ApiOperation(value = "Retourne tous les messages envoyés")
+    @GetMapping("/live/admin")
+    public ResponseEntity<Object> getLiveMessagesAdmin()
+    {
+        try {
+            String messagesEnAttente = adminClient.getMessagesEnAttente();
+            adminClient.viderBuffer();
+            return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public static boolean isValid(String url)
+    {
+        /* Try creating a valid URL */
+        try {
+            new URL(url).toURI();
+            return true;
+        }
+
+        // If there was an Exception
+        // while creating URL object
+        catch (Exception e) {
+            return false;
+        }
     }
 }

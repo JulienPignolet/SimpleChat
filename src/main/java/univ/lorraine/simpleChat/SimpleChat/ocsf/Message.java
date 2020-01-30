@@ -8,6 +8,7 @@ public class Message {
     private String user_name;
     private Long group_id;
     private String message;
+    private boolean is_url;
 
     private Message(Long user_id, String user_name, Long group_id, String message) {
         this.user_id = user_id;
@@ -22,6 +23,7 @@ public class Message {
 //        this.user_name = objet.get("user_name").getAsString();
         this.group_id = objet.get("group_id").getAsLong();
         this.message = objet.get("message").getAsString();
+        this.is_url = objet.get("is_url").getAsBoolean();
     }
 
     public Long getUser_id() {
@@ -37,7 +39,16 @@ public class Message {
         return "{\"user_id\":" + user_id +
 //        		", \"user_name\":" + user_name +
                 ", \"group_id\":" + group_id +
-                ", \"message\":\"" + message + "\"}";
+                ", \"message\":\"" + message + "\"" +
+                ", \"is_url\":" + is_url +"}";
+    }
+
+    public void setURL(boolean url) {
+        is_url = url;
+    }
+
+    public boolean isURL() {
+        return is_url;
     }
 
     public String getMessage() {

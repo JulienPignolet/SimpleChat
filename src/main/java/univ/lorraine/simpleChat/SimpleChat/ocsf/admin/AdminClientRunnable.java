@@ -1,37 +1,39 @@
-package univ.lorraine.simpleChat.SimpleChat.ocsf;
+package univ.lorraine.simpleChat.SimpleChat.ocsf.admin;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 
-public class ClientRunnable implements Runnable {
-    private ClientImpl client;
+public class AdminClientRunnable implements Runnable {
+    private final AdminClientImpl client;
     private String msgToSend;
     private Thread thread;
-    
-    public ClientRunnable(Long id, ClientImpl client) {
+
+    public AdminClientRunnable(AdminClientImpl client) {
         this.client = client;
         msgToSend = null;
         this.thread = null;
     }
 
-    public ClientRunnable(Long id) {
-        this.client = new ClientImpl(id, "simplechat.fun", 12345);
+    public AdminClientRunnable() {
+        /******************** REMPLACER SIMPLECHAT.FUN PAR LOCALHOST POUR UTILISER LE SERVEUR OCSF LOCAL ********************/
+        this.client = new AdminClientImpl( "simplechat.fun", 12345);
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
 
-		// ATTENTION : Il faut demander au serveur d'enregistrer le message dans la BDD
-    	
         try {
             client.isConnected();
             client.openConnection();
             while (true) {
                 try {
-                    client.isConnected();
-                    if (msgToSend != null) {
+                    synchronized (this.client) {
+                        client.isConnected();
+                        if (msgToSend == null) {
+                            wait();
+                        }
                         client.sendToServer(msgToSend);
                         msgToSend = null;
                         Thread.sleep(1);
@@ -62,28 +64,19 @@ public class ClientRunnable implements Runnable {
         }
     }
 
-    public void sendMsg(String message, String name) {
+    public synchronized void sendMsg(String message, String name) {
         JsonObject json = new JsonParser().parse(message).getAsJsonObject();
         json.addProperty("user_name", name);
         this.msgToSend = json.toString();
+        notify();
     }
 
-    public void addUserToGroup(long user_id) {
-        client.addUserToGroup(user_id);
-    }
-
-    /**
-     * Retourne un objet JSON contenant tous le buffer de l'utilisateur
-     * @param user_id
-     * @return String
-     * @throws AutorisationException
-     */
-    public String getMessagesEnAttente(long user_id) throws AutorisationException {
-		return this.client.getBufferById(user_id);
+    public String getMessagesEnAttente() {
+		return this.client.getBuffer();
     }
     
-    public void viderBuffer(long user_id) throws AutorisationException { // /!\ NE SERT ACTUELLEMENT PAS
-        this.client.viderBuffer(user_id);
+    public void viderBuffer() {
+        this.client.viderBuffer();
     }
 }
 

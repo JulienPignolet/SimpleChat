@@ -7,23 +7,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import univ.lorraine.simpleChat.SimpleChat.adapter.UserAdapter;
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
 import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
-import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
-import univ.lorraine.simpleChat.SimpleChat.ocsf.ClientRunnable;
-import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.groupe.GroupeClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.RoleService;
 import univ.lorraine.simpleChat.SimpleChat.service.SecurityService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -39,7 +34,7 @@ public class UserController {
     private final MessageService messageService;
     private final RoleService roleService;
 
-    private HashMap<Long, ClientRunnable> clientPool = new HashMap<>();
+    private HashMap<Long, GroupeClientRunnable> clientPool = new HashMap<>();
 
     @Autowired
     public UserController(UserService userService, GroupeService groupeService, SecurityService securityService, MessageService messageService, RoleService roleService) {
