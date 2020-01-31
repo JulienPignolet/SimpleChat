@@ -75,20 +75,7 @@ class GroupeClientImpl extends ObservableClient {
         Message message = new Message((String) msg);
         if(message.getGroup_id().equals(id)) {
             for (Map.Entry<Long, UserBuffer> user : users.entrySet()) {
-            	try {
-	            	// Vérifie si le membre du groupe a bloqué l'expéditeur
-	            	String expeditor_id = user.getValue().getId() + "";
-	            	ResponseEntity<String> response = this.restTemplate.getForEntity(this.URL_BLOCKLIST + expeditor_id, String.class);
-	            	if(response.getStatusCode() == HttpStatus.OK) { // Si une blocklist existe
-	            		JsonObject blocklist = new JsonParser().parse(response.getBody()).getAsJsonObject();
-	            		if (!blocklist.has(expeditor_id)) // Si l'expéditeur n'est pas bloqué
-	            			user.getValue().addMessageToBuffer(message);
-	                }
-	            	/*else
-	            		user.getValue().addMessageToBuffer(message);*/
-            	} catch (Exception e) {
-            		user.getValue().addMessageToBuffer(message);
-				}
+            	user.getValue().addMessageToBuffer(new Message((String) msg));
             }
         }
     }
