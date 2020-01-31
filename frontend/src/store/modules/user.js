@@ -5,7 +5,7 @@ import { make } from "vuex-pathify";
 import axios from "axios";
 import * as constants from "../../constants/constants";
 import Router from "../../router/router"
-
+import { i18n } from '../../plugins/i18n';
 
 const state = () => ({
   user: new User(),
@@ -38,7 +38,7 @@ const actions = {
       Router.push('/chat');
     })
     .catch(() => {
-      dispatch((`alerte/${types.setAlerte}`), new Alerte('error', `Informations saisies invalides`), { root: true })
+      dispatch((`alerte/${types.setAlerte}`), new Alerte('error', i18n.t('wrong-credentials')), { root: true })
     });
   },
 

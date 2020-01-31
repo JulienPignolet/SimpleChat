@@ -1,7 +1,8 @@
 <template>
   <v-app-bar app color="primary" :clipped-left="$vuetify.breakpoint.lgAndUp">
     <img src="../../public/images/logo.svg" alt="logo simple chat" class="logo" height="40" />
-    <v-spacer></v-spacer>
+    <v-spacer />
+    <locales-menu />
     <v-btn v-if="userIsConnected()" icon @click="deconnexion()">
       <v-icon large color="white">mdi-power</v-icon>
     </v-btn>
@@ -15,9 +16,11 @@ import { groupe } from "@/store/modules/groupe";
 import { chat } from "@/store/modules/chat"
 import RegisterStoreModule from "@/mixins/RegisterStoreModule";
 import {sondage} from "../store/modules/sondage";
+import LocalesMenu from "./LocalesMenu";
 
 export default {
-  mixins: [RegisterStoreModule],
+    components: {LocalesMenu},
+    mixins: [RegisterStoreModule],
   beforeCreate() {},
   created() {
     this.registerStoreModule("groupe", groupe);
