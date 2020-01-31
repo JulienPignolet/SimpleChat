@@ -8,11 +8,12 @@ import Router from "../../router/router"
 import { i18n } from '../../plugins/i18n';
 
 const state = () => ({
-  user: new User(),
+  user: new User(localStorage.username, localStorage.token, localStorage.id),
   userList: [],
   friendList: [],
   selectedUserList: [],
 })
+
 
 const getters = {
   ...make.getters(state),
@@ -44,7 +45,7 @@ const actions = {
 
     async [types.deconnexion]({ state, dispatch}) {
         dispatch((`alerte/${types.setAlerte}`), new Alerte('error', `L'utilisateur ${state.user.username} est bien déconnecté`), { root: true });
-        dispatch(types.setUser, new User());
+        dispatch(types.setUser, new User(null, null, null));
         Router.push('/login');
     },
 
