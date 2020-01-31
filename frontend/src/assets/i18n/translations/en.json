@@ -63,5 +63,8 @@
     "close": "Close",
     "send": "Send",
     "type_username": "Type an username"
+  },
+  "poll": {
+    "vote": "0 votes | 1 vote | {count} votes"
   }
 }

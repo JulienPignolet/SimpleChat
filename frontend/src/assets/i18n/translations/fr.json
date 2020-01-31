@@ -29,6 +29,9 @@
   "user_group": {
     "members": "Membres "
   },
+  "poll": {
+    "vote": "0 votes | 1 vote | {count} votes"
+  },
   "dialog": {
     "new_group": {
       "select_users": "Séléctionner des utilisateurs",
