@@ -81,7 +81,7 @@ public class Message {
     public String toJSON() {
         return "{\n" +
                 "    \"user_id\":" + author.getId() + ", \n" +
-//                "    \"user_name\":" + author.getUsername() + ", \n" +
+                "    \"user_name\":\"" + author.getUsername() + "\", \n" +
                 "    \"group_id\": " + groupe.getId() + ", \n" +
                 "    \"message\": \"" + contenu + "\"" +
                 "}";
