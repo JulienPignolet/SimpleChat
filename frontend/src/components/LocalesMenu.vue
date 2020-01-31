@@ -52,16 +52,12 @@
 
 <script>
   import { i18n } from '../plugins/i18n';
+  import languages from '../assets/i18n/languages';
 
   export default {
     name: 'LocalesMenu',
     data: () => ({
-      languages: [
-        {locale: 'en', name: 'English'},
-        {locale: 'fr', name: 'Français'},
-        {locale: 'de', name: 'Deutsch'},
-        {locale: 'ru', name: 'Русский'},
-      ]
+      languages: languages.languages
     })
     ,
     mounted() {

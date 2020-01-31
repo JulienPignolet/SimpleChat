@@ -35,17 +35,17 @@ const actions = {
     .post(constants.API_URL + 'authentication', request)
     .then(response => {
       dispatch(types.setUser, new User(user.username, response.data.user_key, response.data.user_id));
-      dispatch((`alerte/${types.setAlerte}`), new Alerte('success', `L'utilisateur ${state.user.username} est bien connecté`), { root: true });
+      dispatch((`alerte/${types.setAlerte}`), new Alerte('success', i18n.t('store.user.connected', { username: state.user.username })), { root: true });
       Router.push('/chat');
     })
     .catch(() => {
-      dispatch((`alerte/${types.setAlerte}`), new Alerte('error', i18n.t('wrong-credentials')), { root: true })
+      dispatch((`alerte/${types.setAlerte}`), new Alerte('error', i18n.t('store.user.wrong_credentials')), { root: true })
     });
   },
 
     async [types.deconnexion]({ state, dispatch}) {
-        dispatch((`alerte/${types.setAlerte}`), new Alerte('error', `L'utilisateur ${state.user.username} est bien déconnecté`), { root: true });
-        dispatch(types.setUser, new User(null, null, null));
+        dispatch((`alerte/${types.setAlerte}`), new Alerte('error', i18n.t('store.user.disconnected', { username: state.user.username })), { root: true });
+        dispatch(types.setUser, new User());
         Router.push('/login');
     },
 
@@ -58,10 +58,10 @@ const actions = {
     .post(constants.API_URL + 'registration', request)
     .then(() => {
       Router.push('/login');
-      dispatch((`alerte/${types.setAlerte}`), new Alerte('success', "Vous êtes maintenant inscrit, connectez vous !"), { root: true })
+      dispatch((`alerte/${types.setAlerte}`), new Alerte('success', i18n.t('store.user.registered')), { root: true })
     })
     .catch(error => {
-      let errorMessage = error.response.data.errorMessage || "une erreur est survenue";
+      let errorMessage = error.response.data.errorMessage || i18n.t('error.has_occurred');
       dispatch((`alerte/${types.setAlerte}`), new Alerte('error', errorMessage), { root: true })
     });
   },

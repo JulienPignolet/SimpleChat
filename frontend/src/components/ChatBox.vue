@@ -5,7 +5,7 @@
         ref="message"
         v-model="message"
         label="Solo"
-        placeholder="Saisir un message..."
+        :placeholder="$t('chat_box.type_a_message')"
         solo
         append-icon="mdi-send"
         @click:append="sendMessage(message)"

@@ -1,0 +1,67 @@
+{
+  "login": {
+    "title": "Войдите в SimpleChat",
+    "sign_in": "войти в систему",
+    "sign_up": "зарегистрироваться",
+    "username": "имя пользователя",
+    "password": "пароль"
+  },
+  "register": {
+    "title": "Постановка на учет",
+    "confirm_password": "Подтвердите Пароль",
+    "sign_up": "зарегистрироваться"
+  },
+  "chat_box": {
+    "type_a_message": "Введите сообщение ..."
+  },
+  "chat_list": {
+    "discussions": "Обсуждение",
+    "friends": "друзья"
+  },
+  "friend_list": {
+    "add_friend": "Добавить в друзья",
+    "type_username": "Введите имя пользователя"
+  },
+  "user": {
+    "add_friend": "Добавить в друзья",
+    "block": "Заблокировать этого пользователя"
+  },
+  "user_group": {
+    "members": "члены"
+  },
+  "dialog": {
+    "new_group": {
+      "select_users": "Выберите пользователей",
+      "name": "Наименование группы",
+      "create_group": "Создать группу"
+    },
+    "new_poll": {
+      "title": "Создать опрос",
+      "question": "Вопрос?",
+      "end_date": "Дата окончания",
+      "propositions": "Предложения",
+      "proposition": "предложение",
+      "add_proposition": "Добавить предложение",
+      "anonymize_votes": "Анонимизировать голоса"
+    }
+  },
+  "store": {
+    "user": {
+      "connected": "Пользователь {username} теперь подключен",
+      "disconnected": "Пользователь {username} успешно вышел из системы",
+      "registered": "Вы зарегистрированы, сейчас авторизируйтесь!",
+      "wrong_credentials": "Неправильные учетные данные"
+    }
+  },
+  "error": {
+    "has_occurred": "произошла ошибка"
+  },
+  "general": {
+    "cancel": "Отмена",
+    "add": "добавлять",
+    "ok": "Ok",
+    "close": "близко",
+    "send": "послать",
+    "type_username": "Введите имя пользователя"
+  }
+}

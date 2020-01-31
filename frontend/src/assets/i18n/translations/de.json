@@ -1,0 +1,67 @@
+{
+  "login": {
+    "title": "Sich bei SimpleChat anmelden",
+    "sign_in": "Einloggen",
+    "sign_up": "Anmelden",
+    "username": "Nutzername",
+    "password": "Passwort"
+  },
+  "register": {
+    "title": "Anmeldung",
+    "confirm_password": "Kennwort bestätigen",
+    "sign_up": "Anmelden"
+  },
+  "chat_box": {
+    "type_a_message": "Nachricht eingeben ..."
+  },
+  "chat_list": {
+    "discussions": "Diskussionen",
+    "friends": "Freunde"
+  },
+  "friend_list": {
+    "add_friend": "Einen Freund hinzufügen",
+    "type_username": "Geben Sie einen Benutzernamen ein"
+  },
+  "user": {
+    "add_friend": "Als Freund hinzufügen",
+    "block": "Diesen Benutzer sperren"
+  },
+  "user_group": {
+    "members": "Mitglieder"
+  },
+  "dialog": {
+    "new_group": {
+      "select_users": "Benutzer auswählen",
+      "name": "Name der Gruppe",
+      "create_group": "Erstellen Sie eine Gruppe"
+    },
+    "new_poll": {
+      "title": "Erstellen Sie eine Umfrage",
+      "question": "Frage?",
+      "end_date": "Endtermin",
+      "propositions": "Vorschläge",
+      "proposition": "Vorschlag",
+      "add_proposition": "Fügen Sie einen Vorschlag hinzu",
+      "anonymize_votes": "Anonymisieren Sie die Stimmen"
+    }
+  },
+  "store": {
+    "user": {
+      "connected": "Benutzer {Benutzername} ist jetzt verbunden",
+      "disconnected": "Benutzer {Benutzername} wurde erfolgreich abgemeldet",
+      "registered": "Sie sind registriert, jetzt einloggen!",
+      "wrong_credentials": "Falsche Anmeldeinformationen"
+    }
+  },
+  "error": {
+    "has_occurred": "Ein Fehler ist aufgetreten"
+  },
+  "general": {
+    "cancel": "Stornieren",
+    "add": "Hinzufügen",
+    "ok": "in Ordnung",
+    "close": "Schließen",
+    "send": "Senden",
+    "type_username": "Geben Sie einen Benutzernamen ein"
+  }
+}
