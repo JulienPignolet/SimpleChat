@@ -18,9 +18,9 @@ const actions = {
     );
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.post(constants.API_URL+"api/message/send", {
-      "group_id": rootState.groupe.groupe.id,
-      "message": message,
-      "user_id": rootState.user.user.id
+      "groupId": rootState.groupe.groupe.id,
+      "contenu": message,
+      "userId": rootState.user.user.id
     }).then(function (){
     dispatch((`chat/${types.getLiveMessages}`), null, { root: true })
     })

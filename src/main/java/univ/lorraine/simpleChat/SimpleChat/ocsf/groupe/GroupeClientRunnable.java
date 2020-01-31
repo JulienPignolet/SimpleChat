@@ -1,9 +1,10 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf.groupe;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.MessageOCSF;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.io.IOException;
 
 public class GroupeClientRunnable implements Runnable {
@@ -19,7 +20,7 @@ public class GroupeClientRunnable implements Runnable {
 
     public GroupeClientRunnable(Long id) {
         /******************** REMPLACER SIMPLECHAT.FUN PAR LOCALHOST POUR UTILISER LE SERVEUR OCSF LOCAL ********************/
-        this.client = new GroupeClientImpl(id, "simplechat.fun", 12345);
+        this.client = new GroupeClientImpl(id, "localhost", 12345);
         // this.client = new GroupeClientImpl(id, "localhost", 12345);
     }
 
@@ -66,10 +67,12 @@ public class GroupeClientRunnable implements Runnable {
         }
     }
 
-    public synchronized void sendMsg(String message, String name) {
-        JsonObject json = new JsonParser().parse(message).getAsJsonObject();
-        json.addProperty("user_name", name);
-        this.msgToSend = json.toString();
+    public synchronized void sendMsg(MessageOCSF messageOCSF){
+        try (Jsonb jsonb = JsonbBuilder.create()) {
+            this.msgToSend = jsonb.toJson(messageOCSF);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         notify();
     }
 

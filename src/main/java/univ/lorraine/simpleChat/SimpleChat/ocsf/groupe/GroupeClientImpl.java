@@ -2,9 +2,11 @@ package univ.lorraine.simpleChat.SimpleChat.ocsf.groupe;
 
 import com.lloseng.ocsf.client.ObservableClient;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
-import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.MessageOCSF;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.UserBuffer;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,11 +42,11 @@ class GroupeClientImpl extends ObservableClient {
 
 	/**
 	 * Ajoute un utilisateur au groupe
-	 * @param user_id
+	 * @param userId
 	 */
-	public void addUserToGroup(long user_id) {
-	    if(!users.containsKey(user_id))
-		    users.put(user_id, new UserBuffer(user_id));
+	public void addUserToGroup(long userId) {
+	    if(!users.containsKey(userId))
+		    users.put(userId, new UserBuffer(userId));
 	}
 
 	protected void connectionClosed() {
@@ -61,27 +63,32 @@ class GroupeClientImpl extends ObservableClient {
 //        System.out.println("Client.isConnected()="+isConnected());
     }
 
-    protected void handleMessageFromServer(Object msg) {
+    @Override
+    protected void handleMessageFromServer(Object msg){
         System.out.println("Client " + id + ": Message received = " + msg);
-        Message message = new Message((String) msg);
-        if(message.getGroup_id().equals(id)) {
-            for (Map.Entry<Long, UserBuffer> user : users.entrySet()) {
-            	user.getValue().addMessageToBuffer(new Message((String) msg));
+        try (Jsonb jsonb = JsonbBuilder.create()) {
+            MessageOCSF messageOCSF = jsonb.fromJson((String) msg, MessageOCSF.class);
+            if (messageOCSF.getGroupId().equals(id)) {
+                for (Map.Entry<Long, UserBuffer> user : users.entrySet()) {
+                    user.getValue().addMessageToBuffer(messageOCSF);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
-    public String getBufferById(long user_id) throws AutorisationException {
-	    if(users.containsKey(user_id))
-	        return users.get(user_id).getMsgBuffer();
-	    throw new AutorisationException(this.id, user_id);
+    public String getBufferById(long userId) throws AutorisationException {
+	    if(users.containsKey(userId))
+	        return users.get(userId).getMsgBuffer();
+	    throw new AutorisationException(this.id, userId);
     }
 
 
-    public void viderBuffer(long user_id) throws AutorisationException {
-        if(users.containsKey(user_id))
-            users.get(user_id).clearBufferFromMessages();
+    public void viderBuffer(long userId) throws AutorisationException {
+        if(users.containsKey(userId))
+            users.get(userId).clearBufferFromMessages();
         else
-            throw new AutorisationException(this.id, user_id);
+            throw new AutorisationException(this.id, userId);
     }
 }

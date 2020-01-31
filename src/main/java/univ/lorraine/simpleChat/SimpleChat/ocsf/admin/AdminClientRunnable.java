@@ -1,8 +1,9 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf.admin;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.MessageOCSF;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.io.IOException;
 
 public class AdminClientRunnable implements Runnable {
@@ -18,7 +19,7 @@ public class AdminClientRunnable implements Runnable {
 
     public AdminClientRunnable() {
         /******************** REMPLACER SIMPLECHAT.FUN PAR LOCALHOST POUR UTILISER LE SERVEUR OCSF LOCAL ********************/
-        this.client = new AdminClientImpl( "simplechat.fun", 12345);
+        this.client = new AdminClientImpl( "localhost", 12345);
     }
 
     @Override
@@ -64,10 +65,12 @@ public class AdminClientRunnable implements Runnable {
         }
     }
 
-    public synchronized void sendMsg(String message, String name) {
-        JsonObject json = new JsonParser().parse(message).getAsJsonObject();
-        json.addProperty("user_name", name);
-        this.msgToSend = json.toString();
+    public synchronized void sendMsg(MessageOCSF messageOCSF){
+        try (Jsonb jsonb = JsonbBuilder.create()) {
+            this.msgToSend = jsonb.toJson(messageOCSF);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         notify();
     }
 

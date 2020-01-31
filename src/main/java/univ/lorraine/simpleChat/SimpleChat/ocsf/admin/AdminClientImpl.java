@@ -1,8 +1,11 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf.admin;
 
 import com.lloseng.ocsf.client.ObservableClient;
-import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.MessageOCSF;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.UserBuffer;
+
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 
 /**
  * Représente un groupe de discussion
@@ -33,9 +36,15 @@ class AdminClientImpl extends ObservableClient {
 //        System.out.println("Client.isConnected()="+isConnected());
     }
 
-    protected void handleMessageFromServer(Object msg) {
+    @Override
+    protected void handleMessageFromServer(Object msg){
         System.out.println("Client : Message received = " + msg);
-        userBuffer.addMessageToBuffer(new Message((String) msg));
+        try (Jsonb jsonb = JsonbBuilder.create()) {
+            MessageOCSF messageOCSF = jsonb.fromJson((String) msg, MessageOCSF.class);
+            userBuffer.addMessageToBuffer(messageOCSF);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getBuffer()  {

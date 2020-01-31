@@ -9,11 +9,11 @@ import java.util.List;
 public class UserBuffer {
 	
 	private long id; 					// ID de l'utilisateur
-	private List<Message> msgBuffer;	// Liste des messages en attente d'envoie
+	private List<MessageOCSF> msgBuffer;	// Liste des messages en attente d'envoie
 	
 	public UserBuffer(long id) {
 		setId(id);
-		setMsgBuffer(new ArrayList<Message>());
+		setMsgBuffer(new ArrayList<MessageOCSF>());
 	}
 
 	public long getId() {
@@ -24,7 +24,7 @@ public class UserBuffer {
 		this.id = id;
 	}
 
-	public void setMsgBuffer(List<Message> buffer) {
+	public void setMsgBuffer(List<MessageOCSF> buffer) {
 		this.msgBuffer = buffer;
 	}
 
@@ -48,7 +48,7 @@ public class UserBuffer {
 	 * Ajout d'un message au buffer
 	 * @param msg
 	 */
-	public void addMessageToBuffer(Message msg) {
+	public void addMessageToBuffer(MessageOCSF msg) {
 		msgBuffer.add(msg);
 	}
 
