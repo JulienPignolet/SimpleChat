@@ -142,9 +142,9 @@ public class SondageController {
 
     private void sendSondageMessage(Sondage sondage, User user, Groupe groupe) {
         MessageTemplate messageTemplate = new MessageTemplate();
-        messageTemplate.setGroup_id(groupe.getId());
-        messageTemplate.setUser_id(user.getId());
-        messageTemplate.setMessage("sondage_id:" + sondage.getId());
+        messageTemplate.setGroupId(groupe.getId());
+        messageTemplate.setUserId(user.getId());
+        messageTemplate.setContenu("sondage_id:" + sondage.getId());
 
         this.messageController.sendMessage(messageTemplate);
     }

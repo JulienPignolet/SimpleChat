@@ -14,5 +14,4 @@ public class SimpleChatApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SimpleChatApplication.class, args);
 	}
-
 }

@@ -10,6 +10,7 @@ import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.MessageTemplate;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
+import univ.lorraine.simpleChat.SimpleChat.ocsf.MessageOCSF;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.admin.AdminClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.groupe.GroupeClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.model.Message;
@@ -18,6 +19,8 @@ import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,23 +51,26 @@ public class MessageController {
     @PostMapping("/send")
     public ResponseEntity<Object> sendMessage(@RequestBody MessageTemplate message)
     {
-        try {
-            User user = userService.findById(message.getUser_id());
-            if(groupeUserService.CountByGroupeIdAndUserId(message.getGroup_id(), message.getUser_id())) {
-                if (!clientPool.containsKey(message.getGroup_id())) {
-                    clientPool.put(message.getGroup_id(), new GroupeClientRunnable(message.getGroup_id()));
-                    clientPool.get(message.getGroup_id()).start();
+        try (Jsonb jsonb = JsonbBuilder.create())
+        {
+            User user = userService.findById(message.getUserId());
+            if(groupeUserService.CountByGroupeIdAndUserId(message.getGroupId(), message.getUserId())) {
+                if (!clientPool.containsKey(message.getGroupId())) {
+                    clientPool.put(message.getGroupId(), new GroupeClientRunnable(message.getGroupId()));
+                    clientPool.get(message.getGroupId()).start();
                 }
-                clientPool.get(message.getGroup_id()).addUserToGroup(message.getUser_id());
+                clientPool.get(message.getGroupId()).addUserToGroup(message.getUserId());
 
-                //on verifie egalement ici si le string est un url
-                message.setUrl( isValid(message.getMessage()) );
+                String jsonMessage = jsonb.toJson(message);
 
-                clientPool.get(message.getGroup_id()).sendMsg(message.toString(),
-                        userService.findById(message.getUser_id()).getUsername());
+                MessageOCSF newMessageOCSF = jsonb.fromJson(jsonMessage, MessageOCSF.class);
+
+                newMessageOCSF.setUserName(userService.findById(newMessageOCSF.getUserId()).getUsername());
+
+                clientPool.get(message.getGroupId()).sendMsg(newMessageOCSF);
                 // Sauvegarde
-                Groupe groupe = groupeService.find(message.getGroup_id());
-                messageService.save( new Message(message.getMessage(), user, groupe));
+                Groupe groupe = groupeService.find(message.getGroupId());
+                messageService.save( new Message(message.getContenu(), user, groupe));
             }
         }
         catch(Exception e)

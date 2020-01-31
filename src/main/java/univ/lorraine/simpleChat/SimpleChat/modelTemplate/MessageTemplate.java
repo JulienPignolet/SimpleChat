@@ -12,60 +12,66 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "user_id",
-        "groupe_id",
-        "message",
-        "is_url"
+        "userId",
+        "userName",
+        "groupId",
+        "contenu",
+        "type"
 })
 public class MessageTemplate {
-    @JsonProperty("user_id")
-    private Long user_id;
+    @JsonProperty("userId")
+    private Long userId;
 
-    @JsonProperty("group_id")
-    private Long group_id;
+    @JsonProperty("userName")
+    private String userName;
 
-    @JsonProperty("message")
-    private String message;
+    @JsonProperty("groupId")
+    private Long groupId;
 
-    @JsonProperty("is_url")
-    private boolean is_url;
+    @JsonProperty("contenu")
+    private String contenu;
 
-    public boolean isUrl() {
-        return is_url;
+    @JsonProperty("type")
+    private String type;
+
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUrl(boolean is_url) {
-        this.is_url = is_url;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    @JsonProperty("user_id")
-    public Long getUser_id() {
-        return user_id;
+    public String getUserName() {
+        return userName;
     }
 
-    @JsonProperty("user_id")
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    @JsonProperty("group_id")
-    public Long getGroup_id() {
-        return group_id;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    @JsonProperty("group_id")
-    public void setGroup_id(Long group_id) {
-        this.group_id = group_id;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
-    @JsonProperty("message")
-    public String getMessage() {
-        return message;
+    public String getContenu() {
+        return contenu;
     }
 
-    @JsonProperty("message")
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContenu(String contenu) {
+        this.contenu = contenu;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @JsonIgnore
@@ -83,10 +89,13 @@ public class MessageTemplate {
 
     @Override
     public String toString() {
-        return "{user_id:" + user_id +
-                ", group_id:" + group_id +
-                ", message:\"" + message + "\"" +
-                ", is_url:\"" + is_url + "\"" +
+        return "MessageTemplate{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", groupId=" + groupId +
+                ", contenu='" + contenu + '\'' +
+                ", type='" + type + '\'' +
+                ", additionalProperties=" + additionalProperties +
                 '}';
     }
 }
