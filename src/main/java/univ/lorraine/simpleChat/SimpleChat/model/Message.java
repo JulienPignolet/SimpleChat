@@ -26,7 +26,7 @@ public class Message {
     private User author;
 
     @ManyToMany
-    private Collection<MessageFile> files;
+    private Collection<File> files;
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)

@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name ="file")
-public class MessageFile {
+public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
