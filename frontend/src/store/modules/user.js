@@ -4,14 +4,22 @@ import { Alerte } from "../../models/Alerte";
 import { make } from "vuex-pathify";
 import axios from "axios";
 import * as constants from "../../constants/constants";
-import Router from "../../router"
+import Router from "../../router/router"
 
 
 const state = () => ({
   user: new User(),
   userList: [],
-  selectedUserList: []
+  friendList: [],
+  selectedUserList: [],
 })
+
+const getters = {
+  ...make.getters(state),
+  userList: state => {
+    return state.userList.filter(user => user.id != state.user.id)
+  }
+}
 
 const mutations = {
     ...make.mutations(state)
@@ -19,8 +27,6 @@ const mutations = {
 
 const actions = {
   ...make.actions(state),
-
-  // Connexion
   async [types.connexion]({ state, dispatch }, user) {
     let request = { "username": user.username,"password": user.password };
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
@@ -36,7 +42,6 @@ const actions = {
     });
   },
 
-    // Deconnexion
     async [types.deconnexion]({ state, dispatch}) {
         dispatch((`alerte/${types.setAlerte}`), new Alerte('error', `L'utilisateur ${state.user.username} est bien déconnecté`), { root: true });
         dispatch(types.setUser, new User());
@@ -68,13 +73,46 @@ const actions = {
       dispatch("user/setUserList", response.data, {root: true})
     })
   },
+  
+  async [types.getUserFriends]({dispatch, rootState}){
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}api/buddy/${rootState.user.user.id}`)
+    .then(function (response) { 
+      dispatch("user/setFriendList", response.data, {root : true})
+    })
+    Router.push('/chat/friends')
+  },
 
+  async [types.deleteFriend]({dispatch, rootState}, friendId){
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/remove`, friendId)
+    .then(function () {
+      dispatch("user/getUserFriends", null, {root : true})
+    })
+  },
+
+  async [types.addFriend]({dispatch, rootState}, friendId){
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/add`, friendId)
+    .then(function () {
+      dispatch("user/getUserFriends", null, {root : true})
+    })
+  },
+
+  async [types.blockUser]({rootState}, userId){
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/add`, userId)
+      .then(function () {
+        console.log('user bloqué');
+      })
+  },
 
 }
 
 export const user = {
   namespaced: true,
   state,
+  getters,
   mutations,
   actions
 }

@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" app>
-    <v-list-item link>
+    <v-list-item link @click="getUserFriends()" @mousedown.stop @touchstart.native.stop>
       <v-list-item-icon>
         <v-icon>{{ "mdi-account-heart" }}</v-icon>
       </v-list-item-icon>
@@ -56,7 +56,8 @@ export default {
     getGroupes: call(`groupe/${types.getGroupes}`),
     getUsers: call(`user/${types.getUsers}`),
     createGroupe: call(`groupe/${types.createGroupe}`),
-    chooseGroup:  call(`groupe/${types.chooseGroup}`)
+    chooseGroup:  call(`groupe/${types.chooseGroup}`),
+    getUserFriends: call (`user/${types.getUserFriends}`)
   }
 };
 </script>

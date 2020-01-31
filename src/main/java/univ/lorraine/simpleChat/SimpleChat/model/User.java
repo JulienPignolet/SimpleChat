@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.persistence.*;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @ApplicationScope
 @Entity
@@ -21,14 +18,12 @@ public class User {
 
     private String username;
 
-//    @JsonIgnore
     private String password;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-//    @JsonIgnore
     @Transient
     private String passwordConfirm;
 
@@ -178,9 +173,11 @@ public class User {
 	}
 
 	public void removeBuddy(User buddy) {
-		if(this.buddyList.contains(buddy)) {
-			this.buddyList.remove(buddy);
-		}
+		List<User> operatedList = new ArrayList<>();
+		this.buddyList.stream()
+				.filter(item -> item.getId() == buddy.getId())
+				.forEach(operatedList::add);
+		buddyList.removeAll(operatedList);
 	}
 
 	public void addVote(Vote vote) {
