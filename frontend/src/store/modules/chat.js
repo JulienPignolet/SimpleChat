@@ -31,7 +31,7 @@ const actions = {
     .then(function (response) {
       console.log(response)
       response.data.buffer.forEach(message => {
-        state.messageList.push({"pseudonyme": message.user_name, "message": message.message})
+        state.messageList.push({"pseudonyme": message.userName, "message": message.contenu})
       })
     })
   },
@@ -40,7 +40,7 @@ const actions = {
     axios.get(`${constants.API_URL}api/message/saved/${rootState.groupe.groupe.id}/${rootState.user.user.id}/`)
     .then(function (response) {
       response.data.buffer.forEach(message => {
-        state.messageList.push({"pseudonyme": message.user_name, "message": message.message})
+        state.messageList.push({"pseudonyme": message.userName, "message": message.contenu})
       })
     })
   }

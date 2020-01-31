@@ -2,6 +2,10 @@ package univ.lorraine.simpleChat.SimpleChat.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.persistence.*;
 
 import java.util.ArrayList;
@@ -78,13 +82,15 @@ public class Message {
         return contenu;
     }
 
-    public String toJSON() {
-        return "{\n" +
-                "    \"user_id\":" + author.getId() + ", \n" +
-                "    \"user_name\":\"" + author.getUsername() + "\", \n" +
-                "    \"group_id\": " + groupe.getId() + ", \n" +
-                "    \"message\": \"" + contenu + "\"" +
-                "}";
+    public String toJSON()
+    {
+        JsonObject json = Json.createObjectBuilder()
+                .add("userId", author.getId())
+                .add("userName", author.getUsername())
+                .add("groupId", groupe.getId())
+                .add("contenu", contenu)
+                .build();
+        return json.toString();
     }
 
     public Message() {

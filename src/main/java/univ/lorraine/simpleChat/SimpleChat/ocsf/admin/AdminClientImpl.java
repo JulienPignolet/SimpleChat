@@ -21,8 +21,8 @@ class AdminClientImpl extends ObservableClient {
 
     @Override
 	protected void connectionClosed() {
-        System.out.println("Client: Closed");
-        System.out.println("Client.isConnected()="+isConnected());
+        System.out.println("Admin: Closed");
+        System.out.println("Admin.isConnected()="+isConnected());
     }
 
     @Override
@@ -32,13 +32,13 @@ class AdminClientImpl extends ObservableClient {
 
     @Override
     protected void connectionEstablished() {
-        System.out.println("Client : Connected");
-//        System.out.println("Client.isConnected()="+isConnected());
+        System.out.println("Admin : Connected");
+//        System.out.println("Admin.isConnected()="+isConnected());
     }
 
     @Override
     protected void handleMessageFromServer(Object msg){
-        System.out.println("Client : Message received = " + msg);
+        System.out.println("Admin : Message received = " + msg);
         try (Jsonb jsonb = JsonbBuilder.create()) {
             MessageOCSF messageOCSF = jsonb.fromJson((String) msg, MessageOCSF.class);
             userBuffer.addMessageToBuffer(messageOCSF);
