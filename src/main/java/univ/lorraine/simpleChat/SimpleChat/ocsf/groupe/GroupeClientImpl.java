@@ -1,7 +1,5 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf.groupe;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.lloseng.ocsf.client.ObservableClient;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.Message;
@@ -10,25 +8,18 @@ import univ.lorraine.simpleChat.SimpleChat.ocsf.UserBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
 /**
  * Représente un groupe de discussion
  */
 class GroupeClientImpl extends ObservableClient {
 	
     private Long id;
-    RestTemplate restTemplate;
     private Map<Long, UserBuffer> users;
-    final String URL_BLOCKLIST = "http://localhost:8080/blockList/";
 
     GroupeClientImpl(Long id, String host, int port) {
         super(host, port);
         setId(id);
         setUsers(new HashMap<>());
-        this.restTemplate = new RestTemplate();
     }
 
     public Long getId() {
