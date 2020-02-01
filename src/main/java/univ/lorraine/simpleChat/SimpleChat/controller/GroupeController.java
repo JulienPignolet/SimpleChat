@@ -223,9 +223,16 @@ public class GroupeController {
 	@GetMapping("/find/Members/groupe/{groupeId}")
 	public ResponseEntity<Collection<User>> findMembersGroupe(HttpServletRequest request, @PathVariable String groupeId)
 	{
-		Long gid = Long.parseLong(groupeId); 
-		Collection<User> users = userService.findMembersGroupe(gid); 
-		return ResponseEntity.ok(users); 
+		Collection<User> users = new ArrayList<>();
+		try {
+			Long gid = Long.parseLong(groupeId);
+			users = userService.findMembersGroupe(gid);
+		}
+		catch (Exception e)
+		{
+			logger.warn(e.getMessage());
+		}
+		return ResponseEntity.ok(users);
 	}
 	
 	
