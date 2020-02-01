@@ -6,6 +6,8 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import univ.lorraine.simpleChat.SimpleChat.model.File;
+import univ.lorraine.simpleChat.SimpleChat.repository.FileRepository;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -17,10 +19,13 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class FileStorageService {
 
+    private final FileRepository fileRepository;
+
     private final Path fileStorageLocation;
 
     @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
+    public FileStorageService(FileStorageProperties fileStorageProperties, FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
 
@@ -45,10 +50,19 @@ public class FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
+            File fileToSave = new File(fileName, file.getContentType(), file.getBytes());
+            this.fileRepository.save(fileToSave);
+
+
             return fileName;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
+    }
+
+    public File getFileById(Long fileId){
+
+        return fileRepository.findById(fileId).isPresent() ? fileRepository.findById(fileId).get() : null;
     }
 
     public Resource loadFileAsResource(String fileName) {
