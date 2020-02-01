@@ -41,6 +41,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println("Impossible de récupérer le JWT" + e.getMessage());
             } catch (ExpiredJwtException e) {
                 System.out.println("Le JWT a expiré");
+            }catch (Exception e){
+                //System.out.println("JWT absent ou mal formé");
             }
         }
         else {

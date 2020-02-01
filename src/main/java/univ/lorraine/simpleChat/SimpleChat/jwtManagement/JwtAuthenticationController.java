@@ -7,10 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,7 +38,7 @@ public class JwtAuthenticationController {
     public ResponseEntity<String> createAutentificationToken(@RequestBody User user) throws Exception {
         try {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-            authenticate(user.getUsername(), user.getPassword(),userDetails);
+            boolean rep = authenticate(user.getUsername(), user.getPassword(),userDetails);
             final String token = jwtTokenUtil.generateToken(userDetails);
             user = userService.findByUsername(user.getUsername());
 
@@ -48,7 +46,11 @@ public class JwtAuthenticationController {
             json.put("user_key", token);
             json.put("user_id", user.getId());
 
-            return new ResponseEntity<>(json.toString(), HttpStatus.OK);
+            if(rep){
+                return new ResponseEntity<>(json.toString(), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("null", HttpStatus.UNAUTHORIZED);
+            }
         }
         catch (Exception e)
         {
@@ -57,16 +59,26 @@ public class JwtAuthenticationController {
         }
     }
 
-    private void authenticate(String username, String password, UserDetails userDetails) throws Exception {
+    private boolean authenticate(String username, String password, UserDetails userDetails) throws Exception {
         try {
             //authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    username, password, userDetails.getAuthorities());
+//            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+//                    username, password, userDetails.getAuthorities());
+//
+//            Authentication auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+////            usernamePasswordAuthenticationToken
+////                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+//            SecurityContextHolder.getContext().setAuthentication(auth);
 
-            Authentication auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-//            usernamePasswordAuthenticationToken
-//                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            System.out.println(password + " "  + userDetails.getPassword() );
+            if (passwordEncoder.matches(password, userDetails.getPassword())) {
+                // Encode new password and store it
+                return true;
+            } else {
+                return false;
+                // Report error
+            }
 
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
