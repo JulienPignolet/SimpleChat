@@ -75,14 +75,9 @@ public class JwtAuthenticationController {
 //            SecurityContextHolder.getContext().setAuthentication(auth);
 
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            logger.info(password + " "  + userDetails.getPassword() );
-            if (passwordEncoder.matches(password, userDetails.getPassword())) {
-                // Encode new password and store it
-                return true;
-            } else {
-                return false;
-                // Report error
-            }
+            // Encode new password and store it
+            // Report error
+            return passwordEncoder.matches(password, userDetails.getPassword());
 
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);

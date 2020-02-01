@@ -58,7 +58,6 @@ public class UserController {
 
     @PostMapping("/registration")
     public ResponseEntity<String> registration(@RequestBody User user) {
-        logger.info(user.getUsername() + user.getPassword() + user.getPasswordConfirm());
         //TODO CHECK FORM ERROR
         Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
         JSONObject json = new JSONObject();
