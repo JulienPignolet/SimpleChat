@@ -12,10 +12,13 @@ public class UserBuffer {
 	
 	private long id; 					// ID de l'utilisateur
 	private List<MessageOCSF> msgBuffer;	// Liste des messages en attente d'envoie
-	
+	private boolean empty;
+
+
 	public UserBuffer(long id) {
 		setId(id);
 		setMsgBuffer(new ArrayList<MessageOCSF>());
+		setEmpty(true);
 	}
 
 	public long getId() {
@@ -24,6 +27,14 @@ public class UserBuffer {
 
 	private void setId(long id) {
 		this.id = id;
+	}
+
+	public boolean isEmpty() {
+		return empty;
+	}
+
+	public void setEmpty(boolean empty) {
+		this.empty = empty;
 	}
 
 	public void setMsgBuffer(List<MessageOCSF> buffer) {
@@ -54,8 +65,10 @@ public class UserBuffer {
 	 * Ajout d'un message au buffer
 	 * @param msg
 	 */
-	public void addMessageToBuffer(MessageOCSF msg) {
+	public synchronized void addMessageToBuffer(MessageOCSF msg) {
 		msgBuffer.add(msg);
+		setEmpty(false);
+		notify();
 	}
 
 	/**
@@ -63,5 +76,6 @@ public class UserBuffer {
 	 */
 	public void clearBufferFromMessages() { // /!\ NE SERT ACTUELLEMENT PAS
 		msgBuffer.clear();
+		setEmpty(true);
 	}
 }

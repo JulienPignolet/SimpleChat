@@ -76,21 +76,23 @@ public class GroupeClientRunnable implements Runnable {
         notify();
     }
 
-    public void addUserToGroup(long user_id) {
-        client.addUserToGroup(user_id);
+    public void addUserToGroup(long userId) {
+        client.addUserToGroup(userId);
     }
 
-    public String getMessagesEnAttente(long user_id) throws AutorisationException {
-		    return this.client.getBufferById(user_id);
+    public synchronized String getMessagesEnAttente(long userId) throws AutorisationException, InterruptedException {
+        while(this.client.getBufferById(userId).isEmpty())
+            wait();
+        return this.client.getBufferById(userId);
     }
 
-    public String getMessagesObjetsEnAttente(long user_id) throws AutorisationException {
-        return this.client.getBufferById(user_id);
+    public String getMessagesObjetsEnAttente(long userId) throws AutorisationException {
+        return this.client.getBufferById(userId);
     }
 
     
-    public void viderBuffer(long user_id) throws AutorisationException {
-        this.client.viderBuffer(user_id);
+    public void viderBuffer(long userId) throws AutorisationException {
+        this.client.viderBuffer(userId);
     }
 }
 

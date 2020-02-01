@@ -83,8 +83,8 @@ public class MessageController {
 
     @ApiOperation(value = "Retourne tous les messages reçus par le client OCSF")
     @GetMapping("/live/{idGroupe}/{idUser}")
-    public ResponseEntity<Object> getLiveMessages(@PathVariable(value = "idGroupe") Long idGroupe
-            , @PathVariable(value="idUser") Long idUser)
+    public ResponseEntity<Object> getLiveMessages(@PathVariable(value = "idGroupe") Long idGroupe,
+                                                  @PathVariable(value="idUser") Long idUser)
     {
         try {
             if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
@@ -96,14 +96,19 @@ public class MessageController {
                 GroupeClientRunnable groupeClientRunnable = clientPool.get(idGroupe);
                 groupeClientRunnable.addUserToGroup(idUser);
 
-                String messagesEnAttente = groupeClientRunnable.getMessagesEnAttente(idUser);
-                groupeClientRunnable.viderBuffer(idUser);
-                return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
+                synchronized (groupeClientRunnable) {
+                    String messagesEnAttente = groupeClientRunnable.getMessagesEnAttente(idUser);
+                    groupeClientRunnable.viderBuffer(idUser);
+                    return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
+                }
             }
         }
         catch (AutorisationException e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("{}", HttpStatus.REQUEST_TIMEOUT);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
