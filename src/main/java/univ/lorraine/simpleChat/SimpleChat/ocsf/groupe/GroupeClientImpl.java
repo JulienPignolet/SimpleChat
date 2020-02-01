@@ -1,6 +1,8 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf.groupe;
 
 import com.lloseng.ocsf.client.ObservableClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.MessageOCSF;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.UserBuffer;
@@ -14,6 +16,8 @@ import java.util.Map;
  * Représente un groupe de discussion
  */
 class GroupeClientImpl extends ObservableClient {
+
+    Logger logger = LoggerFactory.getLogger(GroupeClientImpl.class);
 	
     private Long id;
     private Map<Long, UserBuffer> users;
@@ -50,8 +54,8 @@ class GroupeClientImpl extends ObservableClient {
 	}
 
 	protected void connectionClosed() {
-        System.out.println("Client: Closed");
-        System.out.println("Client.isConnected()="+isConnected());
+        logger.info("Client: Closed");
+        logger.info("Client.isConnected()="+isConnected());
     }
 
     protected void connectionException(Exception exception) {
@@ -59,13 +63,13 @@ class GroupeClientImpl extends ObservableClient {
     }
 
     protected void connectionEstablished() {
-        System.out.println("Client " + id +" : Connected");
-//        System.out.println("Client.isConnected()="+isConnected());
+        logger.info("Client " + id +" : Connected");
+//        logger.info("Client.isConnected()="+isConnected());
     }
 
     @Override
     protected void handleMessageFromServer(Object msg){
-        System.out.println("Client " + id + ": Message received = " + msg);
+        logger.info("Client " + id + ": Message received = " + msg);
         try (Jsonb jsonb = JsonbBuilder.create()) {
             MessageOCSF messageOCSF = jsonb.fromJson((String) msg, MessageOCSF.class);
             if (messageOCSF.getGroupId().equals(id)) {
@@ -74,7 +78,7 @@ class GroupeClientImpl extends ObservableClient {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage());
         }
     }
     

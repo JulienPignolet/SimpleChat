@@ -1,5 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api( value="Simple Chat")
 public class GroupeController {
+	Logger logger = LoggerFactory.getLogger(GroupeController.class);
 
 	private final UserService userService;
     private final GroupeService groupeService;
@@ -83,7 +86,7 @@ public class GroupeController {
             
     		return ResponseEntity.ok("groupe d'id "+groupe.getId()+" créé !");
         } catch (NumberFormatException  e) {
-		    e.printStackTrace();
+		    logger.warn(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
         }
 	}
@@ -220,9 +223,16 @@ public class GroupeController {
 	@GetMapping("/find/Members/groupe/{groupeId}")
 	public ResponseEntity<Collection<User>> findMembersGroupe(HttpServletRequest request, @PathVariable String groupeId)
 	{
-		Long gid = Long.parseLong(groupeId); 
-		Collection<User> users = userService.findMembersGroupe(gid); 
-		return ResponseEntity.ok(users); 
+		Collection<User> users = new ArrayList<>();
+		try {
+			Long gid = Long.parseLong(groupeId);
+			users = userService.findMembersGroupe(gid);
+		}
+		catch (Exception e)
+		{
+			logger.warn(e.getMessage());
+		}
+		return ResponseEntity.ok(users);
 	}
 	
 	
