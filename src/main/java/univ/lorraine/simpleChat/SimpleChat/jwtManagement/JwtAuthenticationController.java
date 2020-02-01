@@ -1,6 +1,8 @@
 package univ.lorraine.simpleChat.SimpleChat.jwtManagement;
 
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
+
+    Logger logger = LoggerFactory.getLogger(JwtAuthenticationController.class);
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -54,7 +58,7 @@ public class JwtAuthenticationController {
         }
         catch (Exception e)
         {
-            System.out.println("Invalid credentials");
+            logger.info("Invalid credentials");
             return new ResponseEntity<>("null", HttpStatus.BAD_REQUEST);
         }
     }
@@ -71,7 +75,7 @@ public class JwtAuthenticationController {
 //            SecurityContextHolder.getContext().setAuthentication(auth);
 
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            System.out.println(password + " "  + userDetails.getPassword() );
+            logger.info(password + " "  + userDetails.getPassword() );
             if (passwordEncoder.matches(password, userDetails.getPassword())) {
                 // Encode new password and store it
                 return true;

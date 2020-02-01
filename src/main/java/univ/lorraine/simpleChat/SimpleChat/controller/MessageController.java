@@ -3,6 +3,8 @@ package univ.lorraine.simpleChat.SimpleChat.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,9 @@ import java.util.Map;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api( value="Simple Chat")
 public class MessageController {
+
+    Logger logger = LoggerFactory.getLogger(MessageController.class);
+
     private final UserService userService;
     private final GroupeService groupeService;
     private final MessageService messageService;
@@ -75,7 +80,7 @@ public class MessageController {
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            logger.warn(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -102,7 +107,7 @@ public class MessageController {
             }
         }
         catch (AutorisationException e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
             return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -141,7 +146,7 @@ public class MessageController {
             }
         }
         catch (AutorisationException e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
             return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -157,7 +162,7 @@ public class MessageController {
             return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
             return new ResponseEntity<>("{}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
