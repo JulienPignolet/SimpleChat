@@ -18,9 +18,9 @@ const actions = {
     );
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.post(constants.API_URL+"api/message/send", {
-      "group_id": rootState.groupe.groupe.id,
-      "message": message,
-      "user_id": rootState.user.user.id
+      "groupId": rootState.groupe.groupe.id,
+      "contenu": message,
+      "userId": rootState.user.user.id
     }).then(function (){
     dispatch((`chat/${types.getLiveMessages}`), null, { root: true })
     })
@@ -31,7 +31,7 @@ const actions = {
     .then(function (response) {
       console.log(response)
       response.data.buffer.forEach(message => {
-        state.messageList.push({"pseudonyme": message.user_name, "message": message.message})
+        state.messageList.push({"pseudonyme": message.userName, "message": message.contenu})
       })
     })
   },
@@ -40,7 +40,7 @@ const actions = {
     axios.get(`${constants.API_URL}api/message/saved/${rootState.groupe.groupe.id}/${rootState.user.user.id}/`)
     .then(function (response) {
       response.data.buffer.forEach(message => {
-        state.messageList.push({"pseudonyme": message.user_name, "message": message.message})
+        state.messageList.push({"pseudonyme": message.userName, "message": message.contenu})
       })
     })
   }

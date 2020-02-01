@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -59,12 +60,13 @@ public class JwtAuthenticationController {
     private void authenticate(String username, String password, UserDetails userDetails) throws Exception {
         try {
             //authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
+                    username, password, userDetails.getAuthorities());
+
+            Authentication auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 //            usernamePasswordAuthenticationToken
 //                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(auth);
 
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
