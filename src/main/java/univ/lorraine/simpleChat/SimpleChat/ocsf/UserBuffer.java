@@ -1,5 +1,8 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import java.util.ArrayList;
@@ -9,6 +12,8 @@ import java.util.List;
  * Représente un utilisateur dans une discussion de groupe.
  */
 public class UserBuffer {
+
+	Logger logger = LoggerFactory.getLogger(UserBuffer.class);
 	
 	private long id; 					// ID de l'utilisateur
 	private List<MessageOCSF> msgBuffer;	// Liste des messages en attente d'envoie
@@ -45,7 +50,7 @@ public class UserBuffer {
 			json.append(jsonb.toJson(msgBuffer.get(msgBuffer.size() - 1)));
 			msgBuffer.clear();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn(e.getMessage());
 		}
 		return json.append("]}").toString();
 	}

@@ -1,5 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ import java.util.Date;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api(value = "Simple Chat")
 public class SondageController {
+
+    Logger logger = LoggerFactory.getLogger(SondageController.class);
+
     private final GroupeService groupeService;
     private final GroupeUserService groupeUserService;
     private final UserService userService;
@@ -135,7 +140,7 @@ public class SondageController {
 
             return ResponseEntity.ok(sondage);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
         }
     }
