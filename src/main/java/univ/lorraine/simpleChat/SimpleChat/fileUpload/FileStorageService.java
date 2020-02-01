@@ -50,7 +50,7 @@ public class FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            File fileToSave = new File(fileName);
+            File fileToSave = new File(fileName, file.getContentType(), file.getBytes());
             this.fileRepository.save(fileToSave);
 
 
@@ -58,6 +58,11 @@ public class FileStorageService {
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
+    }
+
+    public File getFileById(Long fileId){
+
+        return fileRepository.findById(fileId).isPresent() ? fileRepository.findById(fileId).get() : null;
     }
 
     public Resource loadFileAsResource(String fileName) {
