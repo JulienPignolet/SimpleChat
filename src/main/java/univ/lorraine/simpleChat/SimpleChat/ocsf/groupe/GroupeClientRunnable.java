@@ -1,5 +1,7 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf.groupe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.MessageOCSF;
 
@@ -8,6 +10,8 @@ import javax.json.bind.JsonbBuilder;
 import java.io.IOException;
 
 public class GroupeClientRunnable implements Runnable {
+    Logger logger = LoggerFactory.getLogger(GroupeClientRunnable.class);
+
     private final GroupeClientImpl client;
     private String msgToSend;
     private Thread thread;
@@ -42,14 +46,14 @@ public class GroupeClientRunnable implements Runnable {
                         Thread.sleep(1);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.warn(e.getMessage());
                     this.stop();
                 }
             }
         }
         catch (InterruptedException | IOException e)
         {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
         }
     }
 
@@ -71,7 +75,7 @@ public class GroupeClientRunnable implements Runnable {
         try (Jsonb jsonb = JsonbBuilder.create()) {
             this.msgToSend = jsonb.toJson(messageOCSF);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage());
         }
         notify();
     }

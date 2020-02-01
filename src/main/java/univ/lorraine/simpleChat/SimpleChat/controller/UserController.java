@@ -2,6 +2,8 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ import java.util.HashMap;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 public class UserController {
+
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
@@ -54,7 +58,7 @@ public class UserController {
 
     @PostMapping("/registration")
     public ResponseEntity<String> registration(@RequestBody User user) {
-        System.out.println(user.getUsername() + user.getPassword() + user.getPasswordConfirm());
+        logger.info(user.getUsername() + user.getPassword() + user.getPasswordConfirm());
         //TODO CHECK FORM ERROR
         Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
         JSONObject json = new JSONObject();

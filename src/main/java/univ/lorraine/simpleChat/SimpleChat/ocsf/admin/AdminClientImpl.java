@@ -1,6 +1,8 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf.admin;
 
 import com.lloseng.ocsf.client.ObservableClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.MessageOCSF;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.UserBuffer;
 
@@ -11,6 +13,7 @@ import javax.json.bind.JsonbBuilder;
  * Représente un groupe de discussion
  */
 class AdminClientImpl extends ObservableClient {
+    Logger logger = LoggerFactory.getLogger(AdminClientImpl.class);
 
     private UserBuffer userBuffer;
     
@@ -21,8 +24,8 @@ class AdminClientImpl extends ObservableClient {
 
     @Override
 	protected void connectionClosed() {
-        System.out.println("Admin: Closed");
-        System.out.println("Admin.isConnected()="+isConnected());
+        logger.info("Admin: Closed");
+        logger.info("Admin.isConnected()="+isConnected());
     }
 
     @Override
@@ -32,18 +35,18 @@ class AdminClientImpl extends ObservableClient {
 
     @Override
     protected void connectionEstablished() {
-        System.out.println("Admin : Connected");
-//        System.out.println("Admin.isConnected()="+isConnected());
+        logger.info("Admin : Connected");
+//        logger.info("Admin.isConnected()="+isConnected());
     }
 
     @Override
     protected void handleMessageFromServer(Object msg){
-        System.out.println("Admin : Message received = " + msg);
+        logger.info("Admin : Message received = " + msg);
         try (Jsonb jsonb = JsonbBuilder.create()) {
             MessageOCSF messageOCSF = jsonb.fromJson((String) msg, MessageOCSF.class);
             userBuffer.addMessageToBuffer(messageOCSF);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn(e.getMessage());
         }
     }
 

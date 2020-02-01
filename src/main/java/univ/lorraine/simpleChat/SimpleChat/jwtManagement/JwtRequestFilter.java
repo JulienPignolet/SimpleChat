@@ -38,13 +38,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try{
                 username = jwtTokenUtil.getUsernameFromToken(requestTokenHeader);
             } catch (IllegalArgumentException e){
-                System.out.println("Impossible de récupérer le JWT" + e.getMessage());
+                logger.info("Impossible de récupérer le JWT" + e.getMessage());
             } catch (ExpiredJwtException e) {
-                System.out.println("Le JWT a expiré");
+                logger.info("Le JWT a expiré");
+            }catch (Exception e){
+                //logger.info("JWT absent ou mal formé");
             }
         }
         else {
-            System.out.println("Le JWT n'existe pas");
+            logger.info("Le JWT n'existe pas");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
