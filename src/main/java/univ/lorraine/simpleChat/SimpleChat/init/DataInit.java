@@ -59,7 +59,7 @@ public class DataInit implements ApplicationRunner {
             for(Role role : roleService.findAll()){
                 nouveau.addRole(role);
             }
-            userService.save(nouveau);
+            userService.saveAndEncryptPassword(nouveau);
         }
     }
 

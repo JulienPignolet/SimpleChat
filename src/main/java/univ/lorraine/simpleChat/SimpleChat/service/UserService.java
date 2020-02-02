@@ -3,14 +3,12 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 
 @Service
@@ -27,11 +25,13 @@ public class UserService {
     }
 
     public void save(User user) {
+        userRepository.save(user);
+    }
+    public void saveAndEncryptPassword(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         //user.setRoles(new HashSet<>(roleRepository.findAll()));
         userRepository.save(user);
     }
-    
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
