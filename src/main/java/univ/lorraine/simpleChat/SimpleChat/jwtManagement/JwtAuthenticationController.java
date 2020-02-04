@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,26 +22,30 @@ import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 @CrossOrigin
 public class JwtAuthenticationController {
 
-    Logger logger = LoggerFactory.getLogger(JwtAuthenticationController.class);
+    private Logger logger = LoggerFactory.getLogger(JwtAuthenticationController.class);
+
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final UserDetailsServiceImpl userDetailsService;
+
+    private final UserService userService;
+
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
-    private UserService userService;
+    public JwtAuthenticationController(JwtTokenUtil jwtTokenUtil, UserDetailsServiceImpl userDetailsService, UserService userService, BCryptPasswordEncoder passwordEncoder) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userDetailsService = userDetailsService;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     //@RequestMapping(value = "/login", method = RequestMethod.POST)
     @PostMapping("/authentication")
-    public ResponseEntity<String> createAutentificationToken(@RequestBody User user) throws Exception {
+    public ResponseEntity<String> createAutentificationToken(@RequestBody User user) {
         try {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-            boolean rep = authenticate(user.getUsername(), user.getPassword(),userDetails);
+            boolean rep = authenticate(user.getPassword(),userDetails);
             final String token = jwtTokenUtil.generateToken(userDetails);
             user = userService.findByUsername(user.getUsername());
 
@@ -53,30 +56,18 @@ public class JwtAuthenticationController {
             if(rep){
                 return new ResponseEntity<>(json.toString(), HttpStatus.OK);
             }else{
-                return new ResponseEntity<>("null", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>("BAD CREDENTIALS", HttpStatus.UNAUTHORIZED);
             }
         }
         catch (Exception e)
         {
             logger.info("Invalid credentials");
-            return new ResponseEntity<>("null", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
     }
 
-    private boolean authenticate(String username, String password, UserDetails userDetails) throws Exception {
+    private boolean authenticate(String password, UserDetails userDetails) throws Exception {
         try {
-            //authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-//            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-//                    username, password, userDetails.getAuthorities());
-//
-//            Authentication auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-////            usernamePasswordAuthenticationToken
-////                    .setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-//            SecurityContextHolder.getContext().setAuthentication(auth);
-
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            // Encode new password and store it
-            // Report error
             return passwordEncoder.matches(password, userDetails.getPassword());
 
         } catch (DisabledException e) {
