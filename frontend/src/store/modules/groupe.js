@@ -84,6 +84,7 @@ const actions = {
     //     state.messageList.push({"pseudonyme": message.user_id, "message": message.message})
     //   })
     // })
+    dispatch(`groupe/${types.getGroupeMembers}`, null, {root: true})
     dispatch('chat/setMessageList', [], {root: true})
     dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   },
