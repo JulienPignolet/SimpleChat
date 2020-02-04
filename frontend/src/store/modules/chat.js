@@ -30,6 +30,7 @@ const actions = {
     })
   },
   async [types.getLiveMessages]({ state, rootState}){
+    if (rootState.user.user.id !== undefined && rootState.groupe.groupe.id !== undefined) {
       axios.defaults.headers.get['user_key'] = rootState.user.user.token;
       axios.get(`${constants.API_URL}api/message/live/${rootState.groupe.groupe.id}/${rootState.user.user.id}/`)
       .then(function (response) {
@@ -38,6 +39,7 @@ const actions = {
           state.messageList.push(new Message(message.userName, message.contenu, message.type))
         })
       })
+    }
   },
   async [types.getSavedMessages]({ state, rootState}){
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
