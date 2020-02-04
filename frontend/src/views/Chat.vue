@@ -6,6 +6,8 @@
     <chat-messages v-if="['groupe'].includes($route.name)" />
     <chat-box v-if="['groupe'].includes($route.name)"/>
     <new-group-dialog />
+    <file-upload-dialog />
+    <zoom-image-dialog />
   </v-content>
 </template>
 <script>
@@ -14,13 +16,17 @@ import ChatMessages from "../components/ChatMessages";
 import FriendList from '../components/FriendList'
 import ChatBox from "../components/ChatBox";
 import NewGroupDialog from "../components/NewGroupDialog"
+import FileUploadDialog from "../components/FileUploadDialog"
+import ZoomImageDialog from "../components/ZoomImageDialog"
 export default {
   components: {
     ChatList,
     ChatBox,
     FriendList,
     ChatMessages,
-    NewGroupDialog
+    NewGroupDialog,
+    FileUploadDialog,
+    ZoomImageDialog
   },
   beforeCreate() {
 

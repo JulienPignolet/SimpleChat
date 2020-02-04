@@ -22,6 +22,10 @@
               v-if="isSondage(item.message)"
               :poll-id="parseInt(item.message.split(':')[1])"
             />
+            <file
+              v-else-if="isFile(item.type)"
+              :file-id="parseInt(item.message.split(':')[0])"
+            />
             <v-list-item-subtitle
               v-else
               v-html="item.message"
@@ -39,10 +43,11 @@
 
 <script>
 import { sync } from "vuex-pathify";
+import File from "./File";
 import Poll from "./Poll";
 import UserGroup from "./UserGroup";
 export default {
-    components: {Poll, UserGroup},
+    components: {File, Poll, UserGroup},
     data: () => ({
 
   }),
@@ -53,6 +58,9 @@ export default {
       isSondage(message) {
           const msgRegex = RegExp('^sondage_id:([0-9]+)$');
           return msgRegex.test(message);
+      },
+      isFile(type) {
+        return type === 'fichier';
       }
   }
 }

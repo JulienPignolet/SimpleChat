@@ -14,7 +14,10 @@
           <v-btn icon>
             <v-icon>mdi-vector-polygon</v-icon>
           </v-btn>
-          <v-btn icon>
+          <v-btn
+            icon
+            @click="activateFileUploadDialog(true)" 
+          >
             <v-icon>mdi-file-plus</v-icon>
           </v-btn>
           <new-poll-dialog />
@@ -27,16 +30,24 @@
 <script>
 import * as types from "@/store/types.js";
 import NewPollDialog from "./NewPollDialog";
+import { call } from 'vuex-pathify';
+import { interfaceControl } from "@/store/modules/interfaceControl";
+import RegisterStoreModule from '@/mixins/RegisterStoreModule'
 export default {
-    components: {NewPollDialog},
+  components: {NewPollDialog},
+  mixins: [ RegisterStoreModule ],
     data () {
     return {
       message : ""
     }
   },
+  created() {
+        this.registerStoreModule("interfaceControl", interfaceControl);
+  },
   methods: {
+    activateFileUploadDialog: call(`interfaceControl/${types.setFileUploadDialog}`),
     sendMessage(message){
-      this.$store.dispatch(`chat/${types.sendMessage}`, message)
+      this.$store.dispatch(`chat/${types.sendMessage}`, { message })
       this.message = ""
       } 
   }
