@@ -26,9 +26,7 @@ const actions = {
     axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
     axios.post(constants.API_URL + "api/fileUpload/uploadFile", file)
       .then(function (response) {
-        if (response.data !== undefined && response.data.fileName !== undefined) {
-          dispatch((`chat/${types.sendMessage}`), { message: `${response.data.fileId}:${response.data.fileName}`, type: 'fichier' }, { root: true })
-        }
+        dispatch((`chat/${types.sendMessage}`), { message: `${response.data.fileId}:${response.data.fileName}`, type: 'fichier' }, { root: true })
         dispatch((`interfaceControl/${types.setFileUploadDialog}`), false, { root: true })
         dispatch((`chat/${types.getLiveMessages}`), null, { root: true })
       })

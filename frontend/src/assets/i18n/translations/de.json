@@ -43,6 +43,14 @@
       "proposition": "Vorschlag",
       "add_proposition": "Fügen Sie einen Vorschlag hinzu",
       "anonymize_votes": "Anonymisieren Sie die Stimmen"
+    },
+    "file_upload": {
+      "title": "Dateien senden",
+      "file_input": "Dateieintrag",
+      "select_files": "Wählen Sie eine Datei"
+    },
+    "zoom_image": {
+      "open_original": "Öffnen Sie das Original"
     }
   },
   "store": {

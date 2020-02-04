@@ -5,7 +5,7 @@
   >
     <v-card>
       <v-card-title>
-        <span class="headline">Envoyer des fichiers</span>
+        <span class="headline">{{ $t('dialog.file_upload.title') }}</span>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -13,9 +13,9 @@
             v-model="files"
             color="primary"
             counter
-            label="Envoi de fichier"
+            :label="$t('dialog.file_upload.file_input')"
             multiple
-            placeholder="Choisir un fichier"
+            :placeholder="$t('dialog.file_upload.select_files')"
             prepend-icon="mdi-paperclip"
             outlined
             :show-size="1000"
@@ -41,7 +41,7 @@
           text
           @click="cancel()"
         >
-          Annuler
+          {{ $t('general.cancel') }}
         </v-btn>
         <v-btn
           color="primary"
@@ -49,7 +49,7 @@
           :disabled="files.length === 0"
           @click="submitFiles()"
         >
-          Envoyer
+          {{ $t('general.send') }}
         </v-btn>
       </v-card-actions>
     </v-card>

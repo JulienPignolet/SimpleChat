@@ -114,15 +114,15 @@ export default {
     },
     fileConvertSize(aSize) {
       const def = [
-        [1, "octets"],
-        [1024, "ko"],
-        [1024 * 1024, "Mo"],
-        [1024 * 1024 * 1024, "Go"],
-        [1024 * 1024 * 1024 * 1024, "To"]
+        [1, "bytes"],
+        [1024, "KB"],
+        [1024 * 1024, "MB"],
+        [1024 * 1024 * 1024, "GB"],
+        [1024 * 1024 * 1024 * 1024, "TB"]
       ];
 
       if (aSize === 0) {
-        return "0 octets";
+        return "0 bytes";
       }
 
       aSize = Math.abs(parseInt(aSize, 10));

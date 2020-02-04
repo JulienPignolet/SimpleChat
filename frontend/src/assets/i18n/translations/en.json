@@ -15,8 +15,8 @@
     "type_a_message": "Type a message ..."
   },
   "chat_list": {
-    "friends": "Friends",
-    "discussions": "Discussions"
+    "discussions": "Discussions",
+    "friends": "Friends"
   },
   "friend_list": {
     "add_friend": "Add a friend",
@@ -43,6 +43,14 @@
       "proposition": "Proposition",
       "add_proposition": "Add a proposition",
       "anonymize_votes": "Anonymize the votes"
+    },
+    "file_upload": {
+      "title": "Send files",
+      "file_input": "File input",
+      "select_files": "Choose a file"
+    },
+    "zoom_image": {
+      "open_original": "Open the original"
     }
   },
   "store": {

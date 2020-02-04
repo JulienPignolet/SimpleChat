@@ -15,7 +15,7 @@
     <a
       class="img-link"
       @click="openLink()"
-    >Ouvrir l'original</a>
+    >{{ $t('dialog.zoom_image.open_original') }}</a>
   </v-dialog>
 </template>
 
