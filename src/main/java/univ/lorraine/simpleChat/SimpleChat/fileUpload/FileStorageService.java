@@ -47,8 +47,8 @@ public class FileStorageService {
             }
 
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+//            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+//            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             File fileToSave = new File(fileName, file.getContentType(), file.getBytes());
             this.fileRepository.save(fileToSave);
