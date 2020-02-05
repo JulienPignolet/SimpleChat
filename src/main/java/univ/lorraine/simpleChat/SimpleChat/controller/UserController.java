@@ -71,7 +71,7 @@ public class UserController {
 
         if(success) {
             userService.addRole(user, role);
-            userService.save(user);
+            userService.saveAndEncryptPassword(user);
             securityService.autoLogin(user.getUsername(), user.getPasswordConfirm());
         }
 
