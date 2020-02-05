@@ -11,9 +11,7 @@
         @click:append="sendMessage(message)"
       >
         <template v-slot:prepend-inner>
-          <v-btn icon>
-            <v-icon>mdi-vector-polygon</v-icon>
-          </v-btn>
+          <drawpad />
           <v-btn icon>
             <v-icon>mdi-file-plus</v-icon>
           </v-btn>
@@ -27,8 +25,9 @@
 <script>
 import * as types from "@/store/types.js";
 import NewPollDialog from "./NewPollDialog";
+import Drawpad from './Drawpad';
 export default {
-    components: {NewPollDialog},
+    components: {NewPollDialog, Drawpad},
     data () {
     return {
       message : ""
@@ -36,9 +35,9 @@ export default {
   },
   methods: {
     sendMessage(message){
-      this.$store.dispatch(`chat/${types.sendMessage}`, message)
-      this.message = ""
-      } 
+      this.$store.dispatch(`chat/${types.sendMessage}`, message);
+      this.message = "";
+    }
   }
 }
 </script>
