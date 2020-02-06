@@ -1,0 +1,70 @@
+{
+  "login": {
+    "title": "Sign in to SimpleChat",
+    "sign_in": "Sign in",
+    "sign_up": "Sign up",
+    "username": "Username",
+    "password": "Password"
+  },
+  "register": {
+    "title": "Registration",
+    "confirm_password": "Confirm password",
+    "sign_up": "Sign up"
+  },
+  "chat_box": {
+    "type_a_message": "Type a message ..."
+  },
+  "chat_list": {
+    "friends": "Friends",
+    "discussions": "Discussions"
+  },
+  "friend_list": {
+    "add_friend": "Add a friend",
+    "type_username": "Type an username"
+  },
+  "user": {
+    "add_friend": "Add as friend",
+    "block": "Block this user"
+  },
+  "user_group": {
+    "members": "Members"
+  },
+  "dialog": {
+    "new_group": {
+      "select_users": "Select users",
+      "name": "Name of the group",
+      "create_group": "Create a group"
+    },
+    "new_poll": {
+      "title": "Create a survey",
+      "question": "Question?",
+      "end_date": "End date",
+      "propositions": "Propositions",
+      "proposition": "Proposition",
+      "add_proposition": "Add a proposition",
+      "anonymize_votes": "Anonymize the votes"
+    }
+  },
+  "store": {
+    "user": {
+      "connected": "User {username} is now connected",
+      "disconnected": "User {username} has been successfully logged out",
+      "registered": "You are registered, now login!",
+      "wrong_credentials": "Wrong credentials"
+    }
+  },
+  "error": {
+    "has_occurred": "An error has occurred"
+  },
+  "general": {
+    "cancel": "Cancel",
+    "add": "Add",
+    "ok": "OK",
+    "close": "Close",
+    "send": "Send",
+    "type_username": "Type an username"
+  },
+  "poll": {
+    "vote": "0 votes | 1 vote | {count} votes"
+  }
+}

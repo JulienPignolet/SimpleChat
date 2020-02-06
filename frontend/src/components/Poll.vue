@@ -74,11 +74,11 @@
                   right
                 >
                   <template v-slot:activator="{ on }">
-                    <span v-on="on">{{ reponse.nbVote }} vote{{ reponse.nbVote !== 1 ? 's' : '' }}</span>
+                    <span v-on="on">{{ $tc('poll.vote', reponse.nbVote, { count: reponse.nbVote }) }}</span>
                   </template>
                   <span>{{ reponse.listVotes.map(vote => vote.user.username).join(", ") }}</span>
                 </v-tooltip>
-                <span v-else>{{ reponse.nbVote }} vote{{ reponse.nbVote !== 1 ? 's' : '' }}</span>
+                <span v-else>{{ $tc('poll.vote', reponse.nbVote, { count: reponse.nbVote }) }}</span>
               </v-col>
             </v-row>
           </div>

@@ -13,7 +13,7 @@
     </template>
     <v-card>
       <v-card-title>
-        <span class="headline">Créer un sondage</span>
+        <span class="headline">{{ $t('dialog.new_poll.title') }}</span>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -24,7 +24,7 @@
             >
               <v-text-field
                 v-model="question"
-                label="Question ?"
+                :label="$t('dialog.new_poll.question')"
                 prepend-inner-icon="mdi-help-circle"
                 required
               />
@@ -48,7 +48,7 @@
                 <template v-slot:activator="{ on }">
                   <v-text-field
                     v-model="dateFinFormatted"
-                    label="Date de fin"
+                    :label="$t('dialog.new_poll.end_date')"
                     prepend-inner-icon="mdi-calendar"
                     readonly
                     @blur="dateFin = parseDate(dateFinFormatted)"
@@ -59,7 +59,7 @@
                   v-model="dateFin"
                   :min="today"
                   :first-day-of-week="1"
-                  locale="fr-fr"
+                  :locale="getLocale()"
                   scrollable
                 >
                   <v-spacer />
@@ -68,14 +68,14 @@
                     color="primary"
                     @click="menuDateFin = false"
                   >
-                    Annuler
+                    {{ $t('general.cancel') }}
                   </v-btn>
                   <v-btn
                     text
                     color="primary"
                     @click="$refs.menuDateFin.save(dateFin)"
                   >
-                    OK
+                    {{ $t('general.ok') }}
                   </v-btn>
                 </v-date-picker>
               </v-menu>
@@ -87,7 +87,7 @@
                 style="color: black"
                 class="mt-2"
               >
-                Réponses :
+                {{ $t('dialog.new_poll.propositions') }}:
               </p>
             </v-col>
           </v-row>
@@ -99,7 +99,7 @@
             <v-col>
               <v-text-field
                 v-model="reponse.reponse"
-                :label="'Réponse n°' + reponse.id"
+                :label="$t('dialog.new_poll.proposition') + ' n°' + reponse.id"
               />
             </v-col>
           </v-row>
@@ -111,7 +111,7 @@
                 color="blue darken-2"
                 @click="addReponse()"
               >
-                Ajouter une réponse
+                {{ $t('dialog.new_poll.add_proposition') }}
               </v-btn>
             </v-col>
           </v-row>
@@ -119,7 +119,7 @@
             <v-col>
               <v-checkbox
                 v-model="votesAnonymes"
-                label="Anonymiser les votes"
+                :label="$t('dialog.new_poll.anonymize_votes')"
                 color="blue darken-2"
                 hide-details
               />
@@ -135,7 +135,7 @@
           :disabled="!canSubmit()"
           @click="submit()"
         >
-          Envoyer
+          {{ $t('general.send') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -145,6 +145,8 @@
 <script>
     import {ReponseSondage} from "../models/ReponseSondage";
     import * as types from "../store/types";
+    import { i18n } from '../plugins/i18n';
+    import languages from '../assets/i18n/languages';
 
     export default {
         name: "NewPollDialog",
@@ -209,6 +211,12 @@
                 const [day, month, year] = date.split('/');
                 return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
             },
+            getLocale() {
+              const language = languages.languages.find(
+                  language => language.locale === i18n.locale
+              );
+              return language.locale + '-' + language.country;
+            }
         }
     }
 </script>

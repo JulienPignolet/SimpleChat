@@ -35,7 +35,7 @@
         </v-list-item>
       </v-list>
 
-      <v-divider></v-divider>
+      <v-divider/>
 
       <v-list class="pa-2">
         <v-list-item>
@@ -46,7 +46,7 @@
             @click="clickToAddFriend()"
           >
             <v-icon left>mdi-account-plus</v-icon>
-            Ajouter en ami
+            {{ $t('user.add_friend') }}
           </v-btn>
         </v-list-item>
 
@@ -58,14 +58,14 @@
             @click="clickToBlockUser()"
           >
             <v-icon left>mdi-cancel</v-icon>
-            Bloquer cet utilisateur
+            {{ $t('user.block') }}
           </v-btn>
         </v-list-item>
       </v-list>
 
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="menu = false">Fermer</v-btn>
+        <v-spacer/>
+        <v-btn color="primary" text @click="menu = false">{{ $t('general.close') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-menu>
