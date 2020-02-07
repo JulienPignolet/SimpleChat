@@ -339,5 +339,23 @@ public class GroupeController {
 		Collection<Groupe> groups = groupeService.findGroupsByUser(uid); 
 		return ResponseEntity.ok(groups); 
 	}
+
+	/**
+	 *
+	 * @param request
+	 * @return les groupes ou l'utilisateur est admin
+	 */
+	@ApiOperation(value = "Retourne les groupe non supprimé (suppression logique) ou l'utilisateur est admin")
+	@GetMapping("/find/groupe/admin/{userId}")
+	public ResponseEntity<Collection<Groupe>> findGroupeByUserAdmin(HttpServletRequest request,@PathVariable String userId)
+	{
+		List<GroupeUser> groupeUser = this.groupeService.findAllByGroupeUserAdmin(Long.parseLong(userId));
+		List<Groupe> listeGroupe = new ArrayList<>();
+		for (GroupeUser gu: groupeUser) {
+			listeGroupe.add(gu.getGroupe());
+		}
+		return ResponseEntity.ok(listeGroupe);
+
+	}
 	
 }
