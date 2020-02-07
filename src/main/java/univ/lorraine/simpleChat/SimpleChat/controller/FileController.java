@@ -1,6 +1,8 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,7 @@ public class FileController {
         this.groupeService = groupeService;
     }
 
+    @ApiOperation("Sauvegarde d'un fichier en BDD puis envoie d'un message avec l'id du fichier et le nom du fichier")
     @PostMapping("/uploadFile")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId, @RequestParam("groupeId") Long groupeId) {
         File fileToGet= fileStorageService.storeFile(file);
@@ -79,6 +82,7 @@ public class FileController {
 
     }
 
+    @ApiOperation("Envoi d'un messagetemplate avec l'id du fichier et le nom du fichier")
     private void sendFileMessage(File file, User user, Groupe groupe){
         MessageTemplate messageTemplate = new MessageTemplate();
         messageTemplate.setGroupId(groupe.getId());
@@ -89,14 +93,13 @@ public class FileController {
 
     }
 
+    @ApiOperation("Sauvegarde de plusieurs fichiers en BDD puis envoie d'un message par fichier avec l'id du fichier et le nom du fichier")
     @PostMapping("/uploadMultipleFiles")
-    public List<ResponseEntity<String>> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files, @RequestParam("userId") Long userId, @RequestParam("groupeId") Long groupeId) {
-        return Arrays.asList(files)
-                .stream()
-                .map(file -> uploadFile(file, userId, groupeId))
-                .collect(Collectors.toList());
+    public ResponseEntity<List> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files, @RequestParam("userId") Long userId, @RequestParam("groupeId") Long groupeId) {
+        return ResponseEntity.ok(Arrays.asList(files).stream().map(file -> uploadFile(file, userId, groupeId).getBody()).collect(Collectors.toList()));
     }
 
+    @ApiOperation("Récupère le fichier via son id")
     @GetMapping("/getFile/{fileId}")
     public ResponseEntity<Resource> getFile(@PathVariable Long fileId, HttpServletRequest request) {
         File fileToGet = fileStorageService.getFileById(fileId);
@@ -106,6 +109,7 @@ public class FileController {
                 .body(new ByteArrayResource(fileToGet.getData()));
     }
 
+    @ApiOperation("Récupère les informations d'un fichier via son id")
     @GetMapping("/getFileData/{fileId}")
     public ResponseEntity<String> getFileData(@PathVariable Long fileId, HttpServletRequest request) {
 
@@ -114,6 +118,8 @@ public class FileController {
         return ResponseEntity.ok()
                 .body(toJSON(fileToGet));
     }
+
+    @ApiOperation("Téléchargement d'un fichier via son id")
     @GetMapping("/downloadFile/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId, HttpServletRequest request) {
 
@@ -124,6 +130,8 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileToGet.getName()+ "\"")
                 .body(new ByteArrayResource(fileToGet.getData()));
     }
+
+    @ApiOperation("Retourne un JSON avec les informations d'un fichier en paramètre")
     public String toJSON(File file)
     {
         JsonObject json = Json.createObjectBuilder()
