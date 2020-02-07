@@ -98,6 +98,7 @@ public class Message {
                 .add("userName", author.getUsername())
                 .add("groupId", groupe.getId())
                 .add("contenu", contenu)
+                .add("type", type)
                 .build();
         return json.toString();
     }
