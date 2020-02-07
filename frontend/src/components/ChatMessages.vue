@@ -19,7 +19,7 @@
           <v-list-item-content>
             <v-list-item-title v-html="item.pseudonyme" />
             <poll
-              v-if="isSondage(item.message)"
+              v-if="isSondage(item.type)"
               :poll-id="parseInt(item.message.split(':')[1])"
             />
             <file
@@ -55,9 +55,8 @@ export default {
     items: sync("chat/messageList")
   },
   methods : {
-      isSondage(message) {
-          const msgRegex = RegExp('^sondage_id:([0-9]+)$');
-          return msgRegex.test(message);
+      isSondage(type) {
+        return type === 'sondage';
       },
       isFile(type) {
         return type === 'fichier';
