@@ -44,33 +44,34 @@ const actions = {
 
   },
   async [types.getGroupes]({dispatch, rootState}){
-    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
-    axios.get(`${constants.API_URL}api/groupe/find/groups/user/${rootState.user.user.id}`)
-    .then(function (response) {
-      dispatch("groupe/setGroupeList", response.data, {root: true})
-    })
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.get(`${constants.API_URL}api/groupe/find/groups/user/${rootState.user.user.id}`)
+      .then(function (response) {
+        dispatch("groupe/setGroupeList", response.data, {root: true})
+      })
+    }
   },
   // Nul nul nul, voir avec front si jpeux avoir une requête déjà plutôt
   async [types.getGroupesCommun]({state, rootState, rootGetters}){
-    console.log(rootGetters['user/friendList'])
-    console.log(rootState.user.friendList)
-    for(const friend of rootState.user.friendList){
-      let userGroups = []
-      let friendGroups = []
-      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
-      await axios.get(`${constants.API_URL}api/groupe/find/groups/user/${rootState.user.user.id}`)
-      .then(function (response) {
-        userGroups = response.data
-       
-      })
-      await axios.get(`${constants.API_URL}api/groupe/find/groups/user/${friend.id}`)
-      .then(function (response) {
-        friendGroups = response.data
-      })
-      state.groupeCommunList[friend.id] = userGroups.filter(userGroup => friendGroups.some(friendGroup => userGroup.id === friendGroup.id))
+    if (rootState.user.user.id !== "undefined") {
+      console.log(rootGetters['user/friendList'])
+      console.log(rootState.user.friendList)
+      for(const friend of rootState.user.friendList){
+        let userGroups = []
+        let friendGroups = []
+        axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+        await axios.get(`${constants.API_URL}api/groupe/find/groups/user/${rootState.user.user.id}`)
+        .then(function (response) {
+          userGroups = response.data
+        })
+        await axios.get(`${constants.API_URL}api/groupe/find/groups/user/${friend.id}`)
+        .then(function (response) {
+          friendGroups = response.data
+        })
+        state.groupeCommunList[friend.id] = userGroups.filter(userGroup => friendGroups.some(friendGroup => userGroup.id === friendGroup.id))
+      }
     }
-
-    
   },
   async [types.chooseGroup]({dispatch, rootState}, group){
     Router.push(`/chat/group/${group.id}`);
@@ -83,16 +84,19 @@ const actions = {
     //     state.messageList.push({"pseudonyme": message.user_id, "message": message.message})
     //   })
     // })
+    dispatch(`groupe/${types.getGroupeMembers}`, null, {root: true})
     dispatch('chat/setMessageList', [], {root: true})
     dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   },
   async [types.getGroupeMembers]({dispatch, rootState}) {
-    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
-    axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/${rootState.groupe.groupe.id}`)
-      .then(function (response) {
-        dispatch("groupe/setGroupeMembers", response.data, {root: true});
-        console.log(rootState.groupe.groupe.id, response.data);
-      })
+    if (rootState.groupe.groupe.id !== undefined) {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/${rootState.groupe.groupe.id}`)
+        .then(function (response) {
+          dispatch("groupe/setGroupeMembers", response.data, {root: true});
+          console.log(rootState.groupe.groupe.id, response.data);
+        })
+    }
   }
 };
 

@@ -43,6 +43,14 @@
       "proposition": "предложение",
       "add_proposition": "Добавить предложение",
       "anonymize_votes": "Анонимизировать голоса"
+    },
+    "file_upload": {
+      "title": "Отправить файлы",
+      "file_input": "Запись файла",
+      "select_files": "Выберите файл"
+    },
+    "zoom_image": {
+      "open_original": "Открыть оригинал"
     }
   },
   "store": {

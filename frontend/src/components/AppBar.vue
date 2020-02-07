@@ -17,6 +17,7 @@ import { chat } from "@/store/modules/chat"
 import RegisterStoreModule from "@/mixins/RegisterStoreModule";
 import {sondage} from "../store/modules/sondage";
 import LocalesMenu from "./LocalesMenu";
+import { file } from "@/store/modules/file";
 
 export default {
     components: {LocalesMenu},
@@ -26,6 +27,7 @@ export default {
     this.registerStoreModule("groupe", groupe);
     this.registerStoreModule("chat", chat);
     this.registerStoreModule("sondage", sondage);
+    this.registerStoreModule("file", file);
     //this.getMessages();
   },
   methods: {
