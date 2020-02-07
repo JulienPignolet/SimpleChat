@@ -11,13 +11,8 @@
         @click:append="sendMessage(message)"
       >
         <template v-slot:prepend-inner>
-          <v-btn icon>
-            <v-icon>mdi-vector-polygon</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            @click="activateFileUploadDialog(true)" 
-          >
+          <drawpad />
+          <v-btn icon @click="activateFileUploadDialog(true)">
             <v-icon>mdi-file-plus</v-icon>
           </v-btn>
           <new-poll-dialog />
@@ -30,29 +25,32 @@
 <script>
 import * as types from "@/store/types.js";
 import NewPollDialog from "./NewPollDialog";
-import { call } from 'vuex-pathify';
+import { call } from "vuex-pathify";
 import { interfaceControl } from "@/store/modules/interfaceControl";
-import RegisterStoreModule from '@/mixins/RegisterStoreModule'
+import RegisterStoreModule from "@/mixins/RegisterStoreModule";
+import Drawpad from "./Drawpad";
+
 export default {
-  components: {NewPollDialog},
-  mixins: [ RegisterStoreModule ],
-    data () {
+  components: { NewPollDialog, Drawpad },
+  mixins: [RegisterStoreModule],
+  data() {
     return {
-      message : ""
-    }
+      message: ""
+    };
   },
   created() {
-        this.registerStoreModule("interfaceControl", interfaceControl);
+    this.registerStoreModule("interfaceControl", interfaceControl);
   },
   methods: {
-    activateFileUploadDialog: call(`interfaceControl/${types.setFileUploadDialog}`),
-    sendMessage(message){
-      this.$store.dispatch(`chat/${types.sendMessage}`, { message })
-      this.message = ""
-      } 
+    activateFileUploadDialog: call(
+      `interfaceControl/${types.setFileUploadDialog}`
+    ),
+    sendMessage(message) {
+      this.$store.dispatch(`chat/${types.sendMessage}`, { message });
+      this.message = "";
+    }
   }
-}
+};
 </script>
 
-<style lang="css">
-</style>
+<style lang="css"></style>

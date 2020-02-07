@@ -36,25 +36,25 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file) {
+    public File storeFile(MultipartFile file) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
             // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-            }
+//            if(fileName.contains("..")) {
+//                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+//            }
 
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.fileStorageLocation.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+//            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+//            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             File fileToSave = new File(fileName, file.getContentType(), file.getBytes());
             this.fileRepository.save(fileToSave);
 
 
-            return fileName;
+            return fileToSave;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }

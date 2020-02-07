@@ -41,6 +41,7 @@ public class DataInit implements ApplicationRunner {
         addUserIfNotExist(defaultUser);
 
         assignUserToGroup(defaultUser,chanGeneral);
+        assignUserToGroup("test",chanGeneral);
 
     }
 
