@@ -29,8 +29,6 @@ public class Message {
     @ManyToOne
     private User author;
 
-    @ManyToMany
-    private Collection<File> files;
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,7 +41,6 @@ public class Message {
         this.contenu = contenu;
         this.author = author;
         this.groupe = groupe;
-        this.files = new ArrayList<>(); 
     }
 
     public Long getId() {
