@@ -25,8 +25,7 @@ const actions = {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
     axios.post(constants.API_URL + "api/fileUpload/uploadFile", file)
-      .then(function (response) {
-        dispatch((`chat/${types.sendMessage}`), { message: `${response.data.fileId}:${response.data.fileName}`, type: 'fichier' }, { root: true })
+      .then(function () {
         dispatch((`interfaceControl/${types.setFileUploadDialog}`), false, { root: true })
         dispatch((`chat/${types.getLiveMessages}`), null, { root: true })
       })
@@ -35,11 +34,7 @@ const actions = {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
     axios.post(constants.API_URL + "api/fileUpload/uploadMultipleFiles", files)
-      .then(function (response) {
-        response.data.forEach(responseFile => {
-          responseFile = JSON.parse(responseFile)
-          dispatch((`chat/${types.sendMessage}`), { message: `${responseFile.fileId}:${responseFile.fileName}`, type: 'fichier' }, { root: true })
-        });
+      .then(function () {
         dispatch((`interfaceControl/${types.setFileUploadDialog}`), false, { root: true })
         dispatch((`chat/${types.getLiveMessages}`), null, { root: true })
       })
