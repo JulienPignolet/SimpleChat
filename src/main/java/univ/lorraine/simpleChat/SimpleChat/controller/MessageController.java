@@ -75,7 +75,7 @@ public class MessageController {
                 clientPool.get(message.getGroupId()).sendMsg(newMessageOCSF);
                 // Sauvegarde
                 Groupe groupe = groupeService.find(message.getGroupId());
-                messageService.save( new Message(message.getContenu(), user, groupe));
+                messageService.save( new Message(message.getContenu(), user, groupe, message.getType()));
             }
         }
         catch(Exception e)

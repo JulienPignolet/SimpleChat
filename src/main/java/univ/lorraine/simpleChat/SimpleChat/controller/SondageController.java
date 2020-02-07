@@ -150,6 +150,7 @@ public class SondageController {
         messageTemplate.setGroupId(groupe.getId());
         messageTemplate.setUserId(user.getId());
         messageTemplate.setContenu("sondage_id:" + sondage.getId());
+        messageTemplate.setType("sondage");
 
         this.messageController.sendMessage(messageTemplate);
     }
