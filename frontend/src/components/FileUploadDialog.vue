@@ -10,6 +10,7 @@
       <v-card-text>
         <v-container>
           <v-file-input
+            ref="fileInput"
             v-model="files"
             color="primary"
             counter
@@ -83,7 +84,7 @@ export default {
         this.sendFiles(formData);
       }
 
-      this.files = [];
+      this.resetFiles();
     },
     sendFile(file) {
       this.$store.dispatch(`file/${types.sendFile}`, file);
@@ -93,12 +94,16 @@ export default {
     },
     cancel() {
       this.dialog = false;
-      this.files = [];
+      this.resetFiles();
     },
     deleteFile(index, event) {
       this.files.splice(index, 1);
       event.stopPropagation()
     },
+    resetFiles() {
+      this.files = [];
+      this.$refs.fileInput.clearableCallback()
+    }
   }
 };
 </script>
