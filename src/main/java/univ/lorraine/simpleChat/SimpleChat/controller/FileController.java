@@ -88,6 +88,7 @@ public class FileController {
         messageTemplate.setGroupId(groupe.getId());
         messageTemplate.setUserId(user.getId());
         messageTemplate.setContenu(file.getId() + ":" + file.getName());
+        messageTemplate.setType("fichier");
 
         this.messageController.sendMessage(messageTemplate);
 
