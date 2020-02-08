@@ -15,8 +15,8 @@
     "type_a_message": "Saisir un message..."
   },
   "chat_list": {
-    "friends": "Amis",
-    "discussions": "Discussions"
+    "discussions": "Discussions",
+    "friends": "Amis"
   },
   "friend_list": {
     "add_friend": "Ajouter un ami",
@@ -28,9 +28,6 @@
   },
   "user_group": {
     "members": "Membres "
-  },
-  "poll": {
-    "vote": "0 votes | 1 vote | {count} votes"
   },
   "dialog": {
     "new_group": {
@@ -46,6 +43,14 @@
       "proposition": "Réponse",
       "add_proposition": "Ajouter une réponse",
       "anonymize_votes": "Anonymiser les votes"
+    },
+    "file_upload": {
+      "title": "Envoyer des fichiers",
+      "file_input": "Entrée de fichier",
+      "select_files": "Choisir un fichier"
+    },
+    "zoom_image": {
+      "open_original": "Ouvrir l'original"
     }
   },
   "store": {
@@ -66,5 +71,8 @@
     "close": "Fermer",
     "send": "Envoyer",
     "type_username": "Entrer le nom d'un utilisateur"
+  },
+  "poll": {
+    "vote": "0 votes | 1 vote | {count} votes"
   }
 }
