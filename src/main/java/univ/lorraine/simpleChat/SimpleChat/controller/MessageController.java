@@ -3,6 +3,8 @@ package univ.lorraine.simpleChat.SimpleChat.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,9 +23,16 @@ import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
 import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
 import univ.lorraine.simpleChat.SimpleChat.service.UserService;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+
+import java.io.StringReader;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,10 +109,10 @@ public class MessageController {
 
                 GroupeClientRunnable groupeClientRunnable = clientPool.get(idGroupe);
                 groupeClientRunnable.addUserToGroup(idUser);
-
                 String messagesEnAttente = groupeClientRunnable.getMessagesEnAttente(idUser);
                 groupeClientRunnable.viderBuffer(idUser);
-                return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
+                
+                return new ResponseEntity<>(removeBlockedMessages(messagesEnAttente, idUser), HttpStatus.OK);
             }
         }
         catch (AutorisationException e) {
@@ -119,8 +128,8 @@ public class MessageController {
     {
         try {
             if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
-                String messagesEnAttente = messageService.get(idGroupe);
-                return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
+                String messagesSaved = messageService.get(idGroupe);
+                return new ResponseEntity<>(removeBlockedMessages(messagesSaved, idUser), HttpStatus.OK);
             }
         }
         catch (AutorisationException e) {
@@ -181,4 +190,54 @@ public class MessageController {
             return false;
         }
     }
+    
+    /**
+     * Construit un nouvel objet JSON sans les messages des utilisateurs bloqués
+     * @param messages
+     * @param idUser
+     * @return String 
+     */
+    public StringBuilder removeBlockedMessages(String messages, Long idUser) {
+        JsonReader jsonReader = Json.createReader(new StringReader(messages));
+        JsonObject jsonObject = jsonReader.readObject();
+        JsonArray buffer = jsonObject.get("buffer").asJsonArray();
+        StringBuilder newMsgBuffer = new StringBuilder("{\"buffer\":[");
+        try (Jsonb jsonBuilder = JsonbBuilder.create()) {
+        	for(int i = 0; i < buffer.size(); i++) {
+        		MessageOCSF messageOCSF = jsonBuilder.fromJson(buffer.get(i).toString(), MessageOCSF.class);
+            	if(!isBlockedMessage(messageOCSF, idUser))
+            		newMsgBuffer.append(buffer.get(i).toString()).append(",");
+            }
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+		}
+        StringBuilder json = new StringBuilder(StringUtils.removeEnd(newMsgBuffer.toString(), ","));
+        json.append("]}");
+        return json;
+    }
+    
+    /**
+     * Retourne vrai si le message provient d'un user bloqué
+     * @param message
+     * @param userId
+     * @return si le message doit être caché
+     */
+    public boolean isBlockedMessage(MessageOCSF message, Long userId) {
+    	Collection<User> blockedUsers = getUserBlocked(userId);
+    	for (User blockedUser : blockedUsers)
+        	if(message.getUserId() == blockedUser.getId())
+        		return true;
+    	return false;
+    }
+    
+    /**
+     * Retourne la liste des id bloqués
+     * @param userId
+     * @return Collection<User>
+     */
+    public Collection<User> getUserBlocked(Long userId) {
+	    User user = userService.findById(userId);
+	    if (user != null) return user.getMyBlocklist();
+	    return null;
+	}
 }
