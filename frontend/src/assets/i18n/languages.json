@@ -1,0 +1,8 @@
+{
+  "languages": [
+    {"locale": "en", "country": "US","name": "English"},
+    {"locale": "fr", "country": "FR", "name": "Français"},
+    {"locale": "de", "country": "DE", "name": "Deutsch"},
+    {"locale": "ru", "country": "RU", "name": "Русский"}
+  ]
+}

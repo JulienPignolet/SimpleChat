@@ -19,8 +19,12 @@
           <v-list-item-content>
             <v-list-item-title v-html="item.pseudonyme" />
             <poll
-              v-if="isSondage(item.message)"
+              v-if="isSondage(item.type)"
               :poll-id="parseInt(item.message.split(':')[1])"
+            />
+            <file
+              v-else-if="isFile(item.type)"
+              :file-id="parseInt(item.message.split(':')[0])"
             />
             <v-list-item-subtitle
               v-else
@@ -39,10 +43,11 @@
 
 <script>
 import { sync } from "vuex-pathify";
+import File from "./File";
 import Poll from "./Poll";
 import UserGroup from "./UserGroup";
 export default {
-    components: {Poll, UserGroup},
+    components: {File, Poll, UserGroup},
     data: () => ({
 
   }),
@@ -50,9 +55,11 @@ export default {
     items: sync("chat/messageList")
   },
   methods : {
-      isSondage(message) {
-          const msgRegex = RegExp('^sondage_id:([0-9]+)$');
-          return msgRegex.test(message);
+      isSondage(type) {
+        return type === 'sondage';
+      },
+      isFile(type) {
+        return type === 'fichier';
       }
   }
 }

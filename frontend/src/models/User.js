@@ -1,5 +1,8 @@
 export class User {
     constructor (username, token, id) {
+      localStorage.username = username;
+      localStorage.token = token;
+      localStorage.id = id;
       this.username = username;
       this.token = token;
       this.id = id;

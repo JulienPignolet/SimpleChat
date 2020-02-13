@@ -29,8 +29,6 @@ public class Message {
     @ManyToOne
     private User author;
 
-    @ManyToMany
-    private Collection<MessageFile> files;
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,11 +37,14 @@ public class Message {
     @Basic(optional = false)
     private String contenu;
 
-    public Message(String contenu, User author, Groupe groupe){
+    @Basic(optional = false)
+    private String type;
+
+    public Message(String contenu, User author, Groupe groupe, String type){
         this.contenu = contenu;
         this.author = author;
         this.groupe = groupe;
-        this.files = new ArrayList<>(); 
+        this.type = type;
     }
 
     public Long getId() {
@@ -82,6 +83,14 @@ public class Message {
         return contenu;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String toJSON()
     {
         JsonObject json = Json.createObjectBuilder()
@@ -89,6 +98,7 @@ public class Message {
                 .add("userName", author.getUsername())
                 .add("groupId", groupe.getId())
                 .add("contenu", contenu)
+                .add("type", type)
                 .build();
         return json.toString();
     }

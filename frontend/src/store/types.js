@@ -27,9 +27,16 @@ export const sendSondage = 'sendSondage'
 export const getSondage = 'getSondage'
 export const sendVote = 'sendVote'
 
+// action module file
+export const sendFile = 'sendFile'
+export const sendMultipleFiles = 'sendMultipleFiles'
+export const getFileData = 'getFileData'
+
 // setters vuex-pathify
 export const setAlerte = 'setAlerte'
 export const setUser = 'setUser'
 export const setMessage = 'setMessage'
 export const setGroupDialog = 'setGroupDialog'
 export const setGroupe = 'setGroupe'
+export const setFileUploadDialog = 'setFileUploadDialog'
+export const setZoomImageDialog = 'setZoomImageDialog'

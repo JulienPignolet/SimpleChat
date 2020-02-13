@@ -3,7 +3,7 @@
     style="border-left: 1px solid rgba(0,0,0,0.1);"
     dense
   >
-    <v-subheader>Membres :</v-subheader>
+    <v-subheader>{{ $t('user_group.members') }}:</v-subheader>
     <v-list-item-group>
       <v-list-item v-for="user in members" :key="user.username">
         <user :user="user" />

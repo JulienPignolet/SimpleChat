@@ -2,26 +2,25 @@
   <div>
     <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on">Ajouter un ami</v-btn>
+        <v-btn v-on="on">{{ $t('friend_list.add_friend') }}</v-btn>
       </template>
 
       <!-- TO DO : Bouger ça dans un autre composants, flemme là -->
       <v-card>
         <v-autocomplete
           v-model="friendId"
-          placeholder="Entre le nom d'un utilisateur"
+          :placeholder="$t('general.type_username')"
           :items="userList.filter(user => !friendList.some(friend => friend.id === user.id))"
           item-text="username"
           item-value="id"
           single-line
           filled
-        ></v-autocomplete>
-
+        />
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer/>
 
-          <v-btn text @click="menu = false">Annuler</v-btn>
-          <v-btn color="primary" text @click="clickToAddFriend()">Ajouter</v-btn>
+          <v-btn text @click="menu = false">{{ $t('general.cancel') }}</v-btn>
+          <v-btn color="primary" text @click="clickToAddFriend()">{{ $t('general.add') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-menu>

@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="dialog" max-width="500">
     <v-card>
-      <v-card-title>Séléctionne des utilisateurs</v-card-title>
+      <v-card-title>{{ $t('dialog.new_group.select_users') }}</v-card-title>
       <v-container>
         <v-autocomplete
           v-model="selectedUserList"
-          placeholder="Entre le nom d'un utilisateur"
+          :placeholder="$t('general.type_username')"
           :items="userList"
           item-text="username"
           item-value="id"
@@ -16,13 +16,13 @@
           rounded
           filled
           @click="getUsers()"
-        ></v-autocomplete>
+        />
 
-        <v-text-field label="Nom du groupe" v-model="groupeName" outlined></v-text-field>
+        <v-text-field :label="$t('dialog.new_group.name')" v-model="groupeName" outlined/>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="dialog = false">Annuler</v-btn>
-          <v-btn text @click="createGroupe()">Créer un groupe</v-btn>
+          <v-spacer/>
+          <v-btn text @click="dialog = false">{{ $t('general.cancel') }}</v-btn>
+          <v-btn text @click="createGroupe()">{{ $t('dialog.new_group.create_group') }}</v-btn>
         </v-card-actions>
       </v-container>
     </v-card>

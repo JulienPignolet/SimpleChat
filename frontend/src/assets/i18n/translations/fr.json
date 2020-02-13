@@ -1,0 +1,78 @@
+{
+  "login": {
+    "title": "Connexion à SimpleChat",
+    "sign_in": "Se connecter",
+    "sign_up": "Créer un compte",
+    "username": "Pseudonyme",
+    "password": "Mot de passe"
+  },
+  "register": {
+    "title": "Inscription",
+    "confirm_password": "Répéter le mot de passe",
+    "sign_up": "S'inscrire"
+  },
+  "chat_box": {
+    "type_a_message": "Saisir un message..."
+  },
+  "chat_list": {
+    "discussions": "Discussions",
+    "friends": "Amis"
+  },
+  "friend_list": {
+    "add_friend": "Ajouter un ami",
+    "type_username": "Entrer le nom d'un utilisateur"
+  },
+  "user": {
+    "add_friend": "Ajouter en tant qu'ami",
+    "block": "Bloquer cet utilisateur"
+  },
+  "user_group": {
+    "members": "Membres "
+  },
+  "dialog": {
+    "new_group": {
+      "select_users": "Séléctionner des utilisateurs",
+      "name": "Nom du groupe",
+      "create_group": "Créer un groupe"
+    },
+    "new_poll": {
+      "title": "Créer un sondage",
+      "question": "Question ?",
+      "end_date": "Date de fin",
+      "propositions": "Réponses ",
+      "proposition": "Réponse",
+      "add_proposition": "Ajouter une réponse",
+      "anonymize_votes": "Anonymiser les votes"
+    },
+    "file_upload": {
+      "title": "Envoyer des fichiers",
+      "file_input": "Entrée de fichier",
+      "select_files": "Choisir un fichier"
+    },
+    "zoom_image": {
+      "open_original": "Ouvrir l'original"
+    }
+  },
+  "store": {
+    "user": {
+      "connected": "L'utilisateur {username} est bien connecté",
+      "disconnected": "L'utilisateur {username} est bien déconnecté",
+      "registered": "Vous êtes maintenant inscrit, connectez vous !",
+      "wrong_credentials": "Informations saisies invalides"
+    }
+  },
+  "error": {
+    "has_occurred": "Une erreur est survenue"
+  },
+  "general": {
+    "cancel": "Annuler",
+    "add": "Ajouter",
+    "ok": "OK",
+    "close": "Fermer",
+    "send": "Envoyer",
+    "type_username": "Entrer le nom d'un utilisateur"
+  },
+  "poll": {
+    "vote": "0 votes | 1 vote | {count} votes"
+  }
+}
