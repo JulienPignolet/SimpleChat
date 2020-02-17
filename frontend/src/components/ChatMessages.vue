@@ -2,6 +2,7 @@
   <div class="d-flex">
     <div class="flex-grow-1">
       <v-list
+        id="messages-list"
         style="height:82vh;"
         class="overflow-y-auto"
         three-line
@@ -25,6 +26,7 @@
             <file
               v-else-if="isFile(item.type)"
               :file-id="parseInt(item.message.split(':')[0])"
+              @ready="scrollBottom()"
             />
             <v-list-item-subtitle
               v-else
@@ -54,12 +56,19 @@ export default {
   computed: {
     items: sync("chat/messageList")
   },
+  updated() {
+    this.scrollBottom()
+  },
   methods : {
       isSondage(type) {
         return type === 'sondage';
       },
       isFile(type) {
         return type === 'fichier';
+      },
+      scrollBottom() {
+        const messageList = this.$el.querySelector('#messages-list')
+        messageList.scrollTop = messageList.scrollHeight
       }
   }
 }
