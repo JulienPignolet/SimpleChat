@@ -35,6 +35,7 @@ public class Message {
     private Date created_at;
 
     @Basic(optional = false)
+    @Lob
     private String contenu;
 
     @Basic(optional = false)
