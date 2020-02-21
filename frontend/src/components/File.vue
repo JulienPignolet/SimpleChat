@@ -8,7 +8,6 @@
       <img
         class="image-file"
         :alt="fichier() ? fichier().name : ''"
-        :src="getLink()"
         @click="zoom()"
       >
     </v-container>
@@ -79,6 +78,9 @@ export default {
     this.$store.dispatch(`file/${types.getFileData}`, this.fileId);
     this.registerStoreModule("interfaceControl", interfaceControl);
   },
+  updated() {
+    this.updateImage();
+  },
   methods: {
     activateZoomImageDialog: call(
       `interfaceControl/${types.setZoomImageDialog}`
@@ -88,6 +90,15 @@ export default {
     },
     isImage() {
       return this.fichier().type.includes("image/");
+    },
+    updateImage() {
+      if (this.fichier() && this.isImage()) {
+        const img = this.$el.querySelector("img");
+        img.onload = () => {
+          this.$emit("ready");
+        };
+        img.src = this.getLink();
+      }
     },
     download() {
       window.open(this.getLink(), "_blank");
@@ -128,7 +139,6 @@ export default {
       aSize = Math.abs(parseInt(aSize, 10));
       for (let i = 0; i < def.length; i++) {
         if (aSize < def[i][0]) {
-          console.log(aSize)
           let size = (aSize / def[i - 1][0]).toFixed(2);
           size = size.toString().replace(".00", "");
           return size + " " + def[i - 1][1];
