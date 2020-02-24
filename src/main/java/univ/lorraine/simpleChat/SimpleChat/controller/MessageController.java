@@ -170,4 +170,20 @@ public class MessageController {
             return false;
         }
     }
+    
+	@ApiOperation(value = "Retourne tous les messages enregistrés dans un groupe")
+	@GetMapping("/saved/{idGroupe}")
+	public ResponseEntity<Object> getSavedMessagesByGroup(@PathVariable(value = "idGroupe") Long idGroupe)
+	{
+		try {
+			if (groupeUserService.CountByGroupeId(idGroupe)) {
+				String messagesEnAttente = messageService.get(idGroupe);
+				return new ResponseEntity<>(messagesEnAttente, HttpStatus.OK);
+			}
+		}
+		catch (AutorisationException e) {
+			return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
+		}
+	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

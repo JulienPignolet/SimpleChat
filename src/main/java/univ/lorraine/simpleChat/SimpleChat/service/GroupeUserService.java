@@ -111,4 +111,12 @@ public class GroupeUserService {
 	{
 		return groupeUserRepository.findByGroupeUserActif(groupeId, userId);
 	}
+
+	public boolean CountByGroupeId(Long groupe_id) throws AutorisationException {
+		boolean authorized = false;
+		authorized = groupeUserRepository.findByGroupeId(groupe_id).size() > 0;
+		if(authorized)
+			return true;
+		throw new AutorisationException(groupe_id, 0L);
+	}
 }
