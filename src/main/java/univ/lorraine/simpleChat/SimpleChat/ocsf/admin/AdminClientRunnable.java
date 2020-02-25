@@ -24,7 +24,7 @@ public class AdminClientRunnable implements Runnable {
 
     public AdminClientRunnable() {
         /******************** REMPLACER SIMPLECHAT.FUN PAR LOCALHOST POUR UTILISER LE SERVEUR OCSF LOCAL ********************/
-        this.client = new AdminClientImpl( "localhost", 12345);
+        this.client = new AdminClientImpl( "simplechat.fun", 12345);
     }
 
     @Override
