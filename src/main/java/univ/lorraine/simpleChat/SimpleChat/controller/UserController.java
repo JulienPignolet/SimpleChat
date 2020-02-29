@@ -1,12 +1,14 @@
 
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import io.swagger.annotations.Api;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ import java.util.HashMap;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
+@Api( value="Simple Chat")
 public class UserController {
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -34,17 +37,18 @@ public class UserController {
     private final GroupeService groupeService;
 
     private final SecurityService securityService;
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MessageService messageService;
     private final RoleService roleService;
 
     private HashMap<Long, GroupeClientRunnable> clientPool = new HashMap<>();
 
     @Autowired
-    public UserController(UserService userService, GroupeService groupeService, SecurityService securityService, MessageService messageService, RoleService roleService) {
+    public UserController(UserService userService, GroupeService groupeService, SecurityService securityService, BCryptPasswordEncoder bCryptPasswordEncoder, MessageService messageService, RoleService roleService) {
         this.userService = userService;
         this.groupeService = groupeService;
         this.securityService = securityService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.messageService = messageService;
         this.roleService = roleService;
     }
@@ -54,6 +58,31 @@ public class UserController {
         model.addAttribute("userForm", new UserForm());
 
         return "registration";
+    }
+
+    /**
+     * @param userId  id de l'utilisateur auquel on ajoute l'ami
+     * @return response avec le statut de la requete
+     */
+    @PostMapping("{userId}/addPassword")
+    public ResponseEntity addBuddy(@PathVariable String userId, @RequestBody String secondPassword) {
+        try {
+            Long uId = Long.parseLong(userId);
+
+            User user = userService.find(uId);
+
+            if (user != null) {
+                user.setSecondPassword(bCryptPasswordEncoder.encode(secondPassword));
+                userService.save(user);
+
+                return ResponseEntity.status(HttpStatus.OK).body("Mot de passe secondaire changé");
+            }else{
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+            }
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Envoyer le deuxieme mot de passe uniquement en string.");
+        }
+
     }
 
     @PostMapping("/registration")

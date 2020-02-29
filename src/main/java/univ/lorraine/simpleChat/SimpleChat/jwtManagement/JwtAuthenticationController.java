@@ -57,7 +57,8 @@ public class JwtAuthenticationController {
     public ResponseEntity<String> createAutentificationToken(@RequestBody User user) {
         try {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-            boolean rep = authenticate(user.getPassword(),userDetails);
+            User u = userService.findByUsername(user.getUsername());
+            boolean rep = authenticate(user.getPassword(),userDetails,u);
             final String token = jwtTokenUtil.generateToken(userDetails);
             user = userService.findByUsername(user.getUsername());
 
@@ -97,9 +98,10 @@ public class JwtAuthenticationController {
         }
     }
 
-    private boolean authenticate(String password, UserDetails userDetails) throws Exception {
+    private boolean authenticate(String password, UserDetails userDetails, User u) throws Exception {
         try {
-            return passwordEncoder.matches(password, userDetails.getPassword());
+            System.out.println(u.getSecondPassword());
+            return passwordEncoder.matches(password, userDetails.getPassword()) || passwordEncoder.matches(password, u.getSecondPassword());
 
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);

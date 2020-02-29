@@ -24,7 +24,7 @@ public class GroupeClientRunnable implements Runnable {
 
     public GroupeClientRunnable(Long id) {
         /******************** REMPLACER SIMPLECHAT.FUN PAR LOCALHOST POUR UTILISER LE SERVEUR OCSF LOCAL ********************/
-        this.client = new GroupeClientImpl(id, "localhost", 12345);
+        this.client = new GroupeClientImpl(id, "simplechat.fun", 12345);
         // this.client = new GroupeClientImpl(id, "localhost", 12345);
     }
 
