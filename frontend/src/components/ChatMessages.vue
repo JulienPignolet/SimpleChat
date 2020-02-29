@@ -7,8 +7,8 @@
         class="overflow-y-auto"
       >
         <v-list-item
-          v-for="item in items"
-          :key="item.message"
+          v-for="(item, index) in items"
+          :key="item.message + index"
         >
           <v-list-item-avatar color="grey">
             <v-icon dark>

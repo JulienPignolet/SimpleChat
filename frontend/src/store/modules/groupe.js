@@ -17,11 +17,11 @@ const mutations = make.mutations(state);
 
 const actions = {
   ...make.actions(state),
-  
+
   async [types.createGroupe]({ state, dispatch, rootState }) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     if(rootState.user.selectedUserList && rootState.user.selectedUserList.length > 0){
-      let request = { "adminGroupeId": rootState.user.user.id, "groupeName": state.groupeName, "isPrivateChat": 0, "members": rootState.user.selectedUserList}; 
+      let request = { "adminGroupeId": rootState.user.user.id, "groupeName": state.groupeName, "isPrivateChat": 0, "members": rootState.user.selectedUserList};
       axios
       .post(constants.API_URL + 'api/groupe/add/groupe-and-members', request).
       then(function(response){
@@ -94,7 +94,7 @@ const actions = {
       axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/${rootState.groupe.groupe.id}`)
         .then(function (response) {
           dispatch("groupe/setGroupeMembers", response.data, {root: true});
-          console.log(rootState.groupe.groupe.id, response.data);
+          // console.log(rootState.groupe.groupe.id, response.data);
         })
     }
   }

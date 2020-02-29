@@ -62,10 +62,14 @@
               </v-list-item-group>
             </v-list>
           </div>
-
           <canvas ref="my-canvas" width="1000" height="448" v-on:mousedown="mouseDown" v-on:mouseup="mouseUp" v-on:mousemove="mouseMove" v-on:mouseleave="mouseLeave">
 
           </canvas>
+          <div class="hidden">
+            <div v-for="(item, index) in items" :key="index">
+              {{ item.message }}
+            </div>
+          </div>
         </div>
       </v-card-text>
     </v-card>
@@ -73,6 +77,9 @@
 </template>
 
 <script>
+  import * as types from "@/store/types.js";
+  import store from '../store/index';
+
   export default {
     name: 'drawpad',
     components: {},
@@ -91,22 +98,33 @@
       }
     },
     updated() {
-      this.canvas = this.$refs['my-canvas'];
-      this.context = this.canvas.getContext('2d');
-    },
+      try {
+        this.canvas = this.$refs['my-canvas'];
+        this.context = this.canvas.getContext('2d');
+      } catch(error) {
+        console.log('Le canvas n\'est pas encore chargé');
+      }
 
+    },
     computed: {
       colorSquare: function() {
         return {
           color: `${this.color}`
         }
+      },
+
+      items: function() {
+        let messages = store.state.chat.messageList;
+        if(this.canvas !== null && this.canvas !== undefined) {
+          this.receiveMessage(messages);
+        }
+        return messages;
       }
     },
 
     methods: {
       toggleColorPicker: function() {
         this.showColorPicker = !this.showColorPicker;
-        console.log(this.showColorPicker);
       },
 
       setShape: function(shape) {
@@ -122,6 +140,7 @@
         this.mouseUpClickPos = this.getMousePosition(event, this.canvas.getBoundingClientRect());
         this.mouseIsDown = false;
         this.saveCurrentForm();
+        this.sendMessage();
       },
 
       mouseLeave: function() {
@@ -198,12 +217,43 @@
           width: endClick.x - startClick.x,
           height: endClick.y - startClick.y
         }
+      },
+
+      sendMessage() {
+        const shape = this.shapesHistory[this.shapesHistory.length - 1];
+        this.$store.dispatch(`chat/${types.sendMessage}`, {
+          message: `${shape.color}|${shape.shape}|${shape.startClick.x}|${shape.startClick.y}|${shape.endClick.x}|${shape.endClick.y}`,
+          type: 'drawpad'
+        });
+      },
+
+      parseMessage(message) {
+        const shape = message.split('|');
+        this.shapesHistory.push({
+          color: shape[0],
+          shape: shape[1],
+          startClick: {x: shape[2], y: shape[3]},
+          endClick: {x: shape[4], y: shape[5]}
+        });
+      },
+
+      receiveMessage(messages) {
+        this.resetCanvas();
+        messages.forEach(message => {
+          if(message.type === 'drawpad') {
+            this.parseMessage(message.message);
+          }
+        });
+        this.draw();
       }
     }
   }
 </script>
 
 <style lang="css">
+  .hidden {
+    display: none;
+  }
   .color-picker-container {
     position: relative;
     overflow: visible;
