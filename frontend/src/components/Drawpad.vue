@@ -95,6 +95,7 @@
         mouseUpClickPos: {x: 0, y: 0},
         canvas: null,
         context: null,
+        messageCount: 0
       }
     },
     updated() {
@@ -114,8 +115,8 @@
       },
 
       items: function() {
-        let messages = store.state.chat.messageList;
-        if(this.canvas !== null && this.canvas !== undefined) {
+        let messages = store.state.chat.messageList.filter(message => message.type === 'drawpad');
+        if(this.canvas !== null && this.canvas !== undefined && this.messageCount !== messages.length) {
           this.receiveMessage(messages);
         }
         return messages;
@@ -148,7 +149,7 @@
       },
 
       mouseMove: function(event) {
-        if(this.mouseIsDown) {
+        if(this.mouseIsDown && this.showColorPicker === false) {
           this.mouseUpClickPos = this.getMousePosition(event, this.canvas.getBoundingClientRect());
           this.draw();
         }
@@ -168,7 +169,6 @@
         this.context.strokeStyle = this.color;
         dimension = this.getDimension(this.mouseDownClickPos, this.mouseUpClickPos);
         this.drawShape(this.shape,this.mouseDownClickPos.x,this.mouseDownClickPos.y,dimension.width,dimension.height);
-        // this.context.fillRect(this.mouseDownClickPos.x,this.mouseDownClickPos.y,dimension.width,dimension.height);
       },
 
       drawShape: function(shape, x, y, width, height) {
@@ -221,6 +221,8 @@
 
       sendMessage() {
         const shape = this.shapesHistory[this.shapesHistory.length - 1];
+        console.log('message send :');
+        console.log(shape);
         this.$store.dispatch(`chat/${types.sendMessage}`, {
           message: `${shape.color}|${shape.shape}|${shape.startClick.x}|${shape.startClick.y}|${shape.endClick.x}|${shape.endClick.y}`,
           type: 'drawpad'
@@ -238,11 +240,12 @@
       },
 
       receiveMessage(messages) {
+        console.log('receive :');
+        console.log(messages[messages.length - 1]);
+        this.messageCount = messages.length;
         this.resetCanvas();
         messages.forEach(message => {
-          if(message.type === 'drawpad') {
-            this.parseMessage(message.message);
-          }
+          this.parseMessage(message.message);
         });
         this.draw();
       }

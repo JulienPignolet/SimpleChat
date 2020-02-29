@@ -7,7 +7,7 @@
         class="overflow-y-auto"
       >
         <v-list-item
-          v-for="(item, index) in items"
+          v-for="(item, index) in messages"
           :key="item.message + index"
         >
           <v-list-item-avatar color="grey">
@@ -53,7 +53,10 @@ export default {
 
   }),
   computed: {
-    items: sync("chat/messageList")
+    items: sync("chat/messageList"),
+    messages () {
+      return this.items.filter((item) => item.type !== 'drawpad');
+    }
   },
   updated() {
     this.scrollBottom()
