@@ -10,7 +10,9 @@ const state = () => ({
   groupeList: [],
   groupeName: "",
   groupeCommunList: [],
-  groupeMembers: []
+  groupeMembers: [],
+  groupeFriends: [],
+  groupeBlockUsers: [],
 });
 
 const mutations = make.mutations(state);
@@ -85,6 +87,8 @@ const actions = {
     //   })
     // })
     dispatch(`groupe/${types.getGroupeMembers}`, null, {root: true})
+    dispatch(`groupe/${types.getGroupeFriends}`, null, {root: true})
+    dispatch(`groupe/${types.getGroupeBlockUsers}`, null, {root: true})
     dispatch('chat/setMessageList', [], {root: true})
     dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   },
@@ -95,6 +99,26 @@ const actions = {
         .then(function (response) {
           dispatch("groupe/setGroupeMembers", response.data, {root: true});
           // console.log(rootState.groupe.groupe.id, response.data);
+        })
+    }
+  },
+
+  async [types.getGroupeFriends]({dispatch, rootState}) {
+    if (rootState.groupe.groupe.id !== undefined) {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/amis/${rootState.groupe.groupe.id}/${rootState.user.user.id}`)
+        .then(function (response) {
+          dispatch("groupe/setGroupeFriends", response.data, {root: true});
+        })
+    }
+  },
+
+  async [types.getGroupeBlockUsers]({dispatch, rootState}) {
+    if (rootState.groupe.groupe.id !== undefined) {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/bloque/${rootState.groupe.groupe.id}/${rootState.user.user.id}`)
+        .then(function (response) {
+          dispatch("groupe/setGroupeBlockUsers", response.data, {root: true});
         })
     }
   }

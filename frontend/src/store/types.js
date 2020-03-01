@@ -6,6 +6,7 @@ export const getUserFriends = 'getUserFriends'
 export const deleteFriend = 'deleteFriend'
 export const addFriend = 'addFriend'
 export const blockUser = 'blockUser'
+export const unblockUser = 'unblockUser'
 
 // action module chat
 export const sendMessage = 'sendMessage'
@@ -18,8 +19,10 @@ export const getGroupes = 'getGroupes'
 export const chooseGroup = 'chooseGroup'
 export const getGroupesCommun = 'getGroupesCommun'
 export const getGroupeMembers = 'getGroupeMembers'
+export const getGroupeFriends = 'getGroupeFriend'
+export const getGroupeBlockUsers = 'getGroupeBlockUsers'
 
-// action module register 
+// action module register
 export const register = 'register'
 
 // action module sondage
