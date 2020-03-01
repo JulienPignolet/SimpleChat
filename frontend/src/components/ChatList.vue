@@ -32,8 +32,8 @@
 <script>
 import { sync, call } from "vuex-pathify";
 import * as types from "@/store/types.js";
-import { groupe } from "@/store/modules/groupe";
-import { interfaceControl } from "@/store/modules/interfaceControl";
+// import { groupe } from "@/store/modules/groupe";
+// import { interfaceControl } from "@/store/modules/interfaceControl";
 import RegisterStoreModule from '@/mixins/RegisterStoreModule'
 export default {
   mixins: [ RegisterStoreModule ],
@@ -41,8 +41,8 @@ export default {
     return {};
   },
   created() {
-    this.registerStoreModule("groupe", groupe);
-    this.registerStoreModule("interfaceControl", interfaceControl);
+    // this.registerStoreModule("groupe", groupe);
+    // this.registerStoreModule("interfaceControl", interfaceControl);
     this.getGroupes();
     this.getUsers();
     

@@ -9,6 +9,8 @@ export class User {
     }
 
     isStillConnected() {
-      return this.token != null && (Date.now() > JSON.parse(atob(this.token.split('.')[1]))['exp']);
+      if(this.token != 'undefined'){
+        return this.token != null && (Date.now() > JSON.parse(atob(this.token.split('.')[1]))['exp']);
+      }
     }
 }

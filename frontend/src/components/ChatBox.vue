@@ -26,7 +26,7 @@
 import * as types from "@/store/types.js";
 import NewPollDialog from "./NewPollDialog";
 import { call } from "vuex-pathify";
-import { interfaceControl } from "@/store/modules/interfaceControl";
+// import { interfaceControl } from "@/store/modules/interfaceControl";
 import RegisterStoreModule from "@/mixins/RegisterStoreModule";
 import Drawpad from "./Drawpad";
 
@@ -39,7 +39,7 @@ export default {
     };
   },
   created() {
-    this.registerStoreModule("interfaceControl", interfaceControl);
+    // this.registerStoreModule("interfaceControl", interfaceControl);
   },
   methods: {
     activateFileUploadDialog: call(

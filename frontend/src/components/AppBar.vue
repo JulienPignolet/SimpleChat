@@ -34,6 +34,8 @@ import { sondage } from "../store/modules/sondage";
 import LocalesMenu from "./LocalesMenu";
 import { file } from "@/store/modules/file";
 import Router from "../router/router";
+import { interfaceControl } from "@/store/modules/interfaceControl";
+import { user } from "@/store/modules/user";
 
 export default {
   data() {
@@ -49,6 +51,9 @@ export default {
     this.registerStoreModule("chat", chat);
     this.registerStoreModule("sondage", sondage);
     this.registerStoreModule("file", file);
+    this.registerStoreModule("interfaceControl", interfaceControl);
+    this.registerStoreModule("user", user);
+    
     //this.getMessages();
   },
   watch: {
@@ -67,7 +72,7 @@ export default {
     getGroupeMembers: call(`groupe/${types.getGroupeMembers}`),
     userIsConnected: function() {
       return (
-        this.$store.state.user != null &&
+        this.$store.state.user.user.id != 'undefined' &&
         this.$store.state.user.user.isStillConnected()
       );
     },
