@@ -103,14 +103,33 @@ const actions = {
       })
   },
 
-  async [types.blockUser]({ rootState }, userId) {
+  async [types.blockUser]({dispatch, rootState}, userId){
+    const request = {
+      userId: rootState.user.user.id,
+      blockId: userId
+    };
+
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
-    axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/add`, userId)
+    axios.post(`${constants.API_URL}api/blockList/add`, request)
       .then(function () {
+        dispatch(`groupe/${types.getGroupeBlockUsers}`, null, {root: true})
         console.log('user bloqué');
       })
   },
 
+  async [types.unblockUser]({dispatch, rootState}, userId){
+    const request = {
+      userId: rootState.user.user.id,
+      blockId: userId
+    };
+
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/blockList/remove`, request)
+      .then(function () {
+        dispatch(`groupe/${types.getGroupeBlockUsers}`, null, {root: true})
+        console.log('user débloqué');
+      })
+  },
 }
 
 export const user = {

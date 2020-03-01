@@ -28,10 +28,15 @@
   },
   "user": {
     "add_friend": "Ajouter en tant qu'ami",
-    "block": "Bloquer cet utilisateur"
+    "remove_friend": "Supprimer l'ami",
+    "block": "Bloquer cet utilisateur",
+    "unblock": "Débloquer cet utilisateur"
   },
   "user_group": {
-    "members": "Membres "
+    "members": "Membres ",
+    "add_member": "Ajouter des membres",
+    "delete": "Supprimer le groupe",
+    "actions": "Actions"
   },
   "dialog": {
     "new_group": {

@@ -20,6 +20,8 @@ public class User {
 
     private String password;
 
+    private String secondPassword;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -309,7 +311,12 @@ public class User {
 			return false;
 		return true;
 	}
-	
-	
-	
+
+	public String getSecondPassword() {
+		return secondPassword;
+	}
+
+	public void setSecondPassword(String secondPassword) {
+		this.secondPassword = secondPassword;
+	}
 }

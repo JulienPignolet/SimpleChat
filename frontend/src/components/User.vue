@@ -38,7 +38,7 @@
       <v-divider/>
 
       <v-list class="pa-2">
-        <v-list-item>
+        <v-list-item v-if="!isFriend">
           <v-btn
             block
             color="primary"
@@ -50,7 +50,19 @@
           </v-btn>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item v-if="isFriend">
+          <v-btn
+            block
+            color="red"
+            class="white--text"
+            @click="clickToRemoveFriend()"
+          >
+            <v-icon left>mdi-account-remove</v-icon>
+            {{ $t('user.remove_friend') }}
+          </v-btn>
+        </v-list-item>
+
+        <v-list-item v-if="!isBlock">
           <v-btn
             block
             color="red"
@@ -59,6 +71,18 @@
           >
             <v-icon left>mdi-cancel</v-icon>
             {{ $t('user.block') }}
+          </v-btn>
+        </v-list-item>
+
+        <v-list-item v-if="isBlock">
+          <v-btn
+            block
+            color="primary"
+            class="white--text"
+            @click="clickToUnblockUser()"
+          >
+            <v-icon left>mdi-cancel</v-icon>
+            {{ $t('user.unblock') }}
           </v-btn>
         </v-list-item>
       </v-list>
@@ -81,15 +105,33 @@
     data: () => ({
       menu: false,
     }),
-    computed: {},
+    computed: {
+      isFriend () {
+        let friendList = this.$store.state.groupe.groupeFriends;
+        return friendList.filter((friend) => friend.id === this.user.id).length > 0;
+      },
+
+      isBlock () {
+        let blockList = this.$store.state.groupe.groupeBlockUsers;
+        return blockList.filter((block) => block.id === this.user.id).length > 0;
+      }
+    },
     methods: {
       addFriend: call(`user/${types.addFriend}`),
+      removeFriend: call(`user/${types.deleteFriend}`),
       blockUser: call(`user/${types.blockUser}`),
+      unblockUser: call(`user/${types.unblockUser}`),
       clickToAddFriend : function() {
         this.addFriend(this.user.id)
       },
+      clickToRemoveFriend : function() {
+        this.removeFriend(this.user.id)
+      },
       clickToBlockUser : function() {
         this.blockUser(this.user.id)
+      },
+      clickToUnblockUser : function() {
+        this.unblockUser(this.user.id)
       }
     }
   }
