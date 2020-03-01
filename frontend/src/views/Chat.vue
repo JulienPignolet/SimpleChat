@@ -17,7 +17,7 @@ import FriendList from '../components/FriendList'
 import ChatBox from "../components/ChatBox";
 import NewGroupDialog from "../components/NewGroupDialog"
 import FileUploadDialog from "../components/FileUploadDialog"
-import ZoomImageDialog from "../components/ZoomImageDialog"
+import ZoomImageDialog from "../components/ZoomImageDialog" 
 export default {
   components: {
     ChatList,

@@ -8,6 +8,7 @@ import Router from "../../router/router"
 const state = () => ({
   groupe:{},
   groupeList: [],
+  allGroupeList: [],
   groupeName: "",
   groupeCommunList: [],
   groupeMembers: []
@@ -52,11 +53,18 @@ const actions = {
       })
     }
   },
-  // Nul nul nul, voir avec front si jpeux avoir une requête déjà plutôt
-  async [types.getGroupesCommun]({state, rootState, rootGetters}){
+  async [types.getAllGroupes]({dispatch, rootState}){
     if (rootState.user.user.id !== "undefined") {
-      console.log(rootGetters['user/friendList'])
-      console.log(rootState.user.friendList)
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.get(`${constants.API_URL}api/groupe/findAll/groupe`)
+      .then(function (response) {
+        dispatch("groupe/setAllGroupeList", response.data, {root: true})
+      })
+    }
+  },
+  // Nul nul nul, voir avec front si jpeux avoir une requête déjà plutôt
+  async [types.getGroupesCommun]({state, rootState}){
+    if (rootState.user.user.id !== "undefined") {
       for(const friend of rootState.user.friendList){
         let userGroups = []
         let friendGroups = []
@@ -84,6 +92,16 @@ const actions = {
     //     state.messageList.push({"pseudonyme": message.user_id, "message": message.message})
     //   })
     // })
+    dispatch(`groupe/${types.getGroupeMembers}`, null, {root: true})
+    dispatch('chat/setMessageList', [], {root: true})
+    dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
+  },
+  //Evitez duplication, mais flemme
+  async [types.chooseGroupAdmin]({dispatch, rootState}, group){
+    Router.push(`/admin/group/${group.id}`);
+    dispatch(types.setGroupe, group);
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}api/message/add/${group.id}/${rootState.user.user.id}/`)
     dispatch(`groupe/${types.getGroupeMembers}`, null, {root: true})
     dispatch('chat/setMessageList', [], {root: true})
     dispatch((`chat/${types.getSavedMessages}`), null, { root: true })

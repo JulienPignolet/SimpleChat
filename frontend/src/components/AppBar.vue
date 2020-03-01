@@ -2,6 +2,21 @@
   <v-app-bar app color="primary" :clipped-left="$vuetify.breakpoint.lgAndUp">
     <img src="../../public/images/logo.svg" alt="logo simple chat" class="logo" height="40" />
     <v-spacer />
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-switch
+          v-model="adminMode"
+          dark
+          color="white"
+          inset
+          hide-details
+          on-icon="account"
+          v-on="on"
+        ></v-switch>
+      </template>
+      <span>{{ $t('app_bar.admin') }}</span>
+    </v-tooltip>
+
     <locales-menu />
     <v-btn v-if="userIsConnected()" icon @click="deconnexion()">
       <v-icon large color="white">mdi-power</v-icon>
@@ -13,15 +28,21 @@
 import { call } from "vuex-pathify";
 import * as types from "@/store/types.js";
 import { groupe } from "@/store/modules/groupe";
-import { chat } from "@/store/modules/chat"
+import { chat } from "@/store/modules/chat";
 import RegisterStoreModule from "@/mixins/RegisterStoreModule";
-import {sondage} from "../store/modules/sondage";
+import { sondage } from "../store/modules/sondage";
 import LocalesMenu from "./LocalesMenu";
 import { file } from "@/store/modules/file";
+import Router from "../router/router";
 
 export default {
-    components: {LocalesMenu},
-    mixins: [RegisterStoreModule],
+  data() {
+    return {
+      adminMode: false
+    };
+  },
+  components: { LocalesMenu },
+  mixins: [RegisterStoreModule],
   beforeCreate() {},
   created() {
     this.registerStoreModule("groupe", groupe);
@@ -29,6 +50,15 @@ export default {
     this.registerStoreModule("sondage", sondage);
     this.registerStoreModule("file", file);
     //this.getMessages();
+  },
+  watch: {
+    adminMode: function() {
+      if (this.adminMode === true) {
+        Router.push(`/admin`);
+      } else if (this.adminMode === false) {
+        Router.push(`/chat`);
+      }
+    }
   },
   methods: {
     deconnexion: call(`user/${types.deconnexion}`),
@@ -40,7 +70,8 @@ export default {
         this.$store.state.user != null &&
         this.$store.state.user.user.isStillConnected()
       );
-    }
+    },
+    activeAdminMode: function() {}
   },
   mounted: function() {
     window.setInterval(() => {

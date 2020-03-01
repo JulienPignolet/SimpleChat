@@ -2,8 +2,10 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/views/Home.vue";
 import Chat from "@/views/Chat.vue";
+import Admin from "@/views/Admin.vue"
 import Register from "@/components/RegisterForm.vue";
 import FriendList from '@/components/FriendList'
+import UserList from '@/components/Admin/UserList'
 import store from "../store/index";
 import auth from "./middleware/auth";
 
@@ -15,6 +17,29 @@ const router = new Router({
     {
       path: "/",
       redirect: '/login'
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: Admin,
+      children: [
+        {
+          path: 'users',
+          name: "users",
+          component: UserList,
+          meta: {
+            middleware: [auth]
+          }
+        },
+        {
+          path: "group/:groupId",
+          name: "groupe",
+          component: Chat,
+          meta: {
+            middleware: [auth]
+          }
+        },
+      ],
     },
     {
       path: "/chat",
@@ -64,18 +89,18 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (!to.meta.middleware) {
-      return next()
+    return next()
   }
   const middleware = to.meta.middleware
 
   const context = {
-      to,
-      from,
-      next,
-      store
+    to,
+    from,
+    next,
+    store
   }
   return middleware[0]({
-      ...context
+    ...context
   })
 })
 

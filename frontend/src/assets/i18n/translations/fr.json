@@ -1,4 +1,7 @@
 {
+  "app_bar": {
+    "admin": "Mode administrateur"
+  },
   "login": {
     "title": "Connexion à SimpleChat",
     "sign_in": "Se connecter",
@@ -16,7 +19,8 @@
   },
   "chat_list": {
     "discussions": "Discussions",
-    "friends": "Amis"
+    "friends": "Amis",
+    "user_list": "Liste d'utilisateurs"
   },
   "friend_list": {
     "add_friend": "Ajouter un ami",

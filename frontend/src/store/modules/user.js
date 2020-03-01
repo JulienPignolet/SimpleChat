@@ -12,6 +12,7 @@ const state = () => ({
   userList: [],
   friendList: [],
   selectedUserList: [],
+
 })
 
 
@@ -34,6 +35,7 @@ const actions = {
     axios
     .post(constants.API_URL + 'authentication', request)
     .then(response => {
+      console.log(response.data)
       dispatch(types.setUser, new User(user.username, response.data.user_key, response.data.user_id));
       dispatch((`alerte/${types.setAlerte}`), new Alerte('success', i18n.t('store.user.connected', { username: state.user.username })), { root: true });
       Router.push('/chat');
