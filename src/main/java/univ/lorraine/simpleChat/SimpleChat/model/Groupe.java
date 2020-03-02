@@ -1,16 +1,15 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
 @Entity
 @Table(name = "groupe")
-public class Groupe {
+public class Groupe extends Active{
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
