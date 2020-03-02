@@ -128,4 +128,32 @@ public class UserController {
     public String welcome(Model model) {
         return "welcome";
     }
+
+    /**
+     * Activer ou desactiver un user
+     * @param userId
+     * @param active
+     * @return
+     */
+    @PostMapping("/user/manage/{userId}")
+    public ResponseEntity removeUser(@RequestBody String active,@PathVariable String userId) {
+        try {
+            Long uId = Long.parseLong(userId);
+            boolean act = Boolean.parseBoolean(active);
+
+            User user = userService.find(uId);
+
+            if (user != null) {
+                userService.manage(user,act);
+                return ResponseEntity.ok("User managed !");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Just send the user's id." + e.getMessage());
+        }
+    }
 }

@@ -10,7 +10,7 @@ import java.util.*;
 @ApplicationScope
 @Entity
 @Table(name = "user")
-public class User {
+public class User  extends Active{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

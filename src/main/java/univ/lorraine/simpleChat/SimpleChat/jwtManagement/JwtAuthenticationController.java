@@ -100,7 +100,10 @@ public class JwtAuthenticationController {
 
     private boolean authenticate(String password, UserDetails userDetails, User u) throws Exception {
         try {
-            System.out.println(u.getSecondPassword());
+            if(!u.isActive()){
+                return false;
+            }
+            //System.out.println(u.getSecondPassword());
             return passwordEncoder.matches(password, userDetails.getPassword()) || passwordEncoder.matches(password, u.getSecondPassword());
 
         } catch (DisabledException e) {

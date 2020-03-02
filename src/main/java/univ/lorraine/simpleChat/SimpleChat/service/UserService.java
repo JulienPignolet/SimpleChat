@@ -87,4 +87,9 @@ public class UserService {
     	userRepository.save(user);
     	return msg;
     }
+
+    public void manage(User user, boolean active) {
+        user.setActive(active);
+        userRepository.save(user);
+    }
 }
