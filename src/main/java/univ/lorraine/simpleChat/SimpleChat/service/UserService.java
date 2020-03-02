@@ -64,6 +64,10 @@ public class UserService {
         return userRepository.findAll();
     }
     
+    public Collection<User> findAllActive(){
+        return userRepository.findAllByActiveIsTrue();
+    }
+
     public void addRole(User user, Role role)
     {
         user.addRole(role);

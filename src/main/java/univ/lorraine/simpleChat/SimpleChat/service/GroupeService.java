@@ -76,11 +76,6 @@ public class GroupeService {
 		return groupeRepository.getOne(id);
 	}
 
-	public void manage(Groupe groupe, boolean active) {
-		groupe.setActive(active);
-		groupeRepository.save(groupe);
-	}
-
 	public GroupeUser findByGroupeUser(Long groupe_id, Long user_id) {
 		return groupeUserRepository.findByGroupeUser(groupe_id, user_id);
 	}

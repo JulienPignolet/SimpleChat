@@ -357,31 +357,5 @@ public class GroupeController {
 		return ResponseEntity.ok(listeGroupe);
 
 	}
-
-	/**
-	 * Activer ou desactiver un groupe avec son id
-	 * @param groupeId
-	 * @return response avec le bon code d'erreur
-	 */
-	@PostMapping("/manage/{groupeId}")
-	public ResponseEntity manageGroupe(@RequestBody String active,@PathVariable String groupeId) {
-		try {
-			Long gId = Long.parseLong(groupeId);
-			boolean act = Boolean.parseBoolean(active);
-
-			Groupe groupe = groupeService.find(gId);
-
-			if (groupe != null) {
-				groupeService.manage(groupe,act);
-				return ResponseEntity.ok("Group managed !");
-
-			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Group not found");
-			}
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Just send the group's id.");
-		}
-	}
+	
 }
