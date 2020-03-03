@@ -103,7 +103,8 @@
         this.canvas = this.$refs['my-canvas'];
         this.context = this.canvas.getContext('2d');
       } catch(error) {
-        console.log('Le canvas n\'est pas encore chargé');
+        // Ne pas mettre un console.log pour afficher une erreur
+        // console.log('Le canvas n\'est pas encore chargé');
       }
 
     },

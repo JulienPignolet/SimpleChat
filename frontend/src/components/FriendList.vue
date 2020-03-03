@@ -69,7 +69,6 @@ export default {
     addFriend: call(`user/${types.addFriend}`),
     getGroupesCommun: call(`groupe/${types.getGroupesCommun}`),
     clickToAddFriend: function() {
-      console.log(this.friendId);
       this.addFriend(this.friendId);
       this.menu = false;
       this.friendId = "";

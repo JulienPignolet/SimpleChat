@@ -35,7 +35,6 @@ const actions = {
     axios
       .post(constants.API_URL + 'authentication', request)
       .then(response => {
-        console.log(response.data)
         dispatch(types.setUser, new User(user.username, response.data.user_key, response.data.user_id));
         dispatch((`alerte/${types.setAlerte}`), new Alerte('success', i18n.t('store.user.connected', { username: state.user.username })), { root: true });
         Router.push('/chat');
@@ -53,8 +52,7 @@ const actions = {
   },
 
   // Inscription
-  async [types.register]({ state, dispatch }, registeringUser) {
-    console.log(state);
+  async [types.register]({ dispatch }, registeringUser) {
     let request = { "username": registeringUser.username, "password": registeringUser.password, "passwordConfirm": registeringUser.passwordConfirm };
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
     axios
@@ -103,7 +101,7 @@ const actions = {
       })
   },
 
-  async [types.blockUser]({dispatch, rootState}, userId){
+  async [types.blockUser]({ dispatch, rootState }, userId) {
     const request = {
       userId: rootState.user.user.id,
       blockId: userId
@@ -112,12 +110,13 @@ const actions = {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.post(`${constants.API_URL}api/blockList/add`, request)
       .then(function () {
-        dispatch(`groupe/${types.getGroupeBlockUsers}`, null, {root: true})
-        console.log('user bloqué');
+        dispatch(`groupe/${types.getGroupeBlockUsers}`, null, { root: true })
+        // Mettre une alerte utilisateur
+        // console.log('user bloqué');
       })
   },
 
-  async [types.unblockUser]({dispatch, rootState}, userId){
+  async [types.unblockUser]({ dispatch, rootState }, userId) {
     const request = {
       userId: rootState.user.user.id,
       blockId: userId
@@ -126,8 +125,9 @@ const actions = {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.post(`${constants.API_URL}api/blockList/remove`, request)
       .then(function () {
-        dispatch(`groupe/${types.getGroupeBlockUsers}`, null, {root: true})
-        console.log('user débloqué');
+        dispatch(`groupe/${types.getGroupeBlockUsers}`, null, { root: true })
+        // Mettre une alerte utilisateur 
+        // console.log('user débloqué');
       })
   },
 }

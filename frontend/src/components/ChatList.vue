@@ -44,8 +44,6 @@ export default {
     // this.registerStoreModule("groupe", groupe);
     this.registerStoreModule("interfaceControl", interfaceControl);
     this.getGroupes();
-    console.log("bonjour");
-    console.log(this.$router);
     // store.dispatch("groupe/setGroupe", { id : to.params.groupId}, {root: true})
     this.getUsers();
   },
@@ -70,13 +68,6 @@ export default {
     chooseGroup: call(`groupe/${types.chooseGroup}`),
     setGroupe: call(`groupe/${types.setGroupe}`),
     getUserFriends: call(`user/${types.getUserFriends}`)
-  },
-  beforeRouterEnter(from, to, next) {
-    console.log("zdsdqs");
-    next(vm => {
-      console.Log("qfqs");
-      vm.adaptSidebar(to.path);
-    });
   }
 };
 </script>
