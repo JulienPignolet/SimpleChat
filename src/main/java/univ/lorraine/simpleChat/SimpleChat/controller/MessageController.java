@@ -247,7 +247,7 @@ public class MessageController {
      * @param active
      * @return
      */
-    @PostMapping("/user/manage/{messageId}")
+    @PostMapping("/message/manage/{messageId}")
     public ResponseEntity removeMessage(@RequestBody String active,@PathVariable String messageId) {
         try {
             Long uId = Long.parseLong(messageId);
