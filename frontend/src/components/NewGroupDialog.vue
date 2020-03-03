@@ -1,5 +1,10 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500">
+  <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="500" offset-x>
+    <template v-slot:activator="{ on }">
+      <v-btn v-on="on" text icon>
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </template>
     <v-card>
       <v-card-title>{{ $t('dialog.new_group.select_users') }}</v-card-title>
       <v-container>
@@ -18,15 +23,15 @@
           @click="getUsers()"
         />
 
-        <v-text-field :label="$t('dialog.new_group.name')" v-model="groupeName" outlined/>
+        <v-text-field :label="$t('dialog.new_group.name')" v-model="groupeName" outlined />
         <v-card-actions>
-          <v-spacer/>
-          <v-btn text @click="dialog = false">{{ $t('general.cancel') }}</v-btn>
+          <v-spacer />
+          <v-btn text @click="menu = false">{{ $t('general.cancel') }}</v-btn>
           <v-btn text @click="createGroupe()">{{ $t('dialog.new_group.create_group') }}</v-btn>
         </v-card-actions>
       </v-container>
     </v-card>
-  </v-dialog>
+  </v-menu>
 </template>
 
 <script>
@@ -35,7 +40,8 @@ import * as types from "@/store/types.js";
 export default {
   data() {
     return {
-      groupName: ""
+      groupName: "",
+      menu: false
     };
   },
   created: function() {
