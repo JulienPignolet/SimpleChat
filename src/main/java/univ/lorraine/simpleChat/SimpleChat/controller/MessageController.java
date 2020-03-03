@@ -240,4 +240,32 @@ public class MessageController {
 	    if (user != null) return user.getMyBlocklist();
 	    return null;
 	}
+
+    /**
+     * Activer ou desactiver un message
+     * @param messageId
+     * @param active
+     * @return
+     */
+    @PostMapping("/user/manage/{messageId}")
+    public ResponseEntity removeMessage(@RequestBody String active,@PathVariable String messageId) {
+        try {
+            Long uId = Long.parseLong(messageId);
+            boolean act = Boolean.parseBoolean(active);
+
+            Message message = messageService.find(uId);
+
+            if (message != null) {
+                messageService.manage(message,act);
+                return ResponseEntity.ok("message managed !");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("message not found");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Just send the message's id." + e.getMessage());
+        }
+    }
 }

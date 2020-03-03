@@ -2,12 +2,10 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.Message;
 import univ.lorraine.simpleChat.SimpleChat.repository.MessageRepository;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -25,6 +23,15 @@ public class MessageService {
 
 
     public void save(Message message) {
+        messageRepository.save(message);
+    }
+
+    public Message find(Long messageId) {
+        return messageRepository.findById(messageId).orElse(null);
+    }
+
+    public void manage(Message message, boolean active) {
+        message.setActive(active);
         messageRepository.save(message);
     }
 
