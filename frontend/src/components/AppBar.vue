@@ -40,6 +40,7 @@ import { user } from "@/store/modules/user";
 export default {
   data() {
     return {
+      currentPath: "a",
       adminMode: false
     };
   },
@@ -53,26 +54,62 @@ export default {
     this.registerStoreModule("file", file);
     this.registerStoreModule("interfaceControl", interfaceControl);
     this.registerStoreModule("user", user);
-    
-    //this.getMessages();
+    this.putainvivementlafindelannee().then(() => {
+      if(this.currentPath.path.includes('admin')){
+        this.adminMode = true
+      } else {
+        this.adminMode = false
+      }
+    })
   },
   watch: {
+    // Elue fonction la plus dégeulasse de 2020, bravo
     adminMode: function() {
-      if (this.adminMode === true) {
-        Router.push(`/admin`);
-      } else if (this.adminMode === false) {
-        Router.push(`/chat`);
-      }
+      this.putainvivementlafindelannee().then(() => {
+        if (this.adminMode === true) {
+          if (this.currentPath.path.includes("group")) {
+            Router.push({
+              path: `/admin/group/${this.currentPath.params.groupId}`
+            });
+          } else if (this.currentPath.path.includes("friends")) {
+            Router.push({
+              path: `/admin/users`
+            });
+          } else {
+            Router.push(`/admin`);
+          }
+        } else if (this.adminMode === false) {
+          if (this.currentPath.path.includes("group")) {
+            Router.push({
+              path: `/chat/group/${this.currentPath.params.groupId}`
+            });
+          } else if (this.currentPath.path.includes("users")) {
+            Router.push({
+              path: `/chat/friends`
+            });
+          } else {
+            Router.push(`/chat`);
+          }
+        }
+      });
     }
   },
+  computed: {},
   methods: {
+    // Y a pas mieux que ça Dany stp, toi qui gère en promise ?
+    putainvivementlafindelannee() {
+      return new Promise(resolve => {
+        this.currentPath = Router.history.current;
+        resolve();
+      });
+    },
     deconnexion: call(`user/${types.deconnexion}`),
     getGroupes: call(`groupe/${types.getGroupes}`),
     getMessages: call(`chat/${types.getLiveMessages}`),
     getGroupeMembers: call(`groupe/${types.getGroupeMembers}`),
     userIsConnected: function() {
       return (
-        this.$store.state.user.user.id != 'undefined' &&
+        this.$store.state.user.user.id != "undefined" &&
         this.$store.state.user.user.isStillConnected()
       );
     },

@@ -24,6 +24,12 @@
               v-html="transformUrls(item.message)"
             />
           </v-list-item-content>
+          <!-- En attendant la vérif back -->
+          <v-list-item-action v-if="$router.history.current.path.includes('admin')">
+            <v-btn icon>
+              <v-icon color="red">mdi-delete</v-icon>
+            </v-btn>
+          </v-list-item-action>
         </v-list-item>
       </v-list>
     </div>

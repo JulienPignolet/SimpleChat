@@ -52,6 +52,16 @@ const router = new Router({
       }
     },
     {
+      path: "/admin",
+      components: {
+        default: AdminChatList,
+        mainView: Home,
+      },
+      meta: {
+        middleware: [auth]
+      }
+    },
+    {
       path: "/chat/group/:groupId",
       components: {
         default: ChatList,
