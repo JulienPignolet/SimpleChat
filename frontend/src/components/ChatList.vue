@@ -30,21 +30,10 @@
 <script>
 import { sync, call } from "vuex-pathify";
 import * as types from "@/store/types.js";
-// import { groupe } from "@/store/modules/groupe";
-import { interfaceControl } from "@/store/modules/interfaceControl";
-import RegisterStoreModule from "@/mixins/RegisterStoreModule";
 import NewGroupDialog from "@/components/NewGroupDialog";
 export default {
   components: { NewGroupDialog },
-  mixins: [RegisterStoreModule],
-  data() {
-    return {
-      //  item: 7
-    };
-  },
   created() {
-    // this.registerStoreModule("groupe", groupe);
-    this.registerStoreModule("interfaceControl", interfaceControl);
     this.getGroupes();
     this.getUsers();
   },
@@ -72,6 +61,3 @@ export default {
   }
 };
 </script>
-
-<style lang="css">
-</style>

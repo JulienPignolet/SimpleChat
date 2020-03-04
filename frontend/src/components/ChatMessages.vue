@@ -1,6 +1,9 @@
 <template>
   <div class="d-flex">
-    <div class="flex-grow-1">
+    <div class="flex-grow-1" style="height:82vh;" v-if="items.length <= 1">
+      <v-skeleton-loader v-for="index in 8" :key="index" type="list-item-avatar-three-line"></v-skeleton-loader>
+    </div>
+    <div v-else class="flex-grow-1">
       <v-list id="messages-list" style="height:82vh;" class="overflow-y-auto">
         <v-list-item v-for="(item, index) in messages" :key="item.message + index">
           <v-list-item-avatar color="grey">
@@ -49,7 +52,9 @@ export default {
     }
   },
   updated() {
-    this.scrollBottom();
+    if (this.items.length != 0) {
+      this.scrollBottom();
+    }
   },
   methods: {
     setGroupe: call(`groupe/${types.setGroupe}`),
