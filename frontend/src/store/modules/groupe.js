@@ -88,22 +88,13 @@ const actions = {
       }
     }
   },
-  async [types.chooseGroup]({  dispatch, rootState }, id) {
-    // Router.push(`/chat/group/${group.id}`);
-    //dispatch(types.setGroupe, group);
-    console.log('aaaaaa')
+  async [types.chooseGroup]({  state, dispatch, rootState }) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
-    axios.post(`${constants.API_URL}api/message/add/${id}/${rootState.user.user.id}/`)
-    // .then(function (response) {
-    //   console.log(response.data)
-    //   response.data.buffer.forEach(message => {
-    //     state.messageList.push({"pseudonyme": message.user_id, "message": message.message})
-    //   })
-    // })
+    axios.post(`${constants.API_URL}api/message/add/${state.groupe.id}/${rootState.user.user.id}/`)
     dispatch(`groupe/${types.getGroupeMembers}`, null, { root: true })
     dispatch(`groupe/${types.getGroupeFriends}`, null, { root: true })
     dispatch(`groupe/${types.getGroupeBlockUsers}`, null, { root: true })
-    dispatch('chat/setMessageList', [], { root: true })
+    dispatch((`chat/${types.setMessageList}`), [], { root: true })
     dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   },
   //Evitez duplication, mais flemme
@@ -122,11 +113,9 @@ const actions = {
       axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/${rootState.groupe.groupe.id}`)
         .then(function (response) {
           dispatch("groupe/setGroupeMembers", response.data, { root: true });
-          // console.log(rootState.groupe.groupe.id, response.data);
         })
     }
   },
-
   async [types.getGroupeFriends]({ dispatch, rootState }) {
     if (rootState.groupe.groupe.id !== undefined) {
       axios.defaults.headers.get['user_key'] = rootState.user.user.token;
@@ -136,7 +125,6 @@ const actions = {
         })
     }
   },
-
   async [types.getGroupeBlockUsers]({ dispatch, rootState }) {
     if (rootState.groupe.groupe.id !== undefined) {
       axios.defaults.headers.get['user_key'] = rootState.user.user.token;

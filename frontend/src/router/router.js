@@ -1,20 +1,23 @@
 import Vue from "vue";
 import Router from "vue-router";
-// import Home from "@/views/Home.vue";
-// import Chat from "@/views/Chat.vue";
+
+import LoginForm from "@/components/LoginForm"
+import Register from "@/components/RegisterForm.vue";
+
+import Home from "@/components/Home"
+
 import ChatList from "@/components/ChatList";
 import ChatBox from "@/components/ChatBox";
- import ChatMessages from "@/components/ChatMessages.vue"
- import Home from "@/components/Home"
-// import Admin from "@/views/Admin.vue"
-import Register from "@/components/RegisterForm.vue";
+import ChatMessages from "@/components/ChatMessages.vue"
 import FriendList from '@/components/FriendList'
-//import ChatList from '@/components/ChatList'
-// import UserList from '@/components/Admin/UserList'
-import store from "../store/index";
-//import groupe from "../store/modules/groupe"
-// import auth from "./middleware/auth";
-import LoginForm from "@/components/LoginForm"
+
+import AdminChatList from "@/components/Admin/ChatList";
+import AdminChatMessages from "@/components/Admin/ChatMessages"
+import AdminUserList from "@/components/Admin/UserList"
+
+
+import store from "@/store/index";
+import auth from "@/router/middleware/auth";
 
 
 Vue.use(Router);
@@ -44,6 +47,9 @@ const router = new Router({
         default: ChatList,
         mainView: Home,
       },
+      meta: {
+        middleware: [auth]
+      }
     },
     {
       path: "/chat/group/:groupId",
@@ -52,103 +58,40 @@ const router = new Router({
         mainView: ChatMessages,
         chatBox: ChatBox
       },
+      meta: {
+        middleware: [auth]
+      }
+    },
+    {
+      path: "/admin/group/:groupId",
+      components: {
+        default: AdminChatList,
+        mainView: AdminChatMessages,
+      },
+      meta: {
+        middleware: [auth]
+      }
     },
     {
       path: "/chat/friends",
       components: {
         default: ChatList,
         mainView: FriendList
-
       },
-      
-
-      // children: [
-      //   {
-      //     path: "group/:groupId",
-      //     components: {
-      //       mainView: ChatMessages
-      //     }
-      //   },
-      //   {
-      //     path: "friends",
-      //     name: "friends",
-      //     components: {
-      //       mainView: FriendList
-      //     },
-      //     meta: {
-      //       middleware: [auth]
-      //     }
-      //   }
-      // ]
+      meta: {
+        middleware: [auth]
+      },
     },
-    // {
-    //   path: "/admin",
-    //   name: "admin",
-    //   component: Admin,
-    //   children: [
-    //     {
-    //       path: 'users',
-    //       name: "users",
-    //       component: UserList,
-    //       meta: {
-    //         middleware: [auth]
-    //       }
-    //     },
-    //     {
-    //       path: "group/:groupId",
-    //       name: "groupe",
-    //       component: Chat,
-    //       meta: {
-    //         middleware: [auth]
-    //       }
-    //     },
-    //   ],
-    // },
-    // {
-    //   path: "/chat",
-    //   name: "chat",
-    //   component: Chat,
-    //   children: [
-    //     {
-    //       path: 'friends',
-    //       name: "friends",
-    //       component: FriendList,
-    //       meta: {
-    //         middleware: [auth]
-    //       }
-    //     },
-    //     {
-    //       path: "group/:groupId",
-    //       name: "groupe",
-    //       component: ChatMessages,
-    //       // beforeEnter: (to, from, next) => {
-
-    //       //   if(from.params.groupId === undefined && from.name != 'chat'){     
-    //       //     console.log(store) 
-    //       //     console.log(to.params.groupId)
-    //       //     store.dispatch("groupe/setGroupe", { id : to.params.groupId}, {root: true})  
-    //       //     // store.dispatch('groupe/chooseGroupe', to.params.groupId, {root: true})       
-    //       //     // next(to.path)
-    //       //   }else{  
-    //       //     next()
-    //       //   }           
-    //       // },
-    //       meta: {
-    //         middleware: [auth]
-    //       }
-    //     },
-    //   ],
-    //   meta: {
-    //     middleware: [auth]
-    //   }
-    // },
-    // {
-    //   path: "/chat/group/:groupId",
-    //   component: Chat,
-    //   meta: {
-    //     middleware: [auth]
-    //   }
-    // },
+    {
+      path: "/admin/users",
+      components: {
+        default: AdminChatList,
+        mainView: AdminUserList
+      },
+      meta: {
+        middleware: [auth]
+      }
+    }
   ]
 });
 

@@ -16,8 +16,8 @@
         <v-spacer />
         <new-group-dialog />
       </v-subheader>
-      <v-list-item-group>
-        <v-list-item v-for="groupe in groupes" :key="groupe.id" @click="setGroupe(groupe)">
+      <v-list-item-group v-model="groupe.id" color="primary">
+        <v-list-item v-for="(groupe, i) in groupes" :key="i.toString()" @click="setGroupe(groupe)">
           <v-list-item-content>
             <v-list-item-title>{{ groupe.name }}</v-list-item-title>
           </v-list-item-content>
@@ -38,20 +38,21 @@ export default {
   components: { NewGroupDialog },
   mixins: [RegisterStoreModule],
   data() {
-    return {};
+    return {
+      //  item: 7
+    };
   },
   created() {
     // this.registerStoreModule("groupe", groupe);
     this.registerStoreModule("interfaceControl", interfaceControl);
     this.getGroupes();
-    // store.dispatch("groupe/setGroupe", { id : to.params.groupId}, {root: true})
     this.getUsers();
   },
   watch: {
     groupe() {
       if (this.groupe.id != undefined) {
         this.$router.push(`/chat/group/${this.groupe.id}`);
-        this.chooseGroup(this.groupe.id);
+        this.chooseGroup();
       }
     }
   },
