@@ -13,17 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import univ.lorraine.simpleChat.SimpleChat.form.UserForm;
-import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
-import univ.lorraine.simpleChat.SimpleChat.model.Role;
-import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.model.*;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.groupe.GroupeClientRunnable;
-import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
-import univ.lorraine.simpleChat.SimpleChat.service.MessageService;
-import univ.lorraine.simpleChat.SimpleChat.service.RoleService;
-import univ.lorraine.simpleChat.SimpleChat.service.SecurityService;
-import univ.lorraine.simpleChat.SimpleChat.service.UserService;
+import univ.lorraine.simpleChat.SimpleChat.service.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
@@ -33,6 +29,7 @@ public class UserController {
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final GroupeUserService groupeUserService;
 
     private final GroupeService groupeService;
 
@@ -44,8 +41,9 @@ public class UserController {
     private HashMap<Long, GroupeClientRunnable> clientPool = new HashMap<>();
 
     @Autowired
-    public UserController(UserService userService, GroupeService groupeService, SecurityService securityService, BCryptPasswordEncoder bCryptPasswordEncoder, MessageService messageService, RoleService roleService) {
+    public UserController(UserService userService, GroupeUserService groupeUserService, GroupeService groupeService, SecurityService securityService, BCryptPasswordEncoder bCryptPasswordEncoder, MessageService messageService, RoleService roleService) {
         this.userService = userService;
+        this.groupeUserService = groupeUserService;
         this.groupeService = groupeService;
         this.securityService = securityService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -154,6 +152,32 @@ public class UserController {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Just send the user's id." + e.getMessage());
+        }
+    }
+
+    /**
+     * @param userId  id de l'utilisateur auquel on ajoute l'ami
+     * @param buddyId id de l'ami
+     * @return response avec le statut de la requete
+     */
+    @PostMapping("{userId}/findCommun")
+    public ResponseEntity findGroupCommun(@PathVariable String userId, @RequestBody String buddyId) {
+        try {
+            Long uId = Long.parseLong(userId);
+            Long bId = Long.parseLong(buddyId);
+
+            List<GroupeUser> myGroups = groupeUserService.findByUser(uId);
+            List<GroupeUser> friendGroups = groupeUserService.findByUser(bId);
+            List<Groupe> res = new ArrayList<>();
+
+            for (GroupeUser gu: myGroups) {
+                if(friendGroups.stream().filter(groupUser -> gu.getGroupe().getId().equals(groupUser.getGroupe().getId())).findFirst().orElse(null) != null){
+                    res.add(gu.getGroupe());
+                }
+            }
+            return ResponseEntity.ok(res);
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id should be sent in JSON. Just send the buddy's id.");
         }
     }
 }
