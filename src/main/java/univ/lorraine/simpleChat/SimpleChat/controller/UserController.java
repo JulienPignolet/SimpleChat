@@ -180,4 +180,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id should be sent in JSON. Just send the buddy's id.");
         }
     }
+
+    /**
+     * Recupere les roles d'un utilisateur
+     * @param userId id de l'utilisateur
+     * @return l'utilisateur
+     */
+    @GetMapping("/{userId}")
+    public ResponseEntity findUser(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        if (user != null) {
+            return ResponseEntity.ok(user.getRoles());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
+        }
+    }
 }
