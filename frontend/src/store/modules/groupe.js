@@ -4,6 +4,7 @@ import { Alerte } from "../../models/Alerte";
 import axios from "axios";
 import * as constants from "../../constants/constants";
 import Router from "../../router/router"
+import Vue from 'vue';
 
 const state = () => ({
   groupe: {},
@@ -21,7 +22,12 @@ const getters = {
 }
 
 
-const mutations = make.mutations(state);
+const mutations = {
+  ...make.mutations(state),
+  ADD_TO_GROUPE_COMMUN(state, payload) {
+    Vue.set(state.groupeCommunList, payload.friendId, payload.groupesCommuns)
+  }
+}
 
 const actions = {
   ...make.actions(state),
@@ -51,6 +57,16 @@ const actions = {
     dispatch('groupe/setGroupeName', "", { root: true })
 
   },
+  async [types.createGroupeWithFriend]({ dispatch, rootState }, friend) {
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    let request = { "adminGroupeId": rootState.user.user.id, "groupeName": friend.username, "isPrivateChat": 0, "members": [friend] };
+    axios
+      .post(constants.API_URL + 'api/groupe/add/groupe-and-members', request).
+      then(function (response) {
+        dispatch((`groupe/${types.getGroupes}`), null, { root: true })
+        dispatch((`alerte/${types.setAlerte}`), new Alerte('success', response.data), { root: true })
+      })
+  },
   async [types.getGroupes]({ dispatch, rootState }) {
     if (rootState.user.user.id !== "undefined") {
       axios.defaults.headers.get['user_key'] = rootState.user.user.token;
@@ -69,26 +85,17 @@ const actions = {
         })
     }
   },
-  // Nul nul nul, voir avec front si jpeux avoir une requête déjà plutôt
-  async [types.getGroupesCommun]({ state, rootState }) {
+  async [types.getGroupesCommun]({ commit, rootState }, friendId) {
     if (rootState.user.user.id !== "undefined") {
-      for (const friend of rootState.user.friendList) {
-        let userGroups = []
-        let friendGroups = []
-        axios.defaults.headers.get['user_key'] = rootState.user.user.token;
-        await axios.get(`${constants.API_URL}api/groupe/find/groups/user/${rootState.user.user.id}`)
-          .then(function (response) {
-            userGroups = response.data
-          })
-        await axios.get(`${constants.API_URL}api/groupe/find/groups/user/${friend.id}`)
-          .then(function (response) {
-            friendGroups = response.data
-          })
-        state.groupeCommunList[friend.id] = userGroups.filter(userGroup => friendGroups.some(friendGroup => userGroup.id === friendGroup.id))
-      }
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}${rootState.user.user.id}/findCommun`, friendId)
+        .then(function (response) {
+          commit('ADD_TO_GROUPE_COMMUN', { friendId: friendId, groupesCommuns: response.data })
+        })
     }
   },
-  async [types.chooseGroup]({  state, dispatch, rootState }) {
+  async [types.chooseGroup]({ state, dispatch, rootState }) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.post(`${constants.API_URL}api/message/add/${state.groupe.id}/${rootState.user.user.id}/`)
     dispatch(`groupe/${types.getGroupeMembers}`, null, { root: true })

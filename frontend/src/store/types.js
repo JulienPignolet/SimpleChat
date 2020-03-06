@@ -16,6 +16,7 @@ export const setMessageList = 'setMessageList'
 
 // action module groupe
 export const createGroupe = 'createGroupe'
+export const createGroupeWithFriend = 'createGroupeWithFriend'
 export const getGroupes = 'getGroupes'
 export const getAllGroupes = 'getAllGroupes'
 export const chooseGroup = 'chooseGroup'

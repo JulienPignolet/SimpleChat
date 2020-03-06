@@ -77,16 +77,23 @@ const actions = {
   },
 
   async [types.getUserFriends]({ dispatch, rootState }) {
-    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
-    axios.get(`${constants.API_URL}api/buddy/${rootState.user.user.id}`)
-      .then(function (response) {
-        dispatch("user/setFriendList", response.data, { root: true })
-      })
     Router.push('/chat/friends')
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    return axios.get(`${constants.API_URL}api/buddy/${rootState.user.user.id}`)
+      .then(function (response) {
+        // Temporairement pour enlever les amis dupliqués 
+        const amis = Array.from(new Set(response.data.map(a => a.id)))
+        .map(id => {
+          return response.data.find(a => a.id === id)
+        })
+        dispatch("user/setFriendList", amis, { root: true })
+      })
+    
   },
 
   async [types.deleteFriend]({ dispatch, rootState }, friendId) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
     axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/remove`, friendId)
       .then(function () {
         dispatch("user/getUserFriends", null, { root: true })
@@ -95,9 +102,12 @@ const actions = {
 
   async [types.addFriend]({ dispatch, rootState }, friendId) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+    console.log(friendId)
     axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/add`, friendId)
       .then(function () {
         dispatch("user/getUserFriends", null, { root: true })
+        dispatch(`groupe/${types.getGroupesCommun}`, friendId, { root: true })
       })
   },
 

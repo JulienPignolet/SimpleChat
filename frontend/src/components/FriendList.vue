@@ -6,10 +6,9 @@
 
       <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
         <template v-slot:activator="{ on }">
-          <v-btn class="{margin-top:2;}" color=green v-on="on">{{ $t('friend_list.add_friend') }}</v-btn>
+          <v-btn style="margin-top:6px;" color="green" v-on="on">{{ $t('friend_list.add_friend') }}</v-btn>
         </template>
 
-        <!-- TO DO : Bouger ça dans un autre composants, flemme là -->
         <v-card>
           <v-autocomplete
             v-model="friendId"
@@ -32,7 +31,8 @@
 
     <v-data-table :headers="headers" :items="friendList" class="elevation-1" hide-default-footer>
       <template v-slot:item.action="{ item }">
-        <v-icon small @click="deleteFriend(item.id)">mdi-delete</v-icon>
+        <v-icon @click="createGroupeWithFriend(item)">mdi-chat</v-icon>
+        <v-icon @click="deleteFriend(item.id)">mdi-delete</v-icon>
       </template>
       <template v-slot:item.chat="{ item }">
         <v-chip
@@ -50,7 +50,11 @@ import { sync, get, call } from "vuex-pathify";
 import * as types from "@/store/types.js";
 export default {
   created() {
-    this.getGroupesCommun();
+    this.getUserFriends().then(( ) => {
+      for (const friend in this.friendList) {
+        this.getGroupesCommun(this.friendList[friend].id)
+      }
+    });
   },
   data: () => ({
     friendId: "",
@@ -74,7 +78,9 @@ export default {
   methods: {
     deleteFriend: call(`user/${types.deleteFriend}`),
     addFriend: call(`user/${types.addFriend}`),
+    getUserFriends: call(`user/${types.getUserFriends}`),
     getGroupesCommun: call(`groupe/${types.getGroupesCommun}`),
+    createGroupeWithFriend: call(`groupe/${types.createGroupeWithFriend}`), 
     clickToAddFriend: function() {
       this.addFriend(this.friendId);
       this.menu = false;

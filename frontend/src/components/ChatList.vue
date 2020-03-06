@@ -16,8 +16,8 @@
         <v-spacer />
         <new-group-dialog />
       </v-subheader>
-      <v-list-item-group v-model="groupe.id" color="primary">
-        <v-list-item v-for="(groupe, i) in groupes" :key="i.toString()" @click="setGroupe(groupe)">
+      <v-list-item-group mandatory>
+        <v-list-item v-for="groupe in groupes" :key="groupe.id" @click="setGroupe(groupe)">
           <v-list-item-content>
             <v-list-item-title>{{ groupe.name }}</v-list-item-title>
           </v-list-item-content>
@@ -33,6 +33,8 @@ import * as types from "@/store/types.js";
 import NewGroupDialog from "@/components/NewGroupDialog";
 export default {
   components: { NewGroupDialog },
+    data: () => ({
+  }),
   created() {
     this.getGroupes();
     this.getUsers();
@@ -45,10 +47,9 @@ export default {
       }
     }
   },
-  computed: {
-    currentGroup: sync("groupe/groupe"),
+  computed: { 
     groupes: sync("groupe/groupeList"),
-    groupe: sync("groupe/groupe")
+    groupe: sync("groupe/groupe"),
   },
   methods: {
     activateNewGroupDialog: call(`interfaceControl/${types.setGroupDialog}`),

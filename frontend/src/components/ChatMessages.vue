@@ -1,9 +1,6 @@
 <template>
   <div class="d-flex">
-    <div class="flex-grow-1" style="height:82vh;" v-if="items.length <= 1">
-      <v-skeleton-loader v-for="index in 8" :key="index" type="list-item-avatar-three-line"></v-skeleton-loader>
-    </div>
-    <div v-else class="flex-grow-1">
+    <div class="flex-grow-1">
       <v-list id="messages-list" style="height:82vh;" class="overflow-y-auto">
         <v-list-item v-for="(item, index) in messages" :key="item.message + index">
           <v-list-item-avatar color="grey">
@@ -24,12 +21,6 @@
               v-html="transformUrls(item.message)"
             />
           </v-list-item-content>
-          <!-- En attendant la vérif back -->
-          <v-list-item-action v-if="$router.history.current.path.includes('admin')">
-            <v-btn icon>
-              <v-icon color="red">mdi-delete</v-icon>
-            </v-btn>
-          </v-list-item-action>
         </v-list-item>
       </v-list>
     </div>
