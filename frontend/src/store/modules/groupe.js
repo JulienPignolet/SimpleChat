@@ -59,12 +59,13 @@ const actions = {
   },
   async [types.createGroupeWithFriend]({ dispatch, rootState }, friend) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
-    let request = { "adminGroupeId": rootState.user.user.id, "groupeName": friend.username, "isPrivateChat": 0, "members": [friend] };
+    let request = { "adminGroupeId": rootState.user.user.id, "groupeName": friend.username, "isPrivateChat": 0, "members": [friend.id] };
     axios
       .post(constants.API_URL + 'api/groupe/add/groupe-and-members', request).
       then(function (response) {
         dispatch((`groupe/${types.getGroupes}`), null, { root: true })
         dispatch((`alerte/${types.setAlerte}`), new Alerte('success', response.data), { root: true })
+        dispatch(`groupe/${types.getGroupesCommun}`, friend.id, { root: true })
       })
   },
   async [types.getGroupes]({ dispatch, rootState }) {
