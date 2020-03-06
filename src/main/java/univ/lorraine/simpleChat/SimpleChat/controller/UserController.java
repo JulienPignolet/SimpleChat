@@ -188,7 +188,7 @@ public class UserController {
      * @param userId id de l'utilisateur
      * @return l'utilisateur
      */
-    @GetMapping("/{userId}")
+    @GetMapping("/getRole/{userId}")
     public ResponseEntity findUser(@PathVariable Long userId) {
         User user = userService.findById(userId);
         if (user != null) {
