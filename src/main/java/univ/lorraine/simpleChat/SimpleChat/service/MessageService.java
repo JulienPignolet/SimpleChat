@@ -48,4 +48,17 @@ public class MessageService {
         return json.append("]}").toString();
     }
 
+    public String getActive(Long groupeId)
+    {
+        List<Message> messages = new ArrayList<>(messageRepository.findByGroupeIdAndActiveIsTrue(groupeId));
+        if(messages.isEmpty())
+            return "{\"buffer\":[]}";
+
+        StringBuilder json = new StringBuilder("{ \"buffer\":[");
+        for(int i = 0; i < messages.size()-1; i++)
+            json.append(messages.get(i).toJSON()).append(",");
+        json.append(messages.get(messages.size()-1).toJSON());
+        return json.append("]}").toString();
+    }
+
 }
