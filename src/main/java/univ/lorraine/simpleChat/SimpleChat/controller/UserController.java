@@ -17,7 +17,9 @@ import univ.lorraine.simpleChat.SimpleChat.model.*;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.groupe.GroupeClientRunnable;
 import univ.lorraine.simpleChat.SimpleChat.service.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -194,5 +196,19 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
         }
+    }
+
+    @GetMapping("/findAll/user")
+    public ResponseEntity<Collection<User>> findAllUser(HttpServletRequest request)
+    {
+        Collection<User> listUser = this.userService.findAll();
+        return ResponseEntity.ok(listUser);
+    }
+
+    @GetMapping("/findAllActive/user")
+    public ResponseEntity<Collection<User>> findAllActiveUser(HttpServletRequest request)
+    {
+        Collection<User> listUser = this.userService.findAllActive();
+        return ResponseEntity.ok(listUser);
     }
 }
