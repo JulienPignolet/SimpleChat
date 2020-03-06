@@ -39,7 +39,9 @@ export default {
   data: () => ({}),
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.setGroupe({ id: parseInt(to.params.groupId, 10) });
+      if (!from.path.includes("friends")) {
+        vm.setGroupe({ id: parseInt(to.params.groupId, 10) });
+      }
     });
   },
   computed: {

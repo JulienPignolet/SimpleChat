@@ -11,6 +11,9 @@ const state = () => ({
 
 const mutations = {
   ...make.mutations(state),
+  CLEAR_MESSAGE_LIST(state) {
+    state.messageList = []
+  },
   ADD_TO_MESSAGE_LIST(state, message) {
     state.messageList.push(new Message(message.userName, message.contenu, message.type))
   }
@@ -39,12 +42,13 @@ const actions = {
       axios.get(`${constants.API_URL}api/message/live/${rootState.groupe.groupe.id}/${rootState.user.user.id}/`)
         .then(function (response) {
           response.data.buffer.forEach(message => {
-            commit('ADD_TO_MESSAGE_LIST', message)
+             commit('ADD_TO_MESSAGE_LIST', message)
           })
         })
     }
   },
   async [types.getSavedMessages]({ commit, rootState }) {
+    commit('CLEAR_MESSAGE_LIST')
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
     axios.get(`${constants.API_URL}api/message/saved/${rootState.groupe.groupe.id}/${rootState.user.user.id}/`)
       .then(function (response) {

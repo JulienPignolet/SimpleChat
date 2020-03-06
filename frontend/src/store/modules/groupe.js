@@ -113,7 +113,7 @@ const actions = {
     axios.post(`${constants.API_URL}api/message/add/${group.id}/${rootState.user.user.id}/`)
     dispatch(`groupe/${types.getGroupeMembers}`, null, { root: true })
     dispatch('chat/setMessageList', [], { root: true })
-    dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
+    // dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   },
   async [types.getGroupeMembers]({ dispatch, rootState }) {
     if (rootState.groupe.groupe.id !== undefined) {
