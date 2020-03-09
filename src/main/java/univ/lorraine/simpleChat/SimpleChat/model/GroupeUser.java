@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "groupe_user")
@@ -22,14 +23,17 @@ public class GroupeUser {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
     
     @Basic
     @Temporal(TemporalType.DATE)
+    @JsonIgnore
     private Date deletedat;
     
     @Basic
     @Temporal(TemporalType.DATE)
+    @JsonIgnore
     private Date createdat;
     
     @ManyToOne(targetEntity=User.class)
@@ -114,6 +118,17 @@ public class GroupeUser {
 		acceptRoles.add(EnumRole.SUPER_ADMIN.getRole()); 
 		if(this.getRole() == null) return false; 
 		return acceptRoles.contains(this.getRole().getName()); 
+	}
+	
+	public String getMemberId()
+	{
+		return this.getUser().getId()+"";  
+	}
+	
+	public String getRoleName()
+	{
+		if(this.getRole() == null) return ""; 
+		return this.getRole().getName();  
 	}
     
 }

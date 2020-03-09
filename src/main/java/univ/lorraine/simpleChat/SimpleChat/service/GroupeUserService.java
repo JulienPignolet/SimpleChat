@@ -117,8 +117,8 @@ public class GroupeUserService {
 		return groupeUserRepository.findByGroupeUserActif(groupeId, userId);
 	}
 	
-	public void deleteeUserGroup(GroupeUser groupUser)
+	public List<GroupeUser> findGroupeUsersAndDeletedatIsNull(Long groupeId)
 	{
-		
+		return groupeUserRepository.findGroupeUsersAndDeletedatIsNull(groupeId);
 	}
 }
