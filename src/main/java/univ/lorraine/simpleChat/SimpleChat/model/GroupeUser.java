@@ -1,5 +1,6 @@
 package univ.lorraine.simpleChat.SimpleChat.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -106,5 +107,13 @@ public class GroupeUser {
 				+ ", groupe=" + groupe + ", role=" + role + "]";
 	}
    
+	public boolean isAdminGroup()
+	{
+		ArrayList<String> acceptRoles = new ArrayList<>();
+		acceptRoles.add(EnumRole.ADMIN_GROUP.getRole());
+		acceptRoles.add(EnumRole.SUPER_ADMIN.getRole()); 
+		if(this.getRole() == null) return false; 
+		return acceptRoles.contains(this.getRole().getName()); 
+	}
     
 }

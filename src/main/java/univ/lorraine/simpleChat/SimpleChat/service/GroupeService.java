@@ -120,6 +120,15 @@ public class GroupeService {
 		return groupeRepository.findByDeletedatIsNull();
 	}
 	
+	
+	/**
+	 * 
+	 * @return Tous les groupes supprimés
+	 */
+	public Collection<Groupe> findByDeletedatIsNotNull(){
+		return groupeRepository.findByDeletedatIsNotNull();
+	}
+	
 	public Groupe findByNameAndDeletedatIsNull(String name)
 	{
 		return groupeRepository.findByNameAndDeletedatIsNull(name);

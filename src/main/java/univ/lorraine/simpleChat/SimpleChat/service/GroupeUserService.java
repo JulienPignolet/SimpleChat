@@ -28,6 +28,11 @@ public class GroupeUserService {
         groupeUserRepository.save(groupeUser); 
     }
 	
+	public void deleteInDatabase(GroupeUser groupeUser)
+	{
+		groupeUserRepository.delete(groupeUser);
+	}
+	
 	/**
 	 * 
 	 * @param groupe
@@ -110,5 +115,10 @@ public class GroupeUserService {
 	public GroupeUser findByGroupeUserActif(Long groupeId, Long userId)
 	{
 		return groupeUserRepository.findByGroupeUserActif(groupeId, userId);
+	}
+	
+	public void deleteeUserGroup(GroupeUser groupUser)
+	{
+		
 	}
 }

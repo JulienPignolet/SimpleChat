@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import univ.lorraine.simpleChat.SimpleChat.model.*;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddGroupAndMembersTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddMemberTemplate;
+import univ.lorraine.simpleChat.SimpleChat.modelTemplate.DeleteUserInGroupTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.GroupeTemplate;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
@@ -357,5 +358,68 @@ public class GroupeController {
 		return ResponseEntity.ok(listeGroupe);
 
 	}
+	
+	/**
+	 * 
+	 * @param deleteUserInGroupTemplate
+	 * @return  Un message de confirmation de la suppression d'un utilisateur dans un groupe ou un message d'erreur
+	 */
+    @ApiOperation(value = "Supprime définitivement un membre (user) dans un groupe. Seul l'admin du groupe (Celui qui a créé le groupe) ou un superadmin peuvent supprimer un membre.")
+	@PostMapping("/delete/member")
+	public ResponseEntity deleteMember(@RequestBody DeleteUserInGroupTemplate deleteUserInGroupTemplate)
+	{
+    	try {
+			
+			Long adminGroupeIdOrSuperAdminId = Long.parseLong(deleteUserInGroupTemplate.getUserId());
+            User adminGroupOrSuperAdmin = this.userService.findById(adminGroupeIdOrSuperAdminId);
+    		if(adminGroupOrSuperAdmin == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+adminGroupeIdOrSuperAdminId+" n'a pas été trouvé.");
+    		}
+    		
+            Long userDelId = Long.parseLong(deleteUserInGroupTemplate.getUserDelId());
+            User userDel = this.userService.findById(userDelId);
+    		if(userDel == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userDelId+" n'a pas été trouvé.");
+    		}
+
+    		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(deleteUserInGroupTemplate.getGroupId());
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+deleteUserInGroupTemplate.getGroupId()+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		GroupeUser groupeUserToDelete = groupeUserService.findByGroupeUserActif(groupe.getId(), userDelId);
+    		if( groupeUserToDelete == null )
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+userDelId+"' n'est pas membre de ce groupe. Par conséquent, il ne peut être supprimé du groupe !");
+    		}
+    		
+    		if(!adminGroupOrSuperAdmin.isSuperAdmin())
+    		{
+    			GroupeUser groupeUserAdmin = groupeUserService.findByGroupeUserActif(groupe.getId(), adminGroupeIdOrSuperAdminId);
+    			if( groupeUserAdmin == null )
+        		{
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+userDelId+"' ne fait pas partir de ce groupe !");
+        		}
+    			
+        		if( !groupeUserAdmin.isAdminGroup() ) 
+        		{
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Seul l'admin du groupe et le super admin  peuvent supprimer un membre d'un groupe !");
+        		}
+    		}
+    		
+    		
+    		groupeUserService.deleteInDatabase(groupeUserToDelete);
+    			
+            
+    		return ResponseEntity.ok("L'utilisateur d'id "+userDelId+"a été supprimé du groupe d'id "+groupe.getId()+" avec succès !");
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+    	
+	}
+	
 	
 }
