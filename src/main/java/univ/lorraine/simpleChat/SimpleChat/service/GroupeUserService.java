@@ -2,7 +2,6 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
@@ -10,7 +9,6 @@ import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.ocsf.AutorisationException;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,9 +114,8 @@ public class GroupeUserService {
 	{
 		return groupeUserRepository.findByGroupeUserActif(groupeId, userId);
 	}
-	
-	public void deleteeUserGroup(GroupeUser groupUser)
-	{
-		
+  
+	public List<GroupeUser> findByUser(Long user_id){
+		return groupeUserRepository.findAllByUserId(user_id);
 	}
 }
