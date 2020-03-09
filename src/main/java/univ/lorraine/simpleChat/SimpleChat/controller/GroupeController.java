@@ -561,6 +561,44 @@ public class GroupeController {
         }
     	
 	}
+    
+    
+    /**
+	 * 
+	 * @param DeleteGroupTemplate
+	 * @return  Un message de confirmation ou un message d'erreur
+	 */
+    @ApiOperation(value = "Retourne le rôle d'un utilisateur dans un groupe.")
+	@PostMapping("/role/user-in-group")
+	public ResponseEntity roleUserInGroup(@RequestBody DeleteGroupTemplate deleteGroupTemplate)
+	{
+    	try {
+			
+			Long userId = Long.parseLong(deleteGroupTemplate.getUserId());
+            User user = this.userService.findById(userId);
+    		if(user == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userId+" n'a pas été trouvé.");
+    		}
+
+    		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(deleteGroupTemplate.getGroupId());
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+deleteGroupTemplate.getGroupId()+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		GroupeUser groupeUser = groupeUserService.findByGroupeUserActif(groupe.getId(), userId);
+    		if( groupeUser == null )
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+userId+"' n'est pas membre de ce groupe.");
+    		}
+    			
+    		return ResponseEntity.ok(groupeUser.getRole());
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+    	
+	}
 	
 	
 }
