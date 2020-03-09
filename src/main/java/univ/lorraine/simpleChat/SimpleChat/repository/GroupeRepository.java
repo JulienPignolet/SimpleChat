@@ -19,7 +19,7 @@ public interface GroupeRepository extends JpaRepository<Groupe, Long>{
 	List<Groupe> findByDeletedatIsNull();
 	List<Groupe> findByDeletedatIsNotNull();
 	
-	@Query(value = "SELECT * FROM groupe join groupe_user on groupe_user.groupe_id = groupe.id join user on user.id = groupe_user.user_id WHERE user.id = ?1 and groupe_user.deletedat is null", 
+	@Query(value = "SELECT * FROM groupe join groupe_user on groupe_user.groupe_id = groupe.id join user on user.id = groupe_user.user_id WHERE user.id = ?1 and groupe_user.deletedat is null and groupe.deletedat is null", 
 			  nativeQuery = true)
 	Collection<Groupe> findGroupsByUser(Long uid);
 }
