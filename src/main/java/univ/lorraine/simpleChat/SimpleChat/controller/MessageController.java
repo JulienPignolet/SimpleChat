@@ -138,6 +138,22 @@ public class MessageController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ApiOperation(value = "Retourne tous les messages enregistrés actifs")
+    @GetMapping("/savedActifs/{idGroupe}/{idUser}")
+    public ResponseEntity<Object> getSavedMessagesActive(@PathVariable(value = "idGroupe") Long idGroupe, @PathVariable(value="idUser") Long idUser)
+    {
+        try {
+            if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
+                String messagesSaved = messageService.getActive(idGroupe);
+                return new ResponseEntity<>(removeBlockedMessages(messagesSaved, idUser), HttpStatus.OK);
+            }
+        }
+        catch (AutorisationException e) {
+            return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ApiOperation(value = "Ajoute un utilisateur au client OCSF du groupe")
     @PostMapping("/add/{idGroupe}/{idUser}")
     public ResponseEntity<Object> addUserToOCSFClient(@PathVariable(value = "idGroupe") Long idGroupe, @PathVariable(value="idUser") Long idUser)

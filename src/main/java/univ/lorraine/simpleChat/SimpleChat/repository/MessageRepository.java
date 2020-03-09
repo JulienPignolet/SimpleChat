@@ -12,4 +12,6 @@ import java.util.Collection;
 public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query("SELECT m FROM Message m WHERE m.groupe = ?1")
     Collection<Message> get(Groupe groupe);
+
+    Collection<Message> findByGroupeIdAndActiveIsTrue(Long groupe_id);
 }
