@@ -15,7 +15,6 @@ public class Vote {
 
     @ManyToOne(targetEntity=User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
     private User user;
 
     @ManyToOne(targetEntity=ReponseSondage.class)

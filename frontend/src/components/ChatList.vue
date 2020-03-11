@@ -1,18 +1,18 @@
 <template>
   <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" app>
-    <v-list-item link>
+    <v-list-item link @click="getUserFriends()" @mousedown.stop @touchstart.native.stop>
       <v-list-item-icon>
         <v-icon>{{ "mdi-account-heart" }}</v-icon>
       </v-list-item-icon>
       <v-list-item-content>
-        <v-list-item-title>Amis</v-list-item-title>
+        <v-list-item-title>{{ $t('chat_list.friends') }}</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
 
     <v-divider></v-divider>
     <v-list dense>
       <v-subheader>
-        Discussions
+        {{ $t('chat_list.discussions') }}
         <v-spacer />
         <v-btn text icon @click="activateNewGroupDialog(true) ">
           <v-icon>mdi-plus</v-icon>
@@ -56,7 +56,8 @@ export default {
     getGroupes: call(`groupe/${types.getGroupes}`),
     getUsers: call(`user/${types.getUsers}`),
     createGroupe: call(`groupe/${types.createGroupe}`),
-    chooseGroup:  call(`groupe/${types.chooseGroup}`)
+    chooseGroup:  call(`groupe/${types.chooseGroup}`),
+    getUserFriends: call (`user/${types.getUserFriends}`)
   }
 };
 </script>

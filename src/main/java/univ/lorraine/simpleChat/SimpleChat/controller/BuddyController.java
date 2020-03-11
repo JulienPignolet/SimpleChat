@@ -85,7 +85,8 @@ public class BuddyController {
             User buddy = userService.find(bId);
 
             if(user != null && buddy != null){
-                if (user.getBuddyList().contains(buddy)) {
+                //if (user.getBuddyList().contains(buddy)) {
+                if (user.getBuddyList().stream().anyMatch(tempUser -> tempUser.getId() == buddy.getId())) {
                     userService.removeBuddy(user,buddy);
                     return ResponseEntity.ok("Buddy removed !");
                 } else {

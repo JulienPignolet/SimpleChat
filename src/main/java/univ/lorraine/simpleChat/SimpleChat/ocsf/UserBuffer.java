@@ -1,5 +1,10 @@
 package univ.lorraine.simpleChat.SimpleChat.ocsf;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,13 +12,15 @@ import java.util.List;
  * Représente un utilisateur dans une discussion de groupe.
  */
 public class UserBuffer {
+
+	Logger logger = LoggerFactory.getLogger(UserBuffer.class);
 	
 	private long id; 					// ID de l'utilisateur
-	private List<Message> msgBuffer;	// Liste des messages en attente d'envoie
+	private List<MessageOCSF> msgBuffer;	// Liste des messages en attente d'envoie
 	
 	public UserBuffer(long id) {
 		setId(id);
-		setMsgBuffer(new ArrayList<Message>());
+		setMsgBuffer(new ArrayList<MessageOCSF>());
 	}
 
 	public long getId() {
@@ -24,7 +31,7 @@ public class UserBuffer {
 		this.id = id;
 	}
 
-	public void setMsgBuffer(List<Message> buffer) {
+	public void setMsgBuffer(List<MessageOCSF> buffer) {
 		this.msgBuffer = buffer;
 	}
 
@@ -37,10 +44,14 @@ public class UserBuffer {
 			return "{\"buffer\":[]}";
 
 		StringBuilder json = new StringBuilder("{ \"buffer\":[");
-		for(int i = 0; i < msgBuffer.size()-1; i++)
-			json.append(msgBuffer.get(i).toString()).append(",");
-		json.append(msgBuffer.get(msgBuffer.size()-1).toString());
-		msgBuffer.clear();
+		try (Jsonb jsonb = JsonbBuilder.create()) {
+			for (int i = 0; i < msgBuffer.size() - 1; i++)
+				json.append(jsonb.toJson(msgBuffer.get(i))).append(",");
+			json.append(jsonb.toJson(msgBuffer.get(msgBuffer.size() - 1)));
+			msgBuffer.clear();
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+		}
 		return json.append("]}").toString();
 	}
 	
@@ -48,7 +59,7 @@ public class UserBuffer {
 	 * Ajout d'un message au buffer
 	 * @param msg
 	 */
-	public void addMessageToBuffer(Message msg) {
+	public void addMessageToBuffer(MessageOCSF msg) {
 		msgBuffer.add(msg);
 	}
 

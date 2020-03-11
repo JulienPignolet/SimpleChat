@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.persistence.*;
+import java.util.*;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @ApplicationScope
 @Entity
 @Table(name = "user")
-public class User {
+public class User  extends Active{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,14 +18,14 @@ public class User {
 
     private String username;
 
-//    @JsonIgnore
     private String password;
+
+    private String secondPassword;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-//    @JsonIgnore
     @Transient
     private String passwordConfirm;
 
@@ -41,18 +39,32 @@ public class User {
 
     //
 	@JsonIgnore
-	@ManyToMany(cascade={CascadeType.ALL})
+	@ManyToMany(cascade={CascadeType.REMOVE})
 	@JoinTable(name="BUDDYMASTER_BUDDY",
 			joinColumns={@JoinColumn(name="id")},
 			inverseJoinColumns={@JoinColumn(name="BUDDY_ID")})
 	private Collection<User> buddyMaster;
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.ALL})
+	@ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.REMOVE})
 	@JoinTable(name="BUDDYMASTER_BUDDY",
 			joinColumns={@JoinColumn(name="BUDDY_ID")},
 			inverseJoinColumns={@JoinColumn(name="id")})
 	private Collection<User> buddyList;
+	
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.EAGER,cascade={CascadeType.REMOVE})
+	@JoinTable(name="BLOCKLIST",
+			joinColumns={@JoinColumn(name="id")},
+			inverseJoinColumns={@JoinColumn(name="user_block_id")})
+	private Collection<User> myBlocklist;
+
+	@JsonIgnore
+	@ManyToMany(cascade={CascadeType.REMOVE})
+	@JoinTable(name="BLOCKLIST",
+			joinColumns={@JoinColumn(name="user_block_id")},
+			inverseJoinColumns={@JoinColumn(name="id")})
+	private Collection<User> yourBlocklist;
 	
 	@JsonIgnore
     @OneToMany(mappedBy = "author")
@@ -65,6 +77,8 @@ public class User {
 	public User()
 	{
 		this.roles = new HashSet<Role>();
+		this.myBlocklist = new ArrayList<>(); 
+		this.yourBlocklist = new ArrayList<>(); 
 	}
 
 
@@ -145,8 +159,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", roles=" + roles
-				+ ", passwordConfirm=" + passwordConfirm + ", groupeUsers=" + groupeUsers + "]";
+		return "User [id=" + id + ", username=" + username + "]";
 	}
 
 
@@ -162,9 +175,11 @@ public class User {
 	}
 
 	public void removeBuddy(User buddy) {
-		if(this.buddyList.contains(buddy)) {
-			this.buddyList.remove(buddy);
-		}
+		List<User> operatedList = new ArrayList<>();
+		this.buddyList.stream()
+				.filter(item -> item.getId() == buddy.getId())
+				.forEach(operatedList::add);
+		buddyList.removeAll(operatedList);
 	}
 
 	public void addVote(Vote vote) {
@@ -224,5 +239,84 @@ public class User {
 
 	public void setListSondage(Collection<Sondage> listSondage) {
 		this.listSondage = listSondage;
+	}
+
+
+	public Collection<User> getMyBlocklist() {
+		return myBlocklist;
+	}
+
+
+	public void setMyBlocklist(Collection<User> myBlocklist) {
+		this.myBlocklist = myBlocklist;
+	}
+	
+	public String addUserToMyBlocklist(User user)
+	{
+		if(this.myBlocklist.contains(user)) return "Cet utilisateur est déjà bloqué !"; 
+		if(this.equals(user)) return "Un utilisateur ne peut pas se bloquer soit même !";
+
+		this.myBlocklist.add(user);
+		return "Utilisateur bloqué avec succès !";
+		
+	}
+	
+	public String removeUserToMyBlocklist(User user)
+	{
+		if(!this.myBlocklist.contains(user)) return "Cet utilisaetur n'est pas bloqué, ne peut donc être débloqué !"; 
+		this.myBlocklist.remove(user);
+		return "Utilisateur débloqué avec succès !";
+	}
+
+
+
+	public Collection<User> getYourBlocklist() {
+		return yourBlocklist;
+	}
+
+
+	public void setYourBlocklist(Collection<User> yourBlocklist) {
+		this.yourBlocklist = yourBlocklist;
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
+
+	public String getSecondPassword() {
+		return secondPassword;
+	}
+
+	public void setSecondPassword(String secondPassword) {
+		this.secondPassword = secondPassword;
 	}
 }

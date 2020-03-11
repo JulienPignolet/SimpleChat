@@ -2,11 +2,14 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import univ.lorraine.simpleChat.SimpleChat.model.*;
+import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
+import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
+import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,12 +19,15 @@ public class GroupeService {
 	private final GroupeUserRepository groupeUserRepository;
 	
 	private final GroupeRepository groupeRepository;
-	
+
+	private final RoleService roleService;
+
 
 	@Autowired
-	public GroupeService(GroupeUserRepository groupeUserRepository, GroupeRepository groupeRepository) {
+	public GroupeService(GroupeUserRepository groupeUserRepository, GroupeRepository groupeRepository, RoleService roleService) {
 		this.groupeUserRepository = groupeUserRepository;
 		this.groupeRepository = groupeRepository;
+		this.roleService = roleService;
 	}
 
 
@@ -71,7 +77,12 @@ public class GroupeService {
 	}
 
 	public GroupeUser findByGroupeUser(Long groupe_id, Long user_id) {
-		return groupeUserRepository.findByGroupeUser(groupe_id, user_id); 
+		return groupeUserRepository.findByGroupeUser(groupe_id, user_id);
+	}
+
+	public List<GroupeUser> findAllByGroupeUserAdmin(Long user_id) {
+		Long role_id = roleService.findByName(EnumRole.ADMIN_GROUP.getRole()).getId();
+		return groupeUserRepository.findByGroupeUserAdmin(user_id, role_id);
 	}
 	
 	/**

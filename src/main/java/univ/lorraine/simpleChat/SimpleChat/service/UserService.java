@@ -3,14 +3,12 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import univ.lorraine.simpleChat.SimpleChat.model.Role;
 import univ.lorraine.simpleChat.SimpleChat.model.User;
 import univ.lorraine.simpleChat.SimpleChat.repository.RoleRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.UserRepository;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 
 @Service
@@ -27,11 +25,13 @@ public class UserService {
     }
 
     public void save(User user) {
+        userRepository.save(user);
+    }
+    public void saveAndEncryptPassword(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         //user.setRoles(new HashSet<>(roleRepository.findAll()));
         userRepository.save(user);
     }
-    
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -64,6 +64,10 @@ public class UserService {
         return userRepository.findAll();
     }
     
+    public Collection<User> findAllActive(){
+        return userRepository.findAllByActiveIsTrue();
+    }
+
     public void addRole(User user, Role role)
     {
         user.addRole(role);
@@ -72,5 +76,24 @@ public class UserService {
     public Collection<User> findMembersGroupe(Long groupe_id)
     {
     	return userRepository.findMembersGroupe(groupe_id);
+    }
+    
+    public String addBlockUser(User user, User bUser)
+    {
+    	String msg = user.addUserToMyBlocklist(bUser);
+    	userRepository.save(user);
+    	return msg; 
+    }
+    
+    public String removeBlockUser(User user, User bUser)
+    {
+    	String msg = user.removeUserToMyBlocklist(bUser);
+    	userRepository.save(user);
+    	return msg;
+    }
+
+    public void manage(User user, boolean active) {
+        user.setActive(active);
+        userRepository.save(user);
     }
 }

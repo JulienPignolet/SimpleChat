@@ -1,18 +1,14 @@
 package univ.lorraine.simpleChat.SimpleChat.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import net.bytebuddy.asm.Advice.Exit;
-import univ.lorraine.simpleChat.SimpleChat.model.EnumRole;
-import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
-import univ.lorraine.simpleChat.SimpleChat.model.GroupeUser;
-import univ.lorraine.simpleChat.SimpleChat.model.Role;
-import univ.lorraine.simpleChat.SimpleChat.model.User;
+import univ.lorraine.simpleChat.SimpleChat.model.*;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddGroupAndMembersTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddMemberTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.GroupeTemplate;
@@ -32,6 +28,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Api( value="Simple Chat")
 public class GroupeController {
+	Logger logger = LoggerFactory.getLogger(GroupeController.class);
 
 	private final UserService userService;
     private final GroupeService groupeService;
@@ -83,7 +80,7 @@ public class GroupeController {
             
     		return ResponseEntity.ok("groupe d'id "+groupe.getId()+" créé !");
         } catch (NumberFormatException  e) {
-		    e.printStackTrace();
+		    logger.warn(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
         }
 	}
@@ -220,12 +217,87 @@ public class GroupeController {
 	@GetMapping("/find/Members/groupe/{groupeId}")
 	public ResponseEntity<Collection<User>> findMembersGroupe(HttpServletRequest request, @PathVariable String groupeId)
 	{
-		Long gid = Long.parseLong(groupeId); 
-		Collection<User> users = userService.findMembersGroupe(gid); 
-		return ResponseEntity.ok(users); 
+		Collection<User> users = new ArrayList<>();
+		try {
+			Long gid = Long.parseLong(groupeId);
+			users = userService.findMembersGroupe(gid);
+		}
+		catch (Exception e)
+		{
+			logger.warn(e.getMessage());
+		}
+		return ResponseEntity.ok(users);
 	}
-	
-	
+
+	/**
+	 *
+	 * @param request
+	 * @param groupeId
+	 * @return Tous les membres d'un groupe
+	 */
+	@ApiOperation(value = "Retourne tous les amis présent dans le groupe.")
+	@GetMapping("/find/Members/groupe/amis/{groupeId}/{userId}")
+	public ResponseEntity<Collection<User>> findFriendsInGroupe(HttpServletRequest request, @PathVariable String groupeId,@PathVariable String userId)
+	{
+		Collection<User> users ;
+		ArrayList<User> amis = new ArrayList<>();
+		try {
+			Long gid = Long.parseLong(groupeId);
+			users = userService.findMembersGroupe(gid);
+
+			User user = userService.find(Long.parseLong(userId));
+
+			User friend;
+			List<User> tempUser = new ArrayList<>(user.getBuddyList());
+			for (User u : tempUser) {
+				friend = users.stream().filter(temp -> u.getId().equals(temp.getId())).findAny().orElse(null);
+				if(friend != null){
+					amis.add(friend);
+				}
+				friend = null;
+			}
+		}
+		catch (Exception e)
+		{
+			logger.warn(e.getMessage());
+		}
+		return ResponseEntity.ok(amis);
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @param groupeId
+	 * @return Tous les membres d'un groupe
+	 */
+	@ApiOperation(value = "Retourne tous les bloqués présent dans le groupe.")
+	@GetMapping("/find/Members/groupe/bloque/{groupeId}/{userId}")
+	public ResponseEntity<Collection<User>> findBlockedInGroupe(HttpServletRequest request, @PathVariable String groupeId,@PathVariable String userId)
+	{
+		Collection<User> users ;
+		ArrayList<User> listeBloque = new ArrayList<>();
+		try {
+			Long gid = Long.parseLong(groupeId);
+			users = userService.findMembersGroupe(gid);
+			User user = userService.find(Long.parseLong(userId));
+
+			User blocked;
+			List<User> tempUser = new ArrayList<>(user.getMyBlocklist());
+			for (User u : tempUser) {
+				blocked = users.stream().filter(temp -> u.getId().equals(temp.getId())).findAny().orElse(null);
+				if(blocked != null){
+					listeBloque.add(blocked);
+				}
+				blocked = null;
+			}
+		}
+		catch (Exception e)
+		{
+			logger.warn(e.getMessage());
+		}
+		return ResponseEntity.ok(listeBloque);
+	}
+
     /**
      * 
      * @param addGroupeAndMembersTemplate
@@ -266,6 +338,24 @@ public class GroupeController {
 		Long uid = Long.parseLong(userId); 
 		Collection<Groupe> groups = groupeService.findGroupsByUser(uid); 
 		return ResponseEntity.ok(groups); 
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @return les groupes ou l'utilisateur est admin
+	 */
+	@ApiOperation(value = "Retourne les groupe non supprimé (suppression logique) ou l'utilisateur est admin")
+	@GetMapping("/find/groupe/admin/{userId}")
+	public ResponseEntity<Collection<Groupe>> findGroupeByUserAdmin(HttpServletRequest request,@PathVariable String userId)
+	{
+		List<GroupeUser> groupeUser = this.groupeService.findAllByGroupeUserAdmin(Long.parseLong(userId));
+		List<Groupe> listeGroupe = new ArrayList<>();
+		for (GroupeUser gu: groupeUser) {
+			listeGroupe.add(gu.getGroupe());
+		}
+		return ResponseEntity.ok(listeGroupe);
+
 	}
 	
 }

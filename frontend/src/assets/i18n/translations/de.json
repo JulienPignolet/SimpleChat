@@ -1,0 +1,83 @@
+{
+    "login": {
+        "title": "Sich bei SimpleChat anmelden",
+        "sign_in": "Einloggen",
+        "sign_up": "Anmelden",
+        "username": "Nutzername",
+        "password": "Passwort"
+    },
+    "register": {
+        "title": "Anmeldung",
+        "confirm_password": "Kennwort bestätigen",
+        "sign_up": "Anmelden"
+    },
+    "chat_box": {
+        "type_a_message": "Nachricht eingeben ..."
+    },
+    "chat_list": {
+        "discussions": "Diskussionen",
+        "friends": "Freunde"
+    },
+    "friend_list": {
+        "add_friend": "Einen Freund hinzufügen",
+        "type_username": "Geben Sie einen Benutzernamen ein"
+    },
+    "user": {
+        "add_friend": "Als Freund hinzufügen",
+        "block": "Diesen Benutzer sperren",
+        "remove_friend": "Freund löschen",
+        "unblock": "Entsperren Sie diesen Benutzer"
+    },
+    "user_group": {
+        "members": "Mitglieder",
+        "add_member": "Mitglieder hinzufügen",
+        "delete": "Gruppe löschen",
+        "actions": "Aktionen"
+    },
+    "dialog": {
+        "new_group": {
+            "select_users": "Benutzer auswählen",
+            "name": "Name der Gruppe",
+            "create_group": "Erstellen Sie eine Gruppe"
+        },
+        "new_poll": {
+            "title": "Erstellen Sie eine Umfrage",
+            "question": "Frage?",
+            "end_date": "Endtermin",
+            "propositions": "Vorschläge",
+            "proposition": "Vorschlag",
+            "add_proposition": "Fügen Sie einen Vorschlag hinzu",
+            "anonymize_votes": "Anonymisieren Sie die Stimmen"
+        },
+        "file_upload": {
+            "title": "Dateien senden",
+            "file_input": "Dateieintrag",
+            "select_files": "Wählen Sie eine Datei"
+        },
+        "zoom_image": {
+            "open_original": "Öffnen Sie das Original"
+        }
+    },
+    "store": {
+        "user": {
+            "connected": "Benutzer {Benutzername} ist jetzt verbunden",
+            "disconnected": "Benutzer {Benutzername} wurde erfolgreich abgemeldet",
+            "registered": "Sie sind registriert, jetzt einloggen!",
+            "wrong_credentials": "Falsche Anmeldeinformationen"
+        }
+    },
+    "error": {
+        "has_occurred": "Ein Fehler ist aufgetreten"
+    },
+    "general": {
+        "cancel": "Stornieren",
+        "add": "Hinzufügen",
+        "ok": "in Ordnung",
+        "close": "Schließen",
+        "send": "Senden",
+        "type_username": "Geben Sie einen Benutzernamen ein"
+    },
+    "poll": {
+        "vote": "0 Stimmen | 1 Stimme | {count} Stimmen"
+    }
+}

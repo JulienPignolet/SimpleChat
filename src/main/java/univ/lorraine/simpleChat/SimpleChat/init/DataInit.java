@@ -41,6 +41,7 @@ public class DataInit implements ApplicationRunner {
         addUserIfNotExist(defaultUser);
 
         assignUserToGroup(defaultUser,chanGeneral);
+        assignUserToGroup("test",chanGeneral);
 
     }
 
@@ -59,7 +60,7 @@ public class DataInit implements ApplicationRunner {
             for(Role role : roleService.findAll()){
                 nouveau.addRole(role);
             }
-            userService.save(nouveau);
+            userService.saveAndEncryptPassword(nouveau);
         }
     }
 
