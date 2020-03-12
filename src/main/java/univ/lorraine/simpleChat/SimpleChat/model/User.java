@@ -22,6 +22,9 @@ public class User  extends Active{
 
     private String secondPassword;
 
+
+	private boolean isAdmin = false;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -318,5 +321,13 @@ public class User  extends Active{
 
 	public void setSecondPassword(String secondPassword) {
 		this.secondPassword = secondPassword;
+	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean admin) {
+		isAdmin = admin;
 	}
 }
