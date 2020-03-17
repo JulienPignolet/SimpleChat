@@ -1,14 +1,5 @@
 <template>
   <v-dialog v-model="dialog" max-width="1200px">
-    <template v-slot:activator="{ on }">
-      <v-btn
-        v-on="on"
-        icon
-      >
-        <v-icon>mdi-vector-polygon</v-icon>
-      </v-btn>
-    </template>
-
     <v-card>
       <v-card-title>
         <span class="headline">Drawpad</span>
@@ -79,13 +70,13 @@
 <script>
   import * as types from "@/store/types.js";
   import store from '../store/index';
+  import {sync} from "vuex-pathify";
 
   export default {
     name: 'drawpad',
     components: {},
     data () {
       return {
-        dialog: false,
         showColorPicker: false,
         color: '#ff0000',
         shape: 'rect',
@@ -121,7 +112,9 @@
           this.receiveMessage(messages);
         }
         return messages;
-      }
+      },
+
+      dialog: sync("interfaceControl/drawpad")
     },
 
     methods: {

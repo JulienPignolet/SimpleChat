@@ -12,11 +12,15 @@
         "sign_up": "зарегистрироваться"
     },
     "chat_box": {
-        "type_a_message": "Введите сообщение ..."
+        "type_a_message": "Введите сообщение ...",
+        "create_poll": "Создать опрос",
+        "upload_file": "Отправить файл",
+        "launch_drawpad": "Запустите блокнот"
     },
     "chat_list": {
         "discussions": "Обсуждение",
-        "friends": "друзья"
+        "friends": "друзья",
+        "user_list": "Список пользователей"
     },
     "friend_list": {
         "add_friend": "Добавить в друзья",
@@ -79,5 +83,8 @@
     },
     "poll": {
         "vote": "0 голосов | 1 голос | {count} голосов"
+    },
+    "app_bar": {
+        "admin": "Режим администратора"
     }
 }

@@ -15,7 +15,10 @@
     "sign_up": "S'inscrire"
   },
   "chat_box": {
-    "type_a_message": "Saisir un message..."
+    "type_a_message": "Saisir un message...",
+    "create_poll": "Créer un sondage",
+    "upload_file": "Envoyer des fichier",
+    "launch_drawpad": "Démarrer le drawpad"
   },
   "chat_list": {
     "discussions": "Discussions",

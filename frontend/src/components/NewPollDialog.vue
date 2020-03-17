@@ -3,14 +3,6 @@
     v-model="dialog"
     max-width="600px"
   >
-    <template v-slot:activator="{ on }">
-      <v-btn
-        icon
-        v-on="on"
-      >
-        <v-icon>mdi-clipboard-list-outline</v-icon>
-      </v-btn>
-    </template>
     <v-card>
       <v-card-title>
         <span class="headline">{{ $t('dialog.new_poll.title') }}</span>
@@ -147,11 +139,11 @@
     import * as types from "../store/types";
     import { i18n } from '../plugins/i18n';
     import languages from '../assets/i18n/languages';
+    import {sync} from "vuex-pathify";
 
     export default {
         name: "NewPollDialog",
         data: vm => ({
-            dialog: false,
             menuDateFin: false,
             today: new Date().toISOString().substr(0, 10),
             question: "",
@@ -162,9 +154,7 @@
         }),
 
         computed: {
-            computedDateFormatted () {
-                return this.formatDate(this.dateFin)
-            },
+            dialog: sync("interfaceControl/newPollDialog")
         },
 
         watch: {

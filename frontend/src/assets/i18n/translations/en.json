@@ -12,11 +12,15 @@
         "sign_up": "Sign up"
     },
     "chat_box": {
-        "type_a_message": "Type a message ..."
+        "type_a_message": "Type a message ...",
+        "create_poll": "Create a survey",
+        "upload_file": "Send files",
+        "launch_drawpad": "Launch drawpad"
     },
     "chat_list": {
         "discussions": "Discussions",
-        "friends": "Friends"
+        "friends": "Friends",
+        "user_list": "List of users"
     },
     "friend_list": {
         "add_friend": "Add a friend",
@@ -79,5 +83,8 @@
     },
     "poll": {
         "vote": "0 votes | 1 vote | {count} votes"
+    },
+    "app_bar": {
+        "admin": "Administrator mode"
     }
 }
