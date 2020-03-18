@@ -81,6 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 "/webjars/**",
                 "/registration",
                 "/authentication/**",
+                "**/**",
                 "/h2-console/**",
                 "/api/fileUpload/**").permitAll().
                 anyRequest().authenticated().and().headers().frameOptions().sameOrigin().and().cors().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

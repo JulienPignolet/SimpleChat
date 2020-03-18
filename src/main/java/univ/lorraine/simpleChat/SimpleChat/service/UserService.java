@@ -92,6 +92,11 @@ public class UserService {
     	return msg;
     }
 
+    public void manageAdmin(User user, boolean admin) {
+        user.setAdmin(admin);
+        userRepository.save(user);
+    }
+
     public void manage(User user, boolean active) {
         user.setActive(active);
         userRepository.save(user);

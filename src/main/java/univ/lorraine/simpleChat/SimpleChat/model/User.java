@@ -22,6 +22,9 @@ public class User  extends Active{
 
     private String secondPassword;
 
+
+	private boolean isAdmin = false;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -329,5 +332,13 @@ public class User  extends Active{
 		ArrayList<String> currentUserRoles = new ArrayList<>(); 
 		for (Role role : this.getRoles()) currentUserRoles.add(role.getName());
 		return currentUserRoles.contains(EnumRole.SUPER_ADMIN.getRole()); 
+  }
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean admin) {
+		isAdmin = admin;
 	}
 }
