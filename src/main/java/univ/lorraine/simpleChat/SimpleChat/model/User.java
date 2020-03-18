@@ -322,6 +322,17 @@ public class User  extends Active{
 	public void setSecondPassword(String secondPassword) {
 		this.secondPassword = secondPassword;
 	}
+	
+	/**
+	 * 
+	 * @return True si l'utilisateur est un super admin
+	 */
+	public boolean isSuperAdmin()
+	{
+		ArrayList<String> currentUserRoles = new ArrayList<>(); 
+		for (Role role : this.getRoles()) currentUserRoles.add(role.getName());
+		return currentUserRoles.contains(EnumRole.SUPER_ADMIN.getRole()); 
+  }
 
 	public boolean isAdmin() {
 		return isAdmin;

@@ -26,6 +26,11 @@ public class GroupeUserService {
         groupeUserRepository.save(groupeUser); 
     }
 	
+	public void deleteInDatabase(GroupeUser groupeUser)
+	{
+		groupeUserRepository.delete(groupeUser);
+	}
+	
 	/**
 	 * 
 	 * @param groupe
@@ -109,7 +114,12 @@ public class GroupeUserService {
 	{
 		return groupeUserRepository.findByGroupeUserActif(groupeId, userId);
 	}
-
+	
+	public List<GroupeUser> findGroupeUsersAndDeletedatIsNull(Long groupeId)
+	{
+		return groupeUserRepository.findGroupeUsersAndDeletedatIsNull(groupeId);
+	}
+  
 	public List<GroupeUser> findByUser(Long user_id){
 		return groupeUserRepository.findAllByUserId(user_id);
 	}
