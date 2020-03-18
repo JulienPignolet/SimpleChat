@@ -4,17 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.persistence.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 @Entity
 @Table(name = "message")
-public class Message {
+public class Message extends Active {
 
 
     @Id

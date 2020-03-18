@@ -10,7 +10,7 @@ import java.util.*;
 @ApplicationScope
 @Entity
 @Table(name = "user")
-public class User {
+public class User  extends Active{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,9 @@ public class User {
     private String password;
 
     private String secondPassword;
+
+
+	private boolean isAdmin = false;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
@@ -318,5 +321,13 @@ public class User {
 
 	public void setSecondPassword(String secondPassword) {
 		this.secondPassword = secondPassword;
+	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean admin) {
+		isAdmin = admin;
 	}
 }

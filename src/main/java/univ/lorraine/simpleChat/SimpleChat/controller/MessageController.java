@@ -138,6 +138,22 @@ public class MessageController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ApiOperation(value = "Retourne tous les messages enregistrés actifs")
+    @GetMapping("/savedActifs/{idGroupe}/{idUser}")
+    public ResponseEntity<Object> getSavedMessagesActive(@PathVariable(value = "idGroupe") Long idGroupe, @PathVariable(value="idUser") Long idUser)
+    {
+        try {
+            if (groupeUserService.CountByGroupeIdAndUserId(idGroupe, idUser)) {
+                String messagesSaved = messageService.getActive(idGroupe);
+                return new ResponseEntity<>(removeBlockedMessages(messagesSaved, idUser), HttpStatus.OK);
+            }
+        }
+        catch (AutorisationException e) {
+            return new ResponseEntity<>("{}", HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ApiOperation(value = "Ajoute un utilisateur au client OCSF du groupe")
     @PostMapping("/add/{idGroupe}/{idUser}")
     public ResponseEntity<Object> addUserToOCSFClient(@PathVariable(value = "idGroupe") Long idGroupe, @PathVariable(value="idUser") Long idUser)
@@ -240,4 +256,32 @@ public class MessageController {
 	    if (user != null) return user.getMyBlocklist();
 	    return null;
 	}
+
+    /**
+     * Activer ou desactiver un message
+     * @param messageId
+     * @param active
+     * @return
+     */
+    @PostMapping("/message/manage/{messageId}")
+    public ResponseEntity removeMessage(@RequestBody String active,@PathVariable String messageId) {
+        try {
+            Long uId = Long.parseLong(messageId);
+            boolean act = Boolean.parseBoolean(active);
+
+            Message message = messageService.find(uId);
+
+            if (message != null) {
+                messageService.manage(message,act);
+                return ResponseEntity.ok("message managed !");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("message not found");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Just send the message's id." + e.getMessage());
+        }
+    }
 }

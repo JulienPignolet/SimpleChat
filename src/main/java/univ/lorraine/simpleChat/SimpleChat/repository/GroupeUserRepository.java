@@ -26,6 +26,7 @@ public interface GroupeUserRepository extends JpaRepository<GroupeUser, Long>{
 	GroupeUser findByGroupeUserActif(Long groupe_id, Long user_id);
 	
 	List<GroupeUser> findAll();
+	List<GroupeUser> findAllByUserId(Long user_id);
 	List<GroupeUser> findByGroupeId(Long groupe_id);
 	List<GroupeUser> findByGroupeAndDeletedatIsNull(Long groupe_id);
 	List<GroupeUser> findByGroupeIdAndUserId(Long groupe_id, Long user_id);
