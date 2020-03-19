@@ -30,7 +30,11 @@
         "add_friend": "Als Freund hinzufügen",
         "block": "Diesen Benutzer sperren",
         "remove_friend": "Freund löschen",
-        "unblock": "Entsperren Sie diesen Benutzer"
+        "unblock": "Entsperren Sie diesen Benutzer",
+        "new_password": "Neues Passwort",
+        "continue": "Weiter",
+        "access_account_title": "Zugriff auf Ihr Konto gewähren?",
+        "access_account": "Zugriff auf das Konto"
     },
     "user_group": {
         "members": "Mitglieder",

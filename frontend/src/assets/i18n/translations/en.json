@@ -30,7 +30,11 @@
         "add_friend": "Add as friend",
         "block": "Block this user",
         "remove_friend": "Delete friend",
-        "unblock": "Unblock this user"
+        "unblock": "Unblock this user",
+        "new_password": "New Password",
+        "continue": "Continue",
+        "access_account_title": "Give access to your account?",
+        "access_account": "Access to the account"
     },
     "user_group": {
         "members": "Members",

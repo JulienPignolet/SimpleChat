@@ -33,7 +33,7 @@
               <v-subheader>OUTILS</v-subheader>
               <v-list-item-group>
                 <v-list-item>
-                  <v-list-item-content v-on:click="resetCanvas()">
+                  <v-list-item-content v-on:click="deleteThisCanvas()">
                     <v-icon x-large>mdi-trash-can-outline</v-icon>
                   </v-list-item-content>
                 </v-list-item>
@@ -70,7 +70,7 @@
 <script>
   import * as types from "@/store/types.js";
   import store from '../store/index';
-  import {sync} from "vuex-pathify";
+  import {call, sync} from "vuex-pathify";
 
   export default {
     name: 'drawpad',
@@ -114,10 +114,12 @@
         return messages;
       },
 
-      dialog: sync("interfaceControl/drawpad")
+      dialog: sync("interfaceControl/drawpad"),
     },
 
     methods: {
+      deleteDrawpad: call(`chat/${types.resetDrawpad}`),
+
       toggleColorPicker: function() {
         this.showColorPicker = !this.showColorPicker;
       },
@@ -190,6 +192,24 @@
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
       },
 
+      deleteThisCanvas: function() {
+        this.deleteDrawpad();
+        this.context.fillStyle = 'white';
+        this.context.strokeStyle = 'white';
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawShape('rect',0,0, this.canvas.width, this.canvas.height);
+        this.shapesHistory = [];
+        this.shapesHistory.push({
+          color: 'white',
+          shape: 'rect',
+          startClick: {x:0, y:0},
+          endClick: {x:this.canvas.width, y:this.canvas.height}
+        });
+        this.mouseUpClickPos = {x:0, y:0};
+        this.mouseDownClickPos = {x:0, y:0};
+        this.sendMessage();
+      },
+
       saveCurrentForm: function() {
         this.shapesHistory.push({
           color: this.color,
@@ -215,8 +235,6 @@
 
       sendMessage() {
         const shape = this.shapesHistory[this.shapesHistory.length - 1];
-        console.log('message send :');
-        console.log(shape);
         this.$store.dispatch(`chat/${types.sendMessage}`, {
           message: `${shape.color}|${shape.shape}|${shape.startClick.x}|${shape.startClick.y}|${shape.endClick.x}|${shape.endClick.y}`,
           type: 'drawpad'
@@ -234,8 +252,6 @@
       },
 
       receiveMessage(messages) {
-        console.log('receive :');
-        console.log(messages[messages.length - 1]);
         this.messageCount = messages.length;
         this.resetCanvas();
         messages.forEach(message => {

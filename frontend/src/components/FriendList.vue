@@ -36,7 +36,7 @@
       </template>
       <template v-slot:item.chat="{ item }">
         <v-chip
-          v-for="groupe in groupeCommun[item.id].filter(groupe => groupe.deletedat == null)"
+          v-for="groupe in groupeCommun[item.id].filter(groupe => groupe && groupe.deletedat == null)"
           :key="groupe.id"
           @click="setGroupe(groupe)"
         >{{groupe.name}}</v-chip>

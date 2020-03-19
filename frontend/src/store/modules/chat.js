@@ -91,6 +91,11 @@ const actions = {
         })
     }
   },
+  async [types.resetDrawpad]({ rootState }) {
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}api/groupe/deleteDrawpadMessages/${rootState.groupe.groupe.id}`)
+      .then(function () {})
+  }
 };
 
 

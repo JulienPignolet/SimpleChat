@@ -3,7 +3,6 @@ package univ.lorraine.simpleChat.SimpleChat.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,7 @@ import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddMemberTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.DeleteGroupTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.DeleteUserInGroupTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.GroupeTemplate;
-import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
-import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
-import univ.lorraine.simpleChat.SimpleChat.service.RoleService;
-import univ.lorraine.simpleChat.SimpleChat.service.UserService;
+import univ.lorraine.simpleChat.SimpleChat.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -38,13 +34,15 @@ public class GroupeController {
     private final GroupeService groupeService;
     private final GroupeUserService groupeUserService;
     private final RoleService roleService;
+    private final MessageService messageService;
 
 	@Autowired
-	public GroupeController(UserService userService, GroupeService groupeService, GroupeUserService groupeUserService, RoleService roleService) {
+	public GroupeController(UserService userService, GroupeService groupeService, GroupeUserService groupeUserService, RoleService roleService, MessageService messageService) {
 		this.userService = userService;
 		this.groupeService = groupeService;
 		this.groupeUserService = groupeUserService;
 		this.roleService = roleService;
+		this.messageService = messageService;
 	}
 
 	/**
@@ -628,4 +626,75 @@ public class GroupeController {
        }
        	
    	}
+    
+    
+
+    @ApiOperation(value = "Ajoute un admin à un groupe existant")
+    @PostMapping("/addAdmin/{groupeId}/{userId}")
+	public ResponseEntity add(@PathVariable String groupeId, @PathVariable String userId) 
+	{
+    	try {
+			
+            Long userIdConv = Long.parseLong(userId);
+            User user = this.userService.findById(userIdConv);
+    		if(user == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userId+" n'a pas été trouvé.");
+    		}
+
+    		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(groupeId);
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+groupeId+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		
+    		Role role = this.roleService.findByName(EnumRole.ADMIN_GROUP.getRole()); 
+    		if(role == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il faut d'abord créer un role "+EnumRole.ADMIN_GROUP.getRole()+" pour pouvoir ajouter un admin au groupe.");
+    		}
+    		
+    		GroupeUser groupeUser = groupeUserService.findByGroupeUserActif(groupe.getId(), user.getId());
+    		if( groupeUser == null )
+    		{
+    			groupeUser = this.groupeUserService.create(groupe, user); 
+        		groupe.addGroupeUser(groupeUser);
+        		user.addGroupeUser(groupeUser);
+    		}
+    		
+    		groupeUser = this.groupeUserService.roleGroupeUser(groupeUser, role);
+    		
+    		this.userService.save(user);
+    		this.groupeService.save(groupe);
+    		this.groupeUserService.save(groupeUser);
+            
+    		return ResponseEntity.ok("L'utilisateur d'id "+user.getId()+"a été ajouté au groupe d'id "+groupe.getId()+" en tant que admin avec succès !");
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+	}
+
+	@ApiOperation(value="Supprime tous les messages de type drawpad au sein d'un groupe")
+	@GetMapping("/deleteDrawpadMessages/{groupeId}")
+	public ResponseEntity deleteAllDrawpadMessages(@PathVariable String groupeId)
+	{
+		try {
+			Groupe groupe = groupeService.findByIdAndDeletedatIsNull(groupeId);
+			if(groupe == null)
+			{
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+groupeId+"' a été supprimé ou n'existe pas !");
+			}
+
+			List<Message> drawpadMessages = this.messageService.getDrawpadMessages(groupe);
+			for (Message message :
+					drawpadMessages) {
+				this.messageService.deleteInDatabase(message);
+			}
+			return ResponseEntity.ok("Tous les messages de type Drawpad ont été supprimés avec succès !");
+
+		} catch (NumberFormatException  e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+		}
+}
 }

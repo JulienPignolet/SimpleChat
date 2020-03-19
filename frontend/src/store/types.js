@@ -16,6 +16,10 @@ export const getSavedActMessages = 'getSavedActMessages'
 export const setMessageList = 'setMessageList'
 export const deleteMessage = 'deleteMessage'
 export const restoreMessage = 'restoreMessage'
+export const resetDrawpad = 'resetDrawpad'
+
+//action user
+export const giveAccountAccess = 'giveAccountAccess'
 
 // action module groupe
 export const createGroupe = 'createGroupe'
@@ -30,6 +34,11 @@ export const getGroupeFriends = 'getGroupeFriend'
 export const getGroupeBlockUsers = 'getGroupeBlockUsers'
 export const restoreGroupe = 'restoreGroupe'
 export const deleteGroupe = 'deleteGroupe'
+export const getGroupeAdminUsers = 'getGroupeAdminUsers'
+export const getGroupeIsAdmin = 'getGroupeIsAdmin'
+export const groupeAddAmin = 'groupeAddAdmin'
+export const groupeDeleteUser = 'groupeDeleteUser'
+export const groupeDelete = 'groupeDelete'
 
 // action module register
 export const register = 'register'
