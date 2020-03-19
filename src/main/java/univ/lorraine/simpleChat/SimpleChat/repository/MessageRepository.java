@@ -15,8 +15,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     Collection<Message> findByGroupeIdAndActiveIsTrue(Long groupe_id);
 
-    @Query("SELECT m FROM Message m WHERE m.groupe.id= ?1 AND m.type = 'drawpad'")
-    Collection<Message> getAllDrawpadMessages(Long groupeId);
+    @Query("SELECT m FROM Message m WHERE m.groupe= ?1 AND m.type = 'drawpad'")
+    Collection<Message> getAllDrawpadMessages(Groupe groupe);
 
 
 

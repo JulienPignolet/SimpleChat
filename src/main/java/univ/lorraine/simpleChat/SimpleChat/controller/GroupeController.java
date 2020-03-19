@@ -680,14 +680,13 @@ public class GroupeController {
 	public ResponseEntity deleteAllDrawpadMessages(@PathVariable String groupeId)
 	{
 		try {
-			Long groupeIdConv = Long.parseLong(groupeId);
-			Groupe groupe = groupeService.find(groupeIdConv);
+			Groupe groupe = groupeService.findByIdAndDeletedatIsNull(groupeId);
 			if(groupe == null)
 			{
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+groupeId+"' a été supprimé ou n'existe pas !");
 			}
 
-			List<Message> drawpadMessages = this.messageService.getDrawpadMessages(groupeIdConv);
+			List<Message> drawpadMessages = this.messageService.getDrawpadMessages(groupe);
 			for (Message message :
 					drawpadMessages) {
 				this.messageService.deleteInDatabase(message);
