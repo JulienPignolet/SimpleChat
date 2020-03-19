@@ -25,6 +25,11 @@ export const getGroupesCommun = 'getGroupesCommun'
 export const getGroupeMembers = 'getGroupeMembers'
 export const getGroupeFriends = 'getGroupeFriend'
 export const getGroupeBlockUsers = 'getGroupeBlockUsers'
+export const getGroupeAdminUsers = 'getGroupeAdminUsers'
+export const getGroupeIsAdmin = 'getGroupeIsAdmin'
+export const groupeAddAmin = 'groupeAddAdmin'
+export const groupeDeleteUser = 'groupeDeleteUser'
+export const groupeDelete = 'groupeDelete'
 
 // action module register
 export const register = 'register'

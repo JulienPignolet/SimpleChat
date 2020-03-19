@@ -15,6 +15,8 @@ const state = () => ({
   groupeMembers: [],
   groupeFriends: [],
   groupeBlockUsers: [],
+  groupeAdminUsers: [],
+  isAdmin: false,
 });
 
 const getters = {
@@ -102,6 +104,8 @@ const actions = {
     dispatch(`groupe/${types.getGroupeMembers}`, null, { root: true })
     dispatch(`groupe/${types.getGroupeFriends}`, null, { root: true })
     dispatch(`groupe/${types.getGroupeBlockUsers}`, null, { root: true })
+    dispatch(`groupe/${types.getGroupeAdminUsers}`, null, { root: true })
+    dispatch(`groupe/${types.getGroupeIsAdmin}`, null, { root: true })
     dispatch((`chat/${types.setMessageList}`), [], { root: true })
     dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   },
@@ -139,6 +143,49 @@ const actions = {
       axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/bloque/${rootState.groupe.groupe.id}/${rootState.user.user.id}`)
         .then(function (response) {
           dispatch("groupe/setGroupeBlockUsers", response.data, { root: true });
+        })
+    }
+  },
+  async [types.getGroupeAdminUsers]({ dispatch, rootState }) {
+    if (rootState.groupe.groupe.id !== undefined) {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.get(`${constants.API_URL}api/groupe/role/user-in-group/${rootState.groupe.groupe.id}`)
+        .then(function (response) {
+          dispatch("groupe/setGroupeAdminUsers", response.data, { root: true });
+        })
+    }
+  },
+  async [types.getGroupeIsAdmin]({ dispatch, rootState }) {
+    if (rootState.groupe.groupe.id !== undefined) {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.get(`${constants.API_URL}api/groupe/role/user-in-group/${rootState.user.user.id}/${rootState.groupe.groupe.id}`)
+        .then(function (response) {
+          dispatch("groupe/setIsAdmin", (response.data.name === 'ROLE_ADMIN_GROUP'), { root: true });
+        })
+    }
+  },
+  async [types.groupeDeleteUser]({ dispatch, rootState }, userId) {
+    if (rootState.groupe.groupe.id !== undefined) {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/groupe/delete/member`, {
+        "groupId": rootState.groupe.groupe.id,
+        "userDelId": userId,
+        "userId": rootState.user.user.id
+      })
+        .then(function () {
+          dispatch(`groupe/${types.getGroupeMembers}`, null, { root: true })
+        })
+    }
+  },
+  async [types.groupeDelete]({ rootState }) {
+    if (rootState.groupe.groupe.id !== undefined) {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/groupe/hide/group`, {
+        "groupId": rootState.groupe.groupe.id,
+        "userId": rootState.user.user.id
+      })
+        .then(function () {
+          Router.push('/chat');
         })
     }
   }

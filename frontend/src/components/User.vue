@@ -13,9 +13,17 @@
         <v-list-item-title>
           <div class="d-flex justify-space-between align-center">
             <span v-on="on">{{ user.username }}</span>
-            <div class="d-flex align-center" style="margin-left: 40px;">
-              <v-icon class="amber--text">mdi-account-star</v-icon>
-              <v-icon class="delete-member" style="margin-left: 10px;">mdi-trash-can-outline</v-icon>
+            <div class="d-flex align-center" style="margin-left: 40px;" v-if="currentUserIsAdmin && !isAdmin">
+              <v-icon
+                class="amber--text"
+                @click="clickToAddAdmin">
+                mdi-account-star
+              </v-icon>
+              <v-icon class="delete-member"
+                      @click="clickToDelete"
+                      style="margin-left: 10px;">
+                mdi-trash-can-outline
+              </v-icon>
             </div>
           </div>
         </v-list-item-title>
@@ -101,7 +109,7 @@
 
   export default {
     components: {},
-    props: ['user'],
+    props: ['user', 'currentUserIsAdmin'],
     data: () => ({
       menu: false,
     }),
@@ -114,6 +122,11 @@
       isBlock () {
         let blockList = this.$store.state.groupe.groupeBlockUsers;
         return blockList.filter((block) => block.id === this.user.id).length > 0;
+      },
+
+      isAdmin() {
+        let adminMembers = this.$store.state.groupe.groupeAdminUsers;
+        return adminMembers.filter((admin) => admin.memberId === this.user.id.toString() && admin.adminGroup).length > 0;
       }
     },
     methods: {
@@ -121,6 +134,7 @@
       removeFriend: call(`user/${types.deleteFriend}`),
       blockUser: call(`user/${types.blockUser}`),
       unblockUser: call(`user/${types.unblockUser}`),
+      deleteUser: call(`groupe/${types.groupeDeleteUser}`),
       clickToAddFriend : function() {
         this.addFriend(this.user.id)
       },
@@ -132,6 +146,12 @@
       },
       clickToUnblockUser : function() {
         this.unblockUser(this.user.id)
+      },
+      clickToAddAdmin: function() {
+        console.log('addadmin');
+      },
+      clickToDelete: function() {
+        this.deleteUser(this.user.id)
       }
     }
   }
