@@ -13,6 +13,7 @@ export const sendMessage = 'sendMessage'
 export const getLiveMessages = 'getLiveMessages'
 export const getSavedMessages = 'getSavedMessages'
 export const setMessageList = 'setMessageList'
+export const resetDrawpad = 'resetDrawpad'
 
 //action user
 export const giveAccountAccess = 'giveAccountAccess'
