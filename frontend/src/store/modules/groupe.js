@@ -25,7 +25,10 @@ const mutations = {
   ...make.mutations(state),
   ADD_TO_GROUPE_COMMUN(state, payload) {
     Vue.set(state.groupeCommunList, payload.friendId, payload.groupesCommuns)
-  }
+  },
+  SET_ACTIVE(state, groupe){
+    state.allGroupeList.find(x => x.id === groupe.id).deletedat = groupe.active
+  },
 }
 
 const actions = {
@@ -79,7 +82,7 @@ const actions = {
   async [types.getAllGroupes]({ dispatch, rootState }) {
     if (rootState.user.user.id !== "undefined") {
       axios.defaults.headers.get['user_key'] = rootState.user.user.token;
-      axios.get(`${constants.API_URL}api/groupe/findAll/groupe`)
+      axios.get(`${constants.API_URL}api/groupe/findAll/groupe/all`)
         .then(function (response) {
           dispatch("groupe/setAllGroupeList", response.data, { root: true })
         })
@@ -140,7 +143,27 @@ const actions = {
           dispatch("groupe/setGroupeBlockUsers", response.data, { root: true });
         })
     }
-  }
+  },
+  async [types.restoreGroupe]({  commit, rootState }, groupeId) {
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/groupe/show/group`, {groupId: groupeId, userId: rootState.user.user.id})
+        .then(function () {
+          commit('SET_ACTIVE', {id : groupeId, active: null})
+        })
+    }
+  },
+  async [types.deleteGroupe]({  commit, rootState }, groupeId) {
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/groupe/hide/group`, {groupId: groupeId, userId: rootState.user.user.id})
+        .then(function () {
+          commit('SET_ACTIVE', {id : groupeId, active: true})
+        })
+    }
+  },
 };
 
 

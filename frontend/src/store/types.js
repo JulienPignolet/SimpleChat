@@ -28,6 +28,8 @@ export const getGroupesCommun = 'getGroupesCommun'
 export const getGroupeMembers = 'getGroupeMembers'
 export const getGroupeFriends = 'getGroupeFriend'
 export const getGroupeBlockUsers = 'getGroupeBlockUsers'
+export const restoreGroupe = 'restoreGroupe'
+export const deleteGroupe = 'deleteGroupe'
 
 // action module register
 export const register = 'register'

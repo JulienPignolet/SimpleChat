@@ -21,9 +21,16 @@
             <v-list-item-title>{{ groupe.name }}</v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn small icon>
-              <v-icon color="red">mdi-delete</v-icon>
-            </v-btn>
+            <div v-if="groupe.deletedat == null" >
+              <v-btn icon @click="deleteGroupe(groupe.id)">
+                <v-icon color="red">mdi-delete</v-icon>
+              </v-btn>
+            </div>
+            <div v-else>
+              <v-btn icon @click="restoreGroupe(groupe.id)">
+                <v-icon color="grey">mdi-backup-restore</v-icon>
+              </v-btn>
+            </div>
           </v-list-item-action>
         </v-list-item>
       </v-list-item-group>
@@ -66,6 +73,8 @@ export default {
     getUsers: call(`user/${types.getUsers}`),
     createGroupe: call(`groupe/${types.createGroupe}`),
     chooseGroup: call(`groupe/${types.chooseGroupAdmin}`),
+    deleteGroupe: call(`groupe/${types.deleteGroupe}`),
+    restoreGroupe: call(`groupe/${types.restoreGroupe}`),
     setGroupe: call(`groupe/${types.setGroupe}`),
     getUserFriends: call(`user/${types.getUserFriends}`)
   }
