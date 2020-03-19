@@ -38,7 +38,7 @@
         <v-chip
           v-for="groupe in groupeCommun[item.id]"
           :key="groupe.id"
-          @click="$router.push(`/chat/group/${groupe.id}`)"
+          @click="setGroupe(groupe)"
         >{{groupe.name}}</v-chip>
       </template>
     </v-data-table>
@@ -76,6 +76,7 @@ export default {
     groupeCommun: get("groupe/groupeCommunList")
   },
   methods: {
+    setGroupe: call(`groupe/${types.setGroupe}`),
     deleteFriend: call(`user/${types.deleteFriend}`),
     addFriend: call(`user/${types.addFriend}`),
     getUserFriends: call(`user/${types.getUserFriends}`),
