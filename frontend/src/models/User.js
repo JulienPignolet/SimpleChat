@@ -6,6 +6,7 @@ export class User {
       this.username = username;
       this.token = token;
       this.id = id;
+      this.roles = JSON.parse(localStorage.getItem('roles'));
     }
 
     isStillConnected() {

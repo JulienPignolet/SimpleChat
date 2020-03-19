@@ -34,6 +34,9 @@ export const sendSondage = 'sendSondage'
 export const getSondage = 'getSondage'
 export const sendVote = 'sendVote'
 
+// action module user
+export const getRole = 'getRole'
+
 // action module file
 export const sendFile = 'sendFile'
 export const sendMultipleFiles = 'sendMultipleFiles'

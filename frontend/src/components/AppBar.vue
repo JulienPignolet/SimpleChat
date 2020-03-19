@@ -2,7 +2,7 @@
   <v-app-bar app color="primary" :clipped-left="$vuetify.breakpoint.lgAndUp">
     <img src="../../public/images/logo.svg" alt="logo simple chat" class="logo" height="40" />
     <v-spacer />
-    <v-tooltip bottom>
+    <v-tooltip bottom v-if="userIsSuperAdmin()">
       <template v-slot:activator="{ on }">
         <v-switch
           v-model="adminMode"
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { call } from "vuex-pathify";
+import { get, call } from "vuex-pathify";
 import * as types from "@/store/types.js";
 import { groupe } from "@/store/modules/groupe";
 import { chat } from "@/store/modules/chat";
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       currentPath: "a",
-      adminMode: false
+      adminMode: false,
     };
   },
   components: { LocalesMenu },
@@ -55,12 +55,12 @@ export default {
     this.registerStoreModule("interfaceControl", interfaceControl);
     this.registerStoreModule("user", user);
     this.putainvivementlafindelannee().then(() => {
-      if(this.currentPath.path.includes('admin')){
-        this.adminMode = true
+      if (this.currentPath.path.includes("admin")) {
+        this.adminMode = true;
       } else {
-        this.adminMode = false
+        this.adminMode = false;
       }
-    })
+    });
   },
   watch: {
     // Elue fonction la plus dégeulasse de 2020, bravo
@@ -94,7 +94,9 @@ export default {
       });
     }
   },
-  computed: {},
+  computed: {
+    user: get("user/user")
+  },
   methods: {
     // Y a pas mieux que ça Dany stp, toi qui gère en promise ?
     putainvivementlafindelannee() {
@@ -112,6 +114,15 @@ export default {
         this.$store.state.user.user.id != "undefined" &&
         this.$store.state.user.user.isStillConnected()
       );
+    },
+    userIsSuperAdmin: function() {
+      if (this.userIsConnected()) {
+        if (this.user.roles != null) {
+          if (this.user.roles.some(e => e.name === "ROLE_SUPER_ADMIN")) {
+            return true;
+          }
+        }
+      }
     },
     activeAdminMode: function() {}
   },

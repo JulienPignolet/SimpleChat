@@ -8,7 +8,7 @@ import Router from "../../router/router"
 import { i18n } from '../../plugins/i18n';
 
 const state = () => ({
-  user: new User(localStorage.username, localStorage.token, localStorage.id),
+  user: new User(localStorage.username, localStorage.token, localStorage.id, localStorage.roles),
   userList: [],
   friendList: [],
   selectedUserList: [],
@@ -24,7 +24,10 @@ const getters = {
 }
 
 const mutations = {
-  ...make.mutations(state)
+  ...make.mutations(state),
+  SET_ROLE(state, roles){
+    state.user.roles = roles
+  }
 }
 
 const actions = {
@@ -36,6 +39,7 @@ const actions = {
       .post(constants.API_URL + 'authentication', request)
       .then(response => {
         dispatch(types.setUser, new User(user.username, response.data.user_key, response.data.user_id));
+        dispatch(types.getRole)
         dispatch((`alerte/${types.setAlerte}`), new Alerte('success', i18n.t('store.user.connected', { username: state.user.username })), { root: true });
         Router.push('/chat');
       })
@@ -76,6 +80,16 @@ const actions = {
       })
   },
 
+  // Récupération rôle
+  async [types.getRole]({commit,rootState }) {
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}getRole/${rootState.user.user.id}`)
+      .then(function (response) {
+        commit('SET_ROLE', response.data)
+        localStorage.setItem('roles', JSON.stringify(response.data))
+      })
+  },
+
   async [types.getUserFriends]({ dispatch, rootState }) {
     Router.push('/chat/friends')
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
@@ -83,12 +97,12 @@ const actions = {
       .then(function (response) {
         // Temporairement pour enlever les amis dupliqués 
         const amis = Array.from(new Set(response.data.map(a => a.id)))
-        .map(id => {
-          return response.data.find(a => a.id === id)
-        })
+          .map(id => {
+            return response.data.find(a => a.id === id)
+          })
         dispatch("user/setFriendList", amis, { root: true })
       })
-    
+
   },
 
   async [types.deleteFriend]({ dispatch, rootState }, friendId) {
@@ -103,7 +117,6 @@ const actions = {
   async [types.addFriend]({ dispatch, rootState }, friendId) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
-    console.log(friendId)
     axios.post(`${constants.API_URL}api/buddy/${rootState.user.user.id}/add`, friendId)
       .then(function () {
         dispatch("user/getUserFriends", null, { root: true })
