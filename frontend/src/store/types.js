@@ -12,7 +12,10 @@ export const unblockUser = 'unblockUser'
 export const sendMessage = 'sendMessage'
 export const getLiveMessages = 'getLiveMessages'
 export const getSavedMessages = 'getSavedMessages'
+export const getSavedActMessages = 'getSavedActMessages'
 export const setMessageList = 'setMessageList'
+export const deleteMessage = 'deleteMessage'
+export const restoreMessage = 'restoreMessage'
 
 // action module groupe
 export const createGroupe = 'createGroupe'

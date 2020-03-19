@@ -3,7 +3,6 @@ import { make } from "vuex-pathify";
 import { Alerte } from "../../models/Alerte";
 import axios from "axios";
 import * as constants from "../../constants/constants";
-import Router from "../../router/router"
 import Vue from 'vue';
 
 const state = () => ({
@@ -103,17 +102,17 @@ const actions = {
     dispatch(`groupe/${types.getGroupeFriends}`, null, { root: true })
     dispatch(`groupe/${types.getGroupeBlockUsers}`, null, { root: true })
     dispatch((`chat/${types.setMessageList}`), [], { root: true })
-    dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
+    dispatch((`chat/${types.getSavedActMessages}`), null, { root: true })
   },
   //Evitez duplication, mais flemme
-  async [types.chooseGroupAdmin]({ dispatch, rootState }, group) {
-    Router.push(`/admin/group/${group.id}`);
-    dispatch(types.setGroupe, group);
+  async [types.chooseGroupAdmin]({ state, dispatch, rootState }) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
-    axios.post(`${constants.API_URL}api/message/add/${group.id}/${rootState.user.user.id}/`)
+    axios.post(`${constants.API_URL}api/message/add/${state.groupe.id}/${rootState.user.user.id}/`)
     dispatch(`groupe/${types.getGroupeMembers}`, null, { root: true })
-    dispatch('chat/setMessageList', [], { root: true })
-    // dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
+    dispatch(`groupe/${types.getGroupeFriends}`, null, { root: true })
+    dispatch(`groupe/${types.getGroupeBlockUsers}`, null, { root: true })
+    dispatch((`chat/${types.setMessageList}`), [], { root: true })
+    dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   },
   async [types.getGroupeMembers]({ dispatch, rootState }) {
     if (rootState.groupe.groupe.id !== undefined) {
