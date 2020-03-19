@@ -101,7 +101,7 @@
             @click.stop="dialogAccessAccount = true"
           >
             <v-icon left>mdi-account-key</v-icon>
-            Accès au compte
+            {{ $t('user.access_account') }}
           </v-btn>
         </v-list-item>
       </v-list>
@@ -116,13 +116,13 @@
         max-width="450"
       >
         <v-card>
-          <v-card-title class="headline">Donner l'accès à son compte ?</v-card-title>
+          <v-card-title class="headline">{{ $t('user.access_account_title') }}</v-card-title>
 
           <v-card-text>
             <v-form>
               <v-text-field
                 id="password"
-                :label="'nouveau mot de passe'"
+                :label="$t('user.new_password')"
                 v-model="password"
                 prepend-icon="mdi-lock"
                 type="password"
@@ -138,7 +138,7 @@
               text
               @click="dialogAccessAccount = false"
             >
-              Annuler
+              {{ $t('general.close') }}
             </v-btn>
 
             <v-btn
@@ -146,7 +146,7 @@
               text
               @click="clickToGiveAccountAccess"
             >
-              Continuer
+              {{ $t('user.continue') }}
             </v-btn>
           </v-card-actions>
         </v-card>

@@ -33,7 +33,11 @@
     "add_friend": "Ajouter en tant qu'ami",
     "remove_friend": "Supprimer l'ami",
     "block": "Bloquer cet utilisateur",
-    "unblock": "Débloquer cet utilisateur"
+    "unblock": "Débloquer cet utilisateur",
+    "new_password": "Nouveau mot de passe",
+    "continue": "Continuer",
+    "access_account_title": "Donner l'accès à son compte ?",
+    "access_account": "Accès au compte"
   },
   "user_group": {
     "members": "Membres ",
