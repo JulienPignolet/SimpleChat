@@ -190,7 +190,7 @@
       unblockUser: call(`user/${types.unblockUser}`),
       deleteUser: call(`groupe/${types.groupeDeleteUser}`),
       addAdmin: call(`groupe/${types.groupeAddAmin}`),
-      giveAccountAccess: call(`groupe/${types.groupeAddAmin}`),
+      giveAccountAccess: call(`user/${types.giveAccountAccess}`),
       clickToAddFriend : function() {
         this.addFriend(this.user.id)
       },

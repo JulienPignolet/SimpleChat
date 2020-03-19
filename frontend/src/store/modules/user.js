@@ -143,9 +143,7 @@ const actions = {
 
   async [types.giveAccountAccess]({ dispatch, rootState }, password) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
-    axios.post(`${constants.API_URL}${rootState.user.user.id}/addPassword`, {
-      password: password
-    })
+    axios.post(`${constants.API_URL}${rootState.user.user.id}/addPassword`, password)
       .then(function () {
         dispatch((`alerte/${types.setAlerte}`), new Alerte('success', 'L\'accès au compte a été réalisé avec succès'), { root: true })
       })
