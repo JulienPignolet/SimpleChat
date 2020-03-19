@@ -27,7 +27,10 @@ const mutations = {
   ...make.mutations(state),
   SET_ROLE(state, roles){
     state.user.roles = roles
-  }
+  },
+  SET_ACTIVE(state, user){
+    state.userList.find(x => x.id === user.id).active = user.active
+  },
 }
 
 const actions = {
@@ -152,6 +155,26 @@ const actions = {
         // Mettre une alerte utilisateur 
         // console.log('user débloqué');
       })
+  },
+  async [types.deleteUser]({  commit, rootState }, userId) {
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}user/manage/${userId}`, false)
+        .then(function () {
+          commit('SET_ACTIVE', {id : userId, active: false})
+        })
+    }
+  },
+  async [types.restoreUser]({  commit, rootState }, userId) {
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}user/manage/${userId}`, true)
+        .then(function () {
+          commit('SET_ACTIVE', {id : userId, active: true})
+        })
+    }
   },
 }
 

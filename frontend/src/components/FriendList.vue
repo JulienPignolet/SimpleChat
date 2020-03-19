@@ -13,7 +13,7 @@
           <v-autocomplete
             v-model="friendId"
             :placeholder="$t('general.type_username')"
-            :items="userList.filter(user => !friendList.some(friend => friend.id === user.id))"
+            :items="userList.filter(user => !friendList.some(friend => friend.id === user.id) && user.active)"
             item-text="username"
             item-value="id"
             single-line
@@ -29,14 +29,14 @@
       </v-menu>
     </v-tabs>
 
-    <v-data-table :headers="headers" :items="friendList" class="elevation-1" hide-default-footer>
+    <v-data-table :headers="headers" :items="friendList.filter(user => user.active)" class="elevation-1" hide-default-footer>
       <template v-slot:item.action="{ item }">
         <v-icon @click="createGroupeWithFriend(item)">mdi-chat</v-icon>
         <v-icon @click="deleteFriend(item.id)">mdi-delete</v-icon>
       </template>
       <template v-slot:item.chat="{ item }">
         <v-chip
-          v-for="groupe in groupeCommun[item.id]"
+          v-for="groupe in groupeCommun[item.id].filter(groupe => groupe.deletedat == null)"
           :key="groupe.id"
           @click="setGroupe(groupe)"
         >{{groupe.name}}</v-chip>

@@ -11,7 +11,7 @@
         <v-autocomplete
           v-model="selectedUserList"
           :placeholder="$t('general.type_username')"
-          :items="userList"
+          :items="userList.filter(user => user.active)"
           item-text="username"
           item-value="id"
           chips

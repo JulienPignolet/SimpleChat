@@ -13,7 +13,8 @@
 
     <v-data-table :headers="headers" :items="userList" class="elevation-1" hide-default-footer>
       <template v-slot:item.action="{ item }">
-        <v-icon small @click="deleteFriend(item.id)">mdi-delete</v-icon>
+        <v-icon small v-if="item.active === true" @click="deleteUser(item.id)">mdi-delete</v-icon>
+        <v-icon small v-if="item.active === false" @click="restoreUser(item.id)">mdi-backup-restore</v-icon>
       </template>
       <template v-slot:item.chat="{ item }">
         <v-chip v-for="groupe in groupeCommun[item.id]" :key="groupe.id" @click="$router.push(`/chat/group/${groupe.id}`)">
@@ -49,6 +50,8 @@ export default {
     groupeCommun : get('groupe/groupeCommunList')
   },
   methods: {
+    deleteUser: call(`user/${types.deleteUser}`),
+    restoreUser: call(`user/${types.restoreUser}`),
     deleteFriend: call(`user/${types.deleteFriend}`),
     addFriend: call(`user/${types.addFriend}`),
     getGroupesCommun: call(`groupe/${types.getGroupesCommun}`),

@@ -41,6 +41,8 @@ export const sendVote = 'sendVote'
 
 // action module user
 export const getRole = 'getRole'
+export const deleteUser = 'deleteUser'
+export const restoreUser = 'restoreUser'
 
 // action module file
 export const sendFile = 'sendFile'

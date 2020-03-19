@@ -28,7 +28,7 @@
 
     <v-subheader>{{ $t('user_group.members') }}:</v-subheader>
     <v-list-item-group>
-      <v-list-item v-for="user in members" :key="user.username">
+      <v-list-item v-for="user in members.filter(user => user.active)" :key="user.username">
         <user :user="user" />
       </v-list-item>
     </v-list-item-group>
