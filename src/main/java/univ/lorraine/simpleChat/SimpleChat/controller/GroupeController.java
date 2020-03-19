@@ -628,4 +628,57 @@ public class GroupeController {
        }
        	
    	}
+    
+    
+
+    @ApiOperation(value = "Ajoute un admin à un groupe existant")
+    @PostMapping("/addAdmin/{groupeId}/{userId}")
+	public ResponseEntity add(@PathVariable String groupeId, @PathVariable String userId) 
+	{
+    	try {
+			
+            Long userIdConv = Long.parseLong(userId);
+            User user = this.userService.findById(userIdConv);
+    		if(user == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userId+" n'a pas été trouvé.");
+    		}
+
+    		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(groupeId);
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+groupeId+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		
+    		GroupeUser groupeUser = groupeUserService.findByGroupeUserActif(groupe.getId(), user.getId());
+    		if( groupeUser != null )
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+user.getId()+"' est déjà membre de ce groupe !");
+    		}
+    		
+    		Role role = this.roleService.findByName(EnumRole.ADMIN_GROUP.getRole()); 
+    		if(role == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il faut d'abord créer un role "+EnumRole.ADMIN_GROUP.getRole()+" pour pouvoir ajouter un admin au groupe.");
+    		}
+    		
+    		
+    		groupeUser = this.groupeUserService.create(groupe, user); 
+    		groupeUser = this.groupeUserService.roleGroupeUser(groupeUser, role);
+    		
+    		
+    		groupe.addGroupeUser(groupeUser);
+    		user.addGroupeUser(groupeUser);
+    		
+    		
+    		this.userService.save(user);
+    		this.groupeService.save(groupe);
+    		this.groupeUserService.save(groupeUser);
+            
+    		return ResponseEntity.ok("L'utilisateur d'id "+user.getId()+"a été ajouté au groupe d'id "+groupe.getId()+" en tant que admin avec succès !");
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+	}
 }
