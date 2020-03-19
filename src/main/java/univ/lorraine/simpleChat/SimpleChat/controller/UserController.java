@@ -88,7 +88,7 @@ public class UserController {
     @PostMapping("/registration")
     public ResponseEntity<String> registration(@RequestBody User user) {
         //TODO CHECK FORM ERROR
-        Role role = roleService.findByName(EnumRole.SUPER_ADMIN.getRole());
+        Role role = roleService.findByName(EnumRole.USER.getRole());
         JSONObject json = new JSONObject();
         boolean success = (role != null);
 
