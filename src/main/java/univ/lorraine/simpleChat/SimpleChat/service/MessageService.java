@@ -2,6 +2,7 @@ package univ.lorraine.simpleChat.SimpleChat.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import univ.lorraine.simpleChat.SimpleChat.model.Groupe;
 import univ.lorraine.simpleChat.SimpleChat.model.Message;
 import univ.lorraine.simpleChat.SimpleChat.repository.MessageRepository;
 
@@ -59,6 +60,17 @@ public class MessageService {
             json.append(messages.get(i).toJSON()).append(",");
         json.append(messages.get(messages.size()-1).toJSON());
         return json.append("]}").toString();
+    }
+
+    public List<Message> getDrawpadMessages(Groupe groupe)
+    {
+        List<Message> messages = new ArrayList<>(messageRepository.getAllDrawpadMessages(groupe));
+        return messages;
+    }
+
+    public void deleteInDatabase(Message message)
+    {
+        this.messageRepository.delete(message);
     }
 
 }
