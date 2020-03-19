@@ -651,26 +651,21 @@ public class GroupeController {
     		}
     		
     		
-    		GroupeUser groupeUser = groupeUserService.findByGroupeUserActif(groupe.getId(), user.getId());
-    		if( groupeUser != null )
-    		{
-    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+user.getId()+"' est déjà membre de ce groupe !");
-    		}
-    		
     		Role role = this.roleService.findByName(EnumRole.ADMIN_GROUP.getRole()); 
     		if(role == null)
     		{
     			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il faut d'abord créer un role "+EnumRole.ADMIN_GROUP.getRole()+" pour pouvoir ajouter un admin au groupe.");
     		}
     		
+    		GroupeUser groupeUser = groupeUserService.findByGroupeUserActif(groupe.getId(), user.getId());
+    		if( groupeUser == null )
+    		{
+    			groupeUser = this.groupeUserService.create(groupe, user); 
+        		groupe.addGroupeUser(groupeUser);
+        		user.addGroupeUser(groupeUser);
+    		}
     		
-    		groupeUser = this.groupeUserService.create(groupe, user); 
     		groupeUser = this.groupeUserService.roleGroupeUser(groupeUser, role);
-    		
-    		
-    		groupe.addGroupeUser(groupeUser);
-    		user.addGroupeUser(groupeUser);
-    		
     		
     		this.userService.save(user);
     		this.groupeService.save(groupe);
