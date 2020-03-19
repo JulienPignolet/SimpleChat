@@ -2,6 +2,8 @@ package univ.lorraine.simpleChat.SimpleChat.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import univ.lorraine.simpleChat.SimpleChat.model.*;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddGroupAndMembersTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddMemberTemplate;
+import univ.lorraine.simpleChat.SimpleChat.modelTemplate.DeleteGroupTemplate;
+import univ.lorraine.simpleChat.SimpleChat.modelTemplate.DeleteUserInGroupTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.GroupeTemplate;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
 import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
@@ -206,12 +210,25 @@ public class GroupeController {
 		Collection<Groupe> listGroupe = this.groupeService.findByDeletedatIsNull(); 
 		return ResponseEntity.ok(listGroupe); 
 	}
+    
+    /**
+	 * 
+	 * @param request
+	 * @return Tous les groupes supprimés
+	 */
+    @ApiOperation(value = "Retourne tous les groupes supprimés (suppression logique)")
+	@GetMapping("/findAll/groupe-deleted")
+	public ResponseEntity<Collection<Groupe>> findAllGroupDeleted(HttpServletRequest request) 
+	{
+		Collection<Groupe> listGroupe = this.groupeService.findByDeletedatIsNotNull(); 
+		return ResponseEntity.ok(listGroupe); 
+	}
 	
 	/**
 	 * 
 	 * @param request
 	 * @param groupeId
-	 * @return Tous les membres d'un groupe
+	 * @return Tous les membres non supprimés d'un groupe
 	 */
     @ApiOperation(value = "Retourne tous les membres non supprimés (suppression logique) d'un groupe.")
 	@GetMapping("/find/Members/groupe/{groupeId}")
@@ -229,6 +246,30 @@ public class GroupeController {
 		return ResponseEntity.ok(users);
 	}
 
+    /**
+	 * 
+	 * @param request
+	 * @param groupeId
+	 * @return Tous les membres non supprimés d'un groupe non supprimé
+	 */
+    @ApiOperation(value = "Retourne tous les membres non supprimés (suppression logique) d'un groupe non supprimé.")
+	@GetMapping("/find/Members/group-not-deleted/{groupeId}")
+	public ResponseEntity<Collection<User>> findMembersGroupNotDeleted(HttpServletRequest request, @PathVariable String groupeId)
+	{
+		Collection<User> users = new ArrayList<>();
+		try {
+			Long gid = Long.parseLong(groupeId);
+			Groupe group = groupeService.findByIdAndDeletedatIsNull(groupeId);
+			if( group == null )	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(users);
+			users = userService.findMembersGroupe(gid);
+		}
+		catch (Exception e)
+		{
+			logger.warn(e.getMessage());
+		}
+		return ResponseEntity.ok(users);
+	}
+    
 	/**
 	 *
 	 * @param request
@@ -345,17 +386,246 @@ public class GroupeController {
 	 * @param request
 	 * @return les groupes ou l'utilisateur est admin
 	 */
-	@ApiOperation(value = "Retourne les groupe non supprimé (suppression logique) ou l'utilisateur est admin")
+	@ApiOperation(value = "Retourne les groupes non supprimés (suppression logique) où l'utilisateur est admin")
 	@GetMapping("/find/groupe/admin/{userId}")
 	public ResponseEntity<Collection<Groupe>> findGroupeByUserAdmin(HttpServletRequest request,@PathVariable String userId)
 	{
 		List<GroupeUser> groupeUser = this.groupeService.findAllByGroupeUserAdmin(Long.parseLong(userId));
 		List<Groupe> listeGroupe = new ArrayList<>();
 		for (GroupeUser gu: groupeUser) {
-			listeGroupe.add(gu.getGroupe());
+			Groupe groupe = gu.getGroupe();  
+			if(groupe.getDeletedat() == null) listeGroupe.add(groupe);
 		}
 		return ResponseEntity.ok(listeGroupe);
 
 	}
 	
+	/**
+	 * 
+	 * @param deleteUserInGroupTemplate
+	 * @return  Un message de confirmation de la suppression d'un utilisateur dans un groupe ou un message d'erreur
+	 */
+    @ApiOperation(value = "Supprime définitivement un membre (user) dans un groupe. Seul l'admin du groupe (Celui qui a créé le groupe) ou un superadmin peuvent supprimer un membre.")
+	@PostMapping("/delete/member")
+	public ResponseEntity deleteMember(@RequestBody DeleteUserInGroupTemplate deleteUserInGroupTemplate)
+	{
+    	try {
+			
+			Long adminGroupeIdOrSuperAdminId = Long.parseLong(deleteUserInGroupTemplate.getUserId());
+            User adminGroupOrSuperAdmin = this.userService.findById(adminGroupeIdOrSuperAdminId);
+    		if(adminGroupOrSuperAdmin == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+adminGroupeIdOrSuperAdminId+" n'a pas été trouvé.");
+    		}
+    		
+            Long userDelId = Long.parseLong(deleteUserInGroupTemplate.getUserDelId());
+            User userDel = this.userService.findById(userDelId);
+    		if(userDel == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userDelId+" n'a pas été trouvé.");
+    		}
+
+    		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(deleteUserInGroupTemplate.getGroupId());
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+deleteUserInGroupTemplate.getGroupId()+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		GroupeUser groupeUserToDelete = groupeUserService.findByGroupeUserActif(groupe.getId(), userDelId);
+    		if( groupeUserToDelete == null )
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+userDelId+"' n'est pas membre de ce groupe. Par conséquent, il ne peut être supprimé du groupe !");
+    		}
+    		
+    		if(!adminGroupOrSuperAdmin.isSuperAdmin())
+    		{
+    			GroupeUser groupeUserAdmin = groupeUserService.findByGroupeUserActif(groupe.getId(), adminGroupeIdOrSuperAdminId);
+    			if( groupeUserAdmin == null )
+        		{
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+userDelId+"' ne fait pas partir de ce groupe !");
+        		}
+    			
+        		if( !groupeUserAdmin.isAdminGroup() ) 
+        		{
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Seul l'admin du groupe et le super admin  peuvent supprimer un membre d'un groupe !");
+        		}
+    		}
+    		
+    		
+    		groupeUserService.deleteInDatabase(groupeUserToDelete);
+    			
+            
+    		return ResponseEntity.ok("L'utilisateur d'id "+userDelId+"a été supprimé du groupe d'id "+groupe.getId()+" avec succès !");
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+    	
+	}
+    
+    
+    /**
+	 * 
+	 * @param deleteGroupTemplate
+	 * @return  Un message de confirmation de la suppression du groupe ou un message d'erreur
+	 */
+    @ApiOperation(value = "Supprime (cache) un groupe (suppression logique). Seul l'admin du groupe (Celui qui a créé le groupe) ou un superadmin peuvent le supprimer.")
+	@PostMapping("/hide/group")
+	public ResponseEntity hideGroup(@RequestBody DeleteGroupTemplate deleteGroupTemplate)
+	{
+    	try {
+			
+			Long userId = Long.parseLong(deleteGroupTemplate.getUserId());
+            User user = this.userService.findById(userId);
+    		if(user == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userId+" n'a pas été trouvé.");
+    		}
+
+    		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(deleteGroupTemplate.getGroupId());
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+deleteGroupTemplate.getGroupId()+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		if(!user.isSuperAdmin())
+    		{
+    			GroupeUser groupeUser = groupeUserService.findByGroupeUserActif(groupe.getId(), user.getId());
+    			if( groupeUser == null )
+        		{
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+userId+"' ne fait pas partir de ce groupe !");
+        		}
+    			
+        		if( !groupeUser.isAdminGroup() ) 
+        		{
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Seul l'admin du groupe et le super admin  peuvent le supprimer !");
+        		}
+    		}
+    		
+    		
+    		groupeService.hideGroup(groupe);
+    		groupeService.save(groupe);
+    			
+            
+    		return ResponseEntity.ok("Le groupe d'id "+groupe.getId()+"a été supprimé avec succès !");
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+    	
+	}
+    
+    /**
+	 * 
+	 * @param deleteGroupTemplate
+	 * @return  Un message de confirmation de la réintégration d'un groupe ou un message d'erreur
+	 */
+    @ApiOperation(value = "Réintègre (rend visible) un groupe. Seul l'admin du groupe (Celui qui a créé le groupe) ou un superadmin peuvent le rendre visible.")
+	@PostMapping("/show/group")
+	public ResponseEntity showGroup(@RequestBody DeleteGroupTemplate deleteGroupTemplate)
+	{
+    	try {
+			
+			Long userId = Long.parseLong(deleteGroupTemplate.getUserId());
+            User user = this.userService.findById(userId);
+    		if(user == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userId+" n'a pas été trouvé.");
+    		}
+
+    		Long groupId = Long.parseLong(deleteGroupTemplate.getGroupId()); 
+    		Groupe groupe = groupeService.findById(groupId).get();
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+deleteGroupTemplate.getGroupId()+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		if(!user.isSuperAdmin())
+    		{
+    			GroupeUser groupeUser = groupeUserService.findByGroupeUserActif(groupe.getId(), user.getId());
+    			if( groupeUser == null )
+        		{
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+userId+"' ne fait pas partir de ce groupe !");
+        		}
+    			
+        		if( !groupeUser.isAdminGroup() ) 
+        		{
+        			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Seul l'admin du groupe et le super admin  peuvent le rendre visible !");
+        		}
+    		}
+    		
+    		
+    		groupeService.showGroup(groupe);
+    		groupeService.save(groupe);
+    			
+            
+    		return ResponseEntity.ok("Le groupe d'id "+groupe.getId()+"a été rendu visible avec succès !");
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+    	
+	}
+    
+    
+    /**
+     * 
+     * @param userId
+     * @param groupId
+     * @return
+     */
+    @ApiOperation(value = "Retourne le rôle d'un utilisateur dans un groupe.")
+	@GetMapping("/role/user-in-group/{userId}/{groupId}")
+	public ResponseEntity roleUserInGroup(@PathVariable String userId, @PathVariable String groupId)
+	{
+    	try {
+			
+			Long userIdConvert = Long.parseLong(userId);
+            User user = this.userService.findById(userIdConvert);
+    		if(user == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id "+userId+" n'a pas été trouvé.");
+    		}
+
+    		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(groupId);
+    		if(groupe == null)
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+groupId+"' a été supprimé ou n'existe pas !");
+    		}
+    		
+    		GroupeUser groupeUser = groupeUserService.findByGroupeUserActif(groupe.getId(), userIdConvert);
+    		if( groupeUser == null )
+    		{
+    			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur d'id '"+userId+"' n'est pas membre de ce groupe.");
+    		}
+    			
+    		return ResponseEntity.ok(groupeUser.getRole());
+        } catch (NumberFormatException  e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+        }
+    	
+	}
+	
+
+    /**
+   	 * 
+   	 * @param DeleteGroupTemplate
+   	 * @return  Un message de confirmation ou un message d'erreur
+   	 */
+    @ApiOperation(value = "Retourne le rôle des utilisateurs d'un groupe.")
+   	@GetMapping("/role/user-in-group/{groupId}")
+   	public ResponseEntity roleUsersInGroup(@PathVariable String groupId)
+   	{
+       	try {
+   			
+       		Groupe groupe = groupeService.findByIdAndDeletedatIsNull(groupId);
+       		if(groupe == null)
+       		{
+       			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+groupId+"' a été supprimé ou n'existe pas !");
+       		}
+       		
+       		ArrayList<GroupeUser> groupeUsers = (ArrayList<GroupeUser>) groupeUserService.findGroupeUsersAndDeletedatIsNull(groupe.getId());
+       		return ResponseEntity.ok(groupeUsers);
+       } catch (NumberFormatException  e) {
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+       }
+       	
+   	}
 }

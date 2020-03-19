@@ -9,6 +9,7 @@ import univ.lorraine.simpleChat.SimpleChat.repository.GroupeRepository;
 import univ.lorraine.simpleChat.SimpleChat.repository.GroupeUserRepository;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,6 +121,15 @@ public class GroupeService {
 		return groupeRepository.findByDeletedatIsNull();
 	}
 	
+	
+	/**
+	 * 
+	 * @return Tous les groupes supprimés
+	 */
+	public Collection<Groupe> findByDeletedatIsNotNull(){
+		return groupeRepository.findByDeletedatIsNotNull();
+	}
+	
 	public Groupe findByNameAndDeletedatIsNull(String name)
 	{
 		return groupeRepository.findByNameAndDeletedatIsNull(name);
@@ -128,6 +138,18 @@ public class GroupeService {
 
 	public Collection<Groupe> findGroupsByUser(Long uid) {
 		return groupeRepository.findGroupsByUser(uid);
+	}
+	
+	public void hideGroup(Groupe group)
+	{
+		group.setDeletedat( new Date() );
+		this.save(group);
+	}
+	
+	public void showGroup(Groupe group)
+	{
+		group.setDeletedat(null);
+		this.save(group);
 	}
 	
 	

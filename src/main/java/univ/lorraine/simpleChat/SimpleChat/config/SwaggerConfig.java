@@ -36,7 +36,6 @@ public class SwaggerConfig extends WebMvcConfigurationSupport{
                 .securityContexts(Lists.newArrayList(securityContext()))
     			.securitySchemes(Lists.newArrayList(apiKey()))
                 .apiInfo(metaData());
-             
     }
 	
 	 private SecurityContext securityContext() {
@@ -47,13 +46,13 @@ public class SwaggerConfig extends WebMvcConfigurationSupport{
 	 }
 	 
 	 List<SecurityReference> defaultAuth() {
-		    AuthorizationScope authorizationScope
-		        = new AuthorizationScope("global", "accessEverything");
-		    AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-		    authorizationScopes[0] = authorizationScope;
-		    return Lists.newArrayList(
-		        new SecurityReference("AUTHORIZATION", authorizationScopes));
-		  }
+	    AuthorizationScope authorizationScope
+	        = new AuthorizationScope("global", "accessEverything");
+	    AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+	    authorizationScopes[0] = authorizationScope;
+	    return Lists.newArrayList(
+	        new SecurityReference("AUTHORIZATION", authorizationScopes));
+	 }
 
 	private ApiKey apiKey() {
     	return new ApiKey("AUTHORIZATION", "user_key", "header");
