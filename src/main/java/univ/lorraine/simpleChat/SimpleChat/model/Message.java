@@ -95,6 +95,7 @@ public class Message extends Active {
                 .add("groupId", groupe.getId())
                 .add("contenu", contenu)
                 .add("type", type)
+                .add("active", isActive())
                 .build();
         return json.toString();
     }
