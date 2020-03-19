@@ -93,12 +93,64 @@
             {{ $t('user.unblock') }}
           </v-btn>
         </v-list-item>
+        <v-list-item>
+          <v-btn
+            block
+            color="primary"
+            class="white--text"
+            @click.stop="dialogAccessAccount = true"
+          >
+            <v-icon left>mdi-account-key</v-icon>
+            Accès au compte
+          </v-btn>
+        </v-list-item>
       </v-list>
 
       <v-card-actions>
         <v-spacer/>
         <v-btn color="primary" text @click="menu = false">{{ $t('general.close') }}</v-btn>
       </v-card-actions>
+
+      <v-dialog
+        v-model="dialogAccessAccount"
+        max-width="450"
+      >
+        <v-card>
+          <v-card-title class="headline">Donner l'accès à son compte ?</v-card-title>
+
+          <v-card-text>
+            <v-form>
+              <v-text-field
+                id="password"
+                :label="'nouveau mot de passe'"
+                v-model="password"
+                prepend-icon="mdi-lock"
+                type="password"
+              />
+            </v-form>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="red"
+              text
+              @click="dialogAccessAccount = false"
+            >
+              Annuler
+            </v-btn>
+
+            <v-btn
+              color="primary"
+              text
+              @click="clickToGiveAccountAccess"
+            >
+              Continuer
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-card>
   </v-menu>
 </template>
@@ -112,6 +164,8 @@
     props: ['user', 'currentUserIsAdmin'],
     data: () => ({
       menu: false,
+      dialogAccessAccount: false,
+      password: ''
     }),
     computed: {
       isFriend () {
@@ -135,6 +189,8 @@
       blockUser: call(`user/${types.blockUser}`),
       unblockUser: call(`user/${types.unblockUser}`),
       deleteUser: call(`groupe/${types.groupeDeleteUser}`),
+      addAdmin: call(`groupe/${types.groupeAddAmin}`),
+      giveAccountAccess: call(`groupe/${types.groupeAddAmin}`),
       clickToAddFriend : function() {
         this.addFriend(this.user.id)
       },
@@ -148,10 +204,14 @@
         this.unblockUser(this.user.id)
       },
       clickToAddAdmin: function() {
-        console.log('addadmin');
+        this.addAdmin(this.user.id)
       },
       clickToDelete: function() {
         this.deleteUser(this.user.id)
+      },
+      clickToGiveAccountAccess: function() {
+        this.giveAccountAccess(this.password);
+        this.dialogAccessAccount = false;
       }
     }
   }

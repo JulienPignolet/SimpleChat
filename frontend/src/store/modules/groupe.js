@@ -188,6 +188,15 @@ const actions = {
           Router.push('/chat');
         })
     }
+  },
+  async [types.groupeAddAmin]({ rootState, dispatch }, userId) {
+    if (rootState.groupe.groupe.id !== undefined) {
+      axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/groupe/addAdmin/${rootState.groupe.groupe.id}/${userId}`)
+        .then(function () {
+          dispatch(`groupe/${types.getGroupeAdminUsers}`, null, { root: true })
+        })
+    }
   }
 };
 

@@ -81,14 +81,14 @@ const actions = {
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
     return axios.get(`${constants.API_URL}api/buddy/${rootState.user.user.id}`)
       .then(function (response) {
-        // Temporairement pour enlever les amis dupliqués 
+        // Temporairement pour enlever les amis dupliqués
         const amis = Array.from(new Set(response.data.map(a => a.id)))
         .map(id => {
           return response.data.find(a => a.id === id)
         })
         dispatch("user/setFriendList", amis, { root: true })
       })
-    
+
   },
 
   async [types.deleteFriend]({ dispatch, rootState }, friendId) {
@@ -136,8 +136,18 @@ const actions = {
     axios.post(`${constants.API_URL}api/blockList/remove`, request)
       .then(function () {
         dispatch(`groupe/${types.getGroupeBlockUsers}`, null, { root: true })
-        // Mettre une alerte utilisateur 
+        // Mettre une alerte utilisateur
         // console.log('user débloqué');
+      })
+  },
+
+  async [types.giveAccountAccess]({ dispatch, rootState }, password) {
+    axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+    axios.post(`${constants.API_URL}${rootState.user.user.id}/addPassword`, {
+      password: password
+    })
+      .then(function () {
+        dispatch((`alerte/${types.setAlerte}`), new Alerte('success', 'L\'accès au compte a été réalisé avec succès'), { root: true })
       })
   },
 }

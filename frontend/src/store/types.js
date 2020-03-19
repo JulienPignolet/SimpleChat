@@ -14,6 +14,9 @@ export const getLiveMessages = 'getLiveMessages'
 export const getSavedMessages = 'getSavedMessages'
 export const setMessageList = 'setMessageList'
 
+//action user
+export const giveAccountAccess = 'giveAccountAccess'
+
 // action module groupe
 export const createGroupe = 'createGroupe'
 export const createGroupeWithFriend = 'createGroupeWithFriend'
