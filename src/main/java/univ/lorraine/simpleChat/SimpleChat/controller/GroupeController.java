@@ -3,7 +3,6 @@ package univ.lorraine.simpleChat.SimpleChat.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,7 @@ import univ.lorraine.simpleChat.SimpleChat.modelTemplate.AddMemberTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.DeleteGroupTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.DeleteUserInGroupTemplate;
 import univ.lorraine.simpleChat.SimpleChat.modelTemplate.GroupeTemplate;
-import univ.lorraine.simpleChat.SimpleChat.service.GroupeService;
-import univ.lorraine.simpleChat.SimpleChat.service.GroupeUserService;
-import univ.lorraine.simpleChat.SimpleChat.service.RoleService;
-import univ.lorraine.simpleChat.SimpleChat.service.UserService;
+import univ.lorraine.simpleChat.SimpleChat.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -38,13 +34,15 @@ public class GroupeController {
     private final GroupeService groupeService;
     private final GroupeUserService groupeUserService;
     private final RoleService roleService;
+    private final MessageService messageService;
 
 	@Autowired
-	public GroupeController(UserService userService, GroupeService groupeService, GroupeUserService groupeUserService, RoleService roleService) {
+	public GroupeController(UserService userService, GroupeService groupeService, GroupeUserService groupeUserService, RoleService roleService, MessageService messageService) {
 		this.userService = userService;
 		this.groupeService = groupeService;
 		this.groupeUserService = groupeUserService;
 		this.roleService = roleService;
+		this.messageService = messageService;
 	}
 
 	/**
@@ -676,4 +674,28 @@ public class GroupeController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
         }
 	}
+
+	@ApiOperation(value="Supprime tous les messages de type drawpad au sein d'un groupe")
+	@GetMapping("/deleteDrawpadMessages/{groupeId}")
+	public ResponseEntity deleteAllDrawpadMessages(@PathVariable String groupeId)
+	{
+		try {
+			Long groupeIdConv = Long.parseLong(groupeId);
+			Groupe groupe = groupeService.find(groupeIdConv);
+			if(groupe == null)
+			{
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Le groupe d'Id '"+groupeId+"' a été supprimé ou n'existe pas !");
+			}
+
+			List<Message> drawpadMessages = this.messageService.getDrawpadMessages(groupeIdConv);
+			for (Message message :
+					drawpadMessages) {
+				this.messageService.deleteInDatabase(message);
+			}
+			return ResponseEntity.ok("Tous les messages de type Drawpad ont été supprimés avec succès !");
+
+		} catch (NumberFormatException  e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les données doivent être envoyé en JSON.");
+		}
+}
 }

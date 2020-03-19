@@ -83,7 +83,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 "/authentication/**",
                 "**/**",
                 "/h2-console/**",
-                "/api/fileUpload/**").permitAll().
+                "/api/fileUpload/**",
+                "/api/groupe/**").permitAll().
                 anyRequest().authenticated().and().headers().frameOptions().sameOrigin().and().cors().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

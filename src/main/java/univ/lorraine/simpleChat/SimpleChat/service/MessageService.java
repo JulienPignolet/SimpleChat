@@ -61,4 +61,15 @@ public class MessageService {
         return json.append("]}").toString();
     }
 
+    public List<Message> getDrawpadMessages(Long groupeId)
+    {
+        List<Message> messages = new ArrayList<>(messageRepository.getAllDrawpadMessages(groupeId));
+        return messages;
+    }
+
+    public void deleteInDatabase(Message message)
+    {
+        this.messageRepository.delete(message);
+    }
+
 }
