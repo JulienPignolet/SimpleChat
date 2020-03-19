@@ -212,6 +212,19 @@ public class GroupeController {
     /**
 	 * 
 	 * @param request
+	 * @return Absolument tous les groupes
+	 */
+    @ApiOperation(value = "Retourne absolument tous les groupes")
+	@GetMapping("/findAll/groupe/all")
+	public ResponseEntity<Collection<Groupe>> findAllGroupeAll(HttpServletRequest request) 
+	{
+		Collection<Groupe> listGroupe = this.groupeService.findAll(); 
+		return ResponseEntity.ok(listGroupe); 
+	}
+    
+    /**
+	 * 
+	 * @param request
 	 * @return Tous les groupes supprimés
 	 */
     @ApiOperation(value = "Retourne tous les groupes supprimés (suppression logique)")
