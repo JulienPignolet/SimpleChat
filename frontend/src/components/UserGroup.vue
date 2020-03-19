@@ -3,33 +3,37 @@
     style="border-left: 1px solid rgba(0,0,0,0.1);"
     dense
   >
-    <v-subheader>{{ $t('user_group.actions') }}</v-subheader>
+    <div v-if="isAdmin">
+      <v-subheader>{{ $t('user_group.actions') }}</v-subheader>
 
-    <div class="buttons">
-      <v-btn
-        block
-        color="primary"
-        class="white--text"
-      >
-        <v-icon left>mdi-account-plus</v-icon>
-        {{ $t('user_group.add_member') }}
-      </v-btn>
-      <v-btn
-        block
-        color="red"
-        class="white--text"
-      >
-        <v-icon left>mdi-cancel</v-icon>
-        {{ $t('user_group.delete') }}
-      </v-btn>
+      <div class="buttons">
+        <v-btn
+          block
+          color="primary"
+          class="white--text"
+        >
+          <v-icon left>mdi-account-plus</v-icon>
+          {{ $t('user_group.add_member') }}
+        </v-btn>
+        <v-btn
+          block
+          color="red"
+          class="white--text"
+          @click="groupeDelete()"
+        >
+          <v-icon left>mdi-cancel</v-icon>
+          {{ $t('user_group.delete') }}
+        </v-btn>
+      </div>
     </div>
-
-
 
     <v-subheader>{{ $t('user_group.members') }}:</v-subheader>
     <v-list-item-group>
-      <v-list-item v-for="user in members" :key="user.username">
-        <user :user="user" />
+      <v-list-item v-for="user in members.filter(user => user.active)" :key="user.username">
+        <user
+          :user="user"
+          :currentUserIsAdmin="isAdmin"
+        />
       </v-list-item>
     </v-list-item-group>
   </v-list>
@@ -37,23 +41,17 @@
 
 <script>
   import User from "./User";
-  import {sync} from "vuex-pathify";
+  import {call, sync} from "vuex-pathify";
+  import * as types from "@/store/types.js";
   export default {
     components: {User},
-    data: () => ({
-      users: [
-        {
-          name: 'Jordan'
-        },
-        {
-          name: 'Thomas'
-        }
-      ]
-    }),
     computed: {
-      members: sync("groupe/groupeMembers")
+      members: sync("groupe/groupeMembers"),
+      isAdmin: sync("groupe/isAdmin")
     },
-    methods: {}
+    methods: {
+      groupeDelete: call(`groupe/${types.groupeDelete}`)
+    }
   }
 </script>
 

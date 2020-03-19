@@ -12,11 +12,15 @@
         "sign_up": "Anmelden"
     },
     "chat_box": {
-        "type_a_message": "Nachricht eingeben ..."
+        "type_a_message": "Nachricht eingeben ...",
+        "create_poll": "Erstellen Sie eine Umfrage",
+        "upload_file": "Datei Senden",
+        "launch_drawpad": "Drawpad Starten"
     },
     "chat_list": {
         "discussions": "Diskussionen",
-        "friends": "Freunde"
+        "friends": "Freunde",
+        "user_list": "Liste der Benutzer"
     },
     "friend_list": {
         "add_friend": "Einen Freund hinzufügen",
@@ -26,7 +30,11 @@
         "add_friend": "Als Freund hinzufügen",
         "block": "Diesen Benutzer sperren",
         "remove_friend": "Freund löschen",
-        "unblock": "Entsperren Sie diesen Benutzer"
+        "unblock": "Entsperren Sie diesen Benutzer",
+        "new_password": "Neues Passwort",
+        "continue": "Weiter",
+        "access_account_title": "Zugriff auf Ihr Konto gewähren?",
+        "access_account": "Zugriff auf das Konto"
     },
     "user_group": {
         "members": "Mitglieder",
@@ -79,5 +87,8 @@
     },
     "poll": {
         "vote": "0 Stimmen | 1 Stimme | {count} Stimmen"
+    },
+    "app_bar": {
+        "admin": "Administratormodus"
     }
 }

@@ -13,9 +13,17 @@
         <v-list-item-title>
           <div class="d-flex justify-space-between align-center">
             <span v-on="on">{{ user.username }}</span>
-            <div class="d-flex align-center" style="margin-left: 40px;">
-              <v-icon class="amber--text">mdi-account-star</v-icon>
-              <v-icon class="delete-member" style="margin-left: 10px;">mdi-trash-can-outline</v-icon>
+            <div class="d-flex align-center" style="margin-left: 40px;" v-if="currentUserIsAdmin && !isAdmin">
+              <v-icon
+                class="amber--text"
+                @click="clickToAddAdmin">
+                mdi-account-star
+              </v-icon>
+              <v-icon class="delete-member"
+                      @click="clickToDelete"
+                      style="margin-left: 10px;">
+                mdi-trash-can-outline
+              </v-icon>
             </div>
           </div>
         </v-list-item-title>
@@ -85,12 +93,64 @@
             {{ $t('user.unblock') }}
           </v-btn>
         </v-list-item>
+        <v-list-item>
+          <v-btn
+            block
+            color="primary"
+            class="white--text"
+            @click.stop="dialogAccessAccount = true"
+          >
+            <v-icon left>mdi-account-key</v-icon>
+            {{ $t('user.access_account') }}
+          </v-btn>
+        </v-list-item>
       </v-list>
 
       <v-card-actions>
         <v-spacer/>
         <v-btn color="primary" text @click="menu = false">{{ $t('general.close') }}</v-btn>
       </v-card-actions>
+
+      <v-dialog
+        v-model="dialogAccessAccount"
+        max-width="450"
+      >
+        <v-card>
+          <v-card-title class="headline">{{ $t('user.access_account_title') }}</v-card-title>
+
+          <v-card-text>
+            <v-form>
+              <v-text-field
+                id="password"
+                :label="$t('user.new_password')"
+                v-model="password"
+                prepend-icon="mdi-lock"
+                type="password"
+              />
+            </v-form>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="red"
+              text
+              @click="dialogAccessAccount = false"
+            >
+              {{ $t('general.close') }}
+            </v-btn>
+
+            <v-btn
+              color="primary"
+              text
+              @click="clickToGiveAccountAccess"
+            >
+              {{ $t('user.continue') }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-card>
   </v-menu>
 </template>
@@ -101,9 +161,11 @@
 
   export default {
     components: {},
-    props: ['user'],
+    props: ['user', 'currentUserIsAdmin'],
     data: () => ({
       menu: false,
+      dialogAccessAccount: false,
+      password: ''
     }),
     computed: {
       isFriend () {
@@ -114,6 +176,11 @@
       isBlock () {
         let blockList = this.$store.state.groupe.groupeBlockUsers;
         return blockList.filter((block) => block.id === this.user.id).length > 0;
+      },
+
+      isAdmin() {
+        let adminMembers = this.$store.state.groupe.groupeAdminUsers;
+        return adminMembers.filter((admin) => admin.memberId === this.user.id.toString() && admin.adminGroup).length > 0;
       }
     },
     methods: {
@@ -121,6 +188,9 @@
       removeFriend: call(`user/${types.deleteFriend}`),
       blockUser: call(`user/${types.blockUser}`),
       unblockUser: call(`user/${types.unblockUser}`),
+      deleteUser: call(`groupe/${types.groupeDeleteUser}`),
+      addAdmin: call(`groupe/${types.groupeAddAmin}`),
+      giveAccountAccess: call(`user/${types.giveAccountAccess}`),
       clickToAddFriend : function() {
         this.addFriend(this.user.id)
       },
@@ -132,6 +202,16 @@
       },
       clickToUnblockUser : function() {
         this.unblockUser(this.user.id)
+      },
+      clickToAddAdmin: function() {
+        this.addAdmin(this.user.id)
+      },
+      clickToDelete: function() {
+        this.deleteUser(this.user.id)
+      },
+      clickToGiveAccountAccess: function() {
+        this.giveAccountAccess(this.password);
+        this.dialogAccessAccount = false;
       }
     }
   }

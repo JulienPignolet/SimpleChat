@@ -12,11 +12,15 @@
         "sign_up": "Sign up"
     },
     "chat_box": {
-        "type_a_message": "Type a message ..."
+        "type_a_message": "Type a message ...",
+        "create_poll": "Create a survey",
+        "upload_file": "Send files",
+        "launch_drawpad": "Launch drawpad"
     },
     "chat_list": {
         "discussions": "Discussions",
-        "friends": "Friends"
+        "friends": "Friends",
+        "user_list": "List of users"
     },
     "friend_list": {
         "add_friend": "Add a friend",
@@ -26,7 +30,11 @@
         "add_friend": "Add as friend",
         "block": "Block this user",
         "remove_friend": "Delete friend",
-        "unblock": "Unblock this user"
+        "unblock": "Unblock this user",
+        "new_password": "New Password",
+        "continue": "Continue",
+        "access_account_title": "Give access to your account?",
+        "access_account": "Access to the account"
     },
     "user_group": {
         "members": "Members",
@@ -79,5 +87,8 @@
     },
     "poll": {
         "vote": "0 votes | 1 vote | {count} votes"
+    },
+    "app_bar": {
+        "admin": "Administrator mode"
     }
 }

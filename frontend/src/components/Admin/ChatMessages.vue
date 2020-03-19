@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex">
     <div class="flex-grow-1">
-      <v-list id="messages-list" style="height:82vh;" class="overflow-y-auto">
+      <v-list id="messages-list" style="height:93vh;" class="overflow-y-auto">
         <v-list-item v-for="(item, index) in messages" :key="item.message + index">
           <v-list-item-avatar color="grey">
             <v-icon dark>mdi-account-circle</v-icon>
@@ -21,6 +21,18 @@
               v-html="transformUrls(item.message)"
             />
           </v-list-item-content>
+          <v-list-item-action>
+            <div v-if="item.active===true" >
+              <v-btn icon @click="deleteMessage(item.id)">
+                <v-icon color="red">mdi-delete</v-icon>
+              </v-btn>
+            </div>
+            <div v-else-if="item.active===false">
+              <v-btn icon @click="restoreMessage(item.id)">
+                <v-icon color="grey">mdi-backup-restore</v-icon>
+              </v-btn>
+            </div>
+          </v-list-item-action>
         </v-list-item>
       </v-list>
     </div>
@@ -29,34 +41,35 @@
 </template>
 
 <script>
-import { sync, call } from "vuex-pathify";
-import File from "./File";
-import Poll from "./Poll";
-import UserGroup from "./UserGroup";
+import { sync, call} from "vuex-pathify";
+import File from "../File";
+import Poll from "../Poll";
+import UserGroup from "../UserGroup";
 import * as types from "@/store/types.js";
 export default {
   components: { File, Poll, UserGroup },
   data: () => ({}),
-  beforeRouteEnter(to, from, next) {
+    beforeRouteEnter(to, from, next) {
     next(vm => {
-      if (!from.path.includes("friends")) {
+      if (!from.path.includes("users")) {
         vm.setGroupe({ id: parseInt(to.params.groupId, 10) });
       }
     });
   },
   computed: {
+
     items: sync("chat/messageList"),
     messages() {
       return this.items.filter(item => item.type !== "drawpad");
     }
   },
   updated() {
-    if (this.items.length != 0) {
-      this.scrollBottom();
-    }
+    this.scrollBottom();
   },
   methods: {
     setGroupe: call(`groupe/${types.setGroupe}`),
+    deleteMessage: call(`chat/${types.deleteMessage}`),
+    restoreMessage: call(`chat/${types.restoreMessage}`),
     isSondage(type) {
       return type === "sondage";
     },

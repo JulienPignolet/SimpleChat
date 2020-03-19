@@ -58,7 +58,7 @@
 import { get, call, sync } from "vuex-pathify";
 import * as types from "@/store/types.js";
 import * as constants from "../constants/constants";
-import { interfaceControl } from "@/store/modules/interfaceControl";
+// import { interfaceControl } from "@/store/modules/interfaceControl";
 import RegisterStoreModule from "@/mixins/RegisterStoreModule";
 
 export default {
@@ -76,7 +76,7 @@ export default {
   },
   created() {
     this.$store.dispatch(`file/${types.getFileData}`, this.fileId);
-    this.registerStoreModule("interfaceControl", interfaceControl);
+    // this.registerStoreModule("interfaceControl", interfaceControl);
   },
   updated() {
     this.updateImage();

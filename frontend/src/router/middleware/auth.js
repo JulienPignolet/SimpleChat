@@ -1,9 +1,10 @@
-export default function auth ({ next, store }){
-    if(!store.getters['user/user']){
+export default function auth ({ next }){
+    if (localStorage.token === 'undefined' ) {
         return next({
-           name: ''
-        })
-    }
+            name: ''
+         })
+      }
+
 
     return next()
    }

@@ -1,4 +1,7 @@
 {
+  "app_bar": {
+    "admin": "Mode administrateur"
+  },
   "login": {
     "title": "Connexion à SimpleChat",
     "sign_in": "Se connecter",
@@ -12,11 +15,15 @@
     "sign_up": "S'inscrire"
   },
   "chat_box": {
-    "type_a_message": "Saisir un message..."
+    "type_a_message": "Saisir un message...",
+    "create_poll": "Créer un sondage",
+    "upload_file": "Envoyer des fichier",
+    "launch_drawpad": "Démarrer le drawpad"
   },
   "chat_list": {
     "discussions": "Discussions",
-    "friends": "Amis"
+    "friends": "Amis",
+    "user_list": "Liste d'utilisateurs"
   },
   "friend_list": {
     "add_friend": "Ajouter un ami",
@@ -26,7 +33,11 @@
     "add_friend": "Ajouter en tant qu'ami",
     "remove_friend": "Supprimer l'ami",
     "block": "Bloquer cet utilisateur",
-    "unblock": "Débloquer cet utilisateur"
+    "unblock": "Débloquer cet utilisateur",
+    "new_password": "Nouveau mot de passe",
+    "continue": "Continuer",
+    "access_account_title": "Donner l'accès à son compte ?",
+    "access_account": "Accès au compte"
   },
   "user_group": {
     "members": "Membres ",

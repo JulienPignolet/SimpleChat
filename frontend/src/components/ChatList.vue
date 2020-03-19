@@ -14,16 +14,14 @@
       <v-subheader>
         {{ $t('chat_list.discussions') }}
         <v-spacer />
-        <v-btn text icon @click="activateNewGroupDialog(true) ">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        <new-group-dialog />
       </v-subheader>
-      <v-list-item-group>
-      <v-list-item v-for="groupe in groupes" :key="groupe.id" @click="chooseGroup(groupe)">
-        <v-list-item-content>
-          <v-list-item-title>{{ groupe.name }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <v-list-item-group mandatory>
+        <v-list-item v-for="groupe in groupes" :key="groupe.id" @click="setGroupe(groupe)">
+          <v-list-item-content>
+            <v-list-item-title>{{ groupe.name }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
@@ -32,35 +30,35 @@
 <script>
 import { sync, call } from "vuex-pathify";
 import * as types from "@/store/types.js";
-import { groupe } from "@/store/modules/groupe";
-import { interfaceControl } from "@/store/modules/interfaceControl";
-import RegisterStoreModule from '@/mixins/RegisterStoreModule'
+import NewGroupDialog from "@/components/NewGroupDialog";
 export default {
-  mixins: [ RegisterStoreModule ],
-  data() {
-    return {};
-  },
+  components: { NewGroupDialog },
+    data: () => ({
+  }),
   created() {
-    this.registerStoreModule("groupe", groupe);
-    this.registerStoreModule("interfaceControl", interfaceControl);
     this.getGroupes();
     this.getUsers();
-    
   },
-  computed: {
-    currentGroup: sync("groupe/groupe"),
-    groupes: sync("groupe/groupeList")
+  watch: {
+    groupe() {
+      if (this.groupe.id != undefined) {
+        this.$router.push(`/chat/group/${this.groupe.id}`);
+        this.chooseGroup();
+      }
+    }
+  },
+  computed: { 
+    groupes: sync("groupe/groupeList"),
+    groupe: sync("groupe/groupe"),
   },
   methods: {
     activateNewGroupDialog: call(`interfaceControl/${types.setGroupDialog}`),
     getGroupes: call(`groupe/${types.getGroupes}`),
     getUsers: call(`user/${types.getUsers}`),
     createGroupe: call(`groupe/${types.createGroupe}`),
-    chooseGroup:  call(`groupe/${types.chooseGroup}`),
-    getUserFriends: call (`user/${types.getUserFriends}`)
+    chooseGroup: call(`groupe/${types.chooseGroup}`),
+    setGroupe: call(`groupe/${types.setGroupe}`),
+    getUserFriends: call(`user/${types.getUserFriends}`)
   }
 };
 </script>
-
-<style lang="css">
-</style>

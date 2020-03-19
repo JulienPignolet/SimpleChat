@@ -6,9 +6,12 @@ export class User {
       this.username = username;
       this.token = token;
       this.id = id;
+      this.roles = JSON.parse(localStorage.getItem('roles'));
     }
 
     isStillConnected() {
-      return this.token != null && (Date.now() > JSON.parse(atob(this.token.split('.')[1]))['exp']);
+      if(this.token != 'undefined'){
+        return this.token != null && (Date.now() > JSON.parse(atob(this.token.split('.')[1]))['exp']);
+      }
     }
 }
