@@ -1,8 +1,8 @@
-# frontend
+﻿# frontend
 
 ## Project setup
 ```
-npm install
+npm install  
 ```
 
 # Conseil à prendre ou à laisser bande d'enfoirés
