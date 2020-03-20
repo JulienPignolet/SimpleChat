@@ -2,7 +2,7 @@
   <div>
     <v-tabs background-color="primary" dark>
       <v-tab>Mes amis</v-tab>
-      <v-tab>Bloqués</v-tab>
+      <!-- <v-tab>Bloqués</v-tab> -->
 
       <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
         <template v-slot:activator="{ on }">
@@ -13,7 +13,7 @@
           <v-autocomplete
             v-model="friendId"
             :placeholder="$t('general.type_username')"
-            :items="userList.filter(user => !friendList.some(friend => friend.id === user.id))"
+            :items="userList.filter(user => !friendList.some(friend => friend.id === user.id) && user.active)"
             item-text="username"
             item-value="id"
             single-line
@@ -29,16 +29,16 @@
       </v-menu>
     </v-tabs>
 
-    <v-data-table :headers="headers" :items="friendList" class="elevation-1" hide-default-footer>
+    <v-data-table :headers="headers" :items="friendList.filter(user => user.active)" class="elevation-1" hide-default-footer>
       <template v-slot:item.action="{ item }">
         <v-icon @click="createGroupeWithFriend(item)">mdi-chat</v-icon>
         <v-icon @click="deleteFriend(item.id)">mdi-delete</v-icon>
       </template>
       <template v-slot:item.chat="{ item }">
         <v-chip
-          v-for="groupe in groupeCommun[item.id]"
+          v-for="groupe in groupeCommun[item.id].filter(groupe => groupe && groupe.deletedat == null)"
           :key="groupe.id"
-          @click="$router.push(`/chat/group/${groupe.id}`)"
+          @click="setGroupe(groupe)"
         >{{groupe.name}}</v-chip>
       </template>
     </v-data-table>
@@ -76,6 +76,7 @@ export default {
     groupeCommun: get("groupe/groupeCommunList")
   },
   methods: {
+    setGroupe: call(`groupe/${types.setGroupe}`),
     deleteFriend: call(`user/${types.deleteFriend}`),
     addFriend: call(`user/${types.addFriend}`),
     getUserFriends: call(`user/${types.getUserFriends}`),

@@ -16,14 +16,21 @@
         <v-spacer />
       </v-subheader>
       <v-list-item-group>
-        <v-list-item v-for="groupe in groupes" :key="groupe.id" @click="chooseGroup(groupe)">
+        <v-list-item v-for="groupe in groupes" :key="groupe.id" @click="setGroupe(groupe)">
           <v-list-item-content>
             <v-list-item-title>{{ groupe.name }}</v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn small icon>
-              <v-icon color="red">mdi-delete</v-icon>
-            </v-btn>
+            <div v-if="groupe.deletedat == null" >
+              <v-btn icon @click="deleteGroupe(groupe.id)">
+                <v-icon color="red">mdi-delete</v-icon>
+              </v-btn>
+            </div>
+            <div v-else>
+              <v-btn icon @click="restoreGroupe(groupe.id)">
+                <v-icon color="grey">mdi-backup-restore</v-icon>
+              </v-btn>
+            </div>
           </v-list-item-action>
         </v-list-item>
       </v-list-item-group>
@@ -42,6 +49,14 @@ export default {
   data() {
     return {};
   },
+  watch: {
+    groupe() {
+      if (this.groupe.id != undefined) {
+        this.$router.push(`/admin/group/${this.groupe.id}`);
+        this.chooseGroup();
+      }
+    }
+  },
   created() {
     // this.registerStoreModule("groupe", groupe);
     // this.registerStoreModule("interfaceControl", interfaceControl);
@@ -50,13 +65,17 @@ export default {
   },
   computed: {
     currentGroup: sync("groupe/groupe"),
-    groupes: sync("groupe/allGroupeList")
+    groupes: sync("groupe/allGroupeList"),
+    groupe: sync("groupe/groupe")
   },
   methods: {
     getGroupes: call(`groupe/${types.getAllGroupes}`),
     getUsers: call(`user/${types.getUsers}`),
     createGroupe: call(`groupe/${types.createGroupe}`),
     chooseGroup: call(`groupe/${types.chooseGroupAdmin}`),
+    deleteGroupe: call(`groupe/${types.deleteGroupe}`),
+    restoreGroupe: call(`groupe/${types.restoreGroupe}`),
+    setGroupe: call(`groupe/${types.setGroupe}`),
     getUserFriends: call(`user/${types.getUserFriends}`)
   }
 };

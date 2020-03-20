@@ -15,8 +15,11 @@ const mutations = {
     state.messageList = []
   },
   ADD_TO_MESSAGE_LIST(state, message) {
-    state.messageList.push(new Message(message.userName, message.contenu, message.type))
-  }
+    state.messageList.push(new Message(message.userName, message.contenu, message.type, message.active, message.id))
+  },
+  SET_ACTIVE(state, message){
+    state.messageList.find(x => x.id === message.id).active = message.active
+  },
 }
 const actions = {
   ...make.actions(state),
@@ -47,6 +50,17 @@ const actions = {
         })
     }
   },
+  async [types.getSavedActMessages]({ commit, rootState }) {
+    commit('CLEAR_MESSAGE_LIST')
+    axios.defaults.headers.get['user_key'] = rootState.user.user.token;
+    axios.get(`${constants.API_URL}api/message/savedActifs/${rootState.groupe.groupe.id}/${rootState.user.user.id}/`)
+      .then(function (response) {
+        response.data.buffer.forEach(message => {
+          commit('ADD_TO_MESSAGE_LIST', message)
+        })
+
+      })
+  },
   async [types.getSavedMessages]({ commit, rootState }) {
     commit('CLEAR_MESSAGE_LIST')
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
@@ -55,8 +69,27 @@ const actions = {
         response.data.buffer.forEach(message => {
           commit('ADD_TO_MESSAGE_LIST', message)
         })
-
       })
+  },
+  async [types.deleteMessage]({  commit, rootState }, messageId) {
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/message/message/manage/${messageId}`, false)
+        .then(function () {
+          commit('SET_ACTIVE', {id : messageId, active: false})
+        })
+    }
+  },
+  async [types.restoreMessage]({  commit, rootState }, messageId) {
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/message/message/manage/${messageId}`, true)
+        .then(function () {
+          commit('SET_ACTIVE', {id : messageId, active: true})
+        })
+    }
   },
   async [types.resetDrawpad]({ rootState }) {
     axios.defaults.headers.get['user_key'] = rootState.user.user.token;
@@ -64,6 +97,7 @@ const actions = {
       .then(function () {})
   }
 };
+
 
 export const chat = {
   namespaced: true,

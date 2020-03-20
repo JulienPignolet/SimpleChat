@@ -3,8 +3,8 @@ import { make } from "vuex-pathify";
 import { Alerte } from "../../models/Alerte";
 import axios from "axios";
 import * as constants from "../../constants/constants";
-import Router from "../../router/router"
 import Vue from 'vue';
+import Router from "../../router/router"
 
 const state = () => ({
   groupe: {},
@@ -28,7 +28,10 @@ const mutations = {
   ...make.mutations(state),
   ADD_TO_GROUPE_COMMUN(state, payload) {
     Vue.set(state.groupeCommunList, payload.friendId, payload.groupesCommuns)
-  }
+  },
+  SET_ACTIVE(state, groupe){
+    state.allGroupeList.find(x => x.id === groupe.id).deletedat = groupe.active
+  },
 }
 
 const actions = {
@@ -59,6 +62,7 @@ const actions = {
     dispatch('groupe/setGroupeName', "", { root: true })
 
   },
+  
   async [types.createGroupeWithFriend]({ dispatch, rootState }, friend) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     let request = { "adminGroupeId": rootState.user.user.id, "groupeName": friend.username, "isPrivateChat": 0, "members": [friend.id] };
@@ -79,10 +83,23 @@ const actions = {
         })
     }
   },
+  async [types.addMembers]({ state, dispatch, rootState }, users) {
+    if (rootState.user.user.id !== "undefined") {
+      for(let user in users){
+        axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+        axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+        let request = {"adminGroupeId": rootState.user.user.id, "groupeId": state.groupe.id, "userId": users[user] }
+        axios.post(`${constants.API_URL}api/groupe/add/member/`, request)
+          .then(function (response) {
+            dispatch("groupe/setGroupeList", response.data, { root: true })
+          })
+      }
+    }
+  },
   async [types.getAllGroupes]({ dispatch, rootState }) {
     if (rootState.user.user.id !== "undefined") {
       axios.defaults.headers.get['user_key'] = rootState.user.user.token;
-      axios.get(`${constants.API_URL}api/groupe/findAll/groupe`)
+      axios.get(`${constants.API_URL}api/groupe/findAll/groupe/all`)
         .then(function (response) {
           dispatch("groupe/setAllGroupeList", response.data, { root: true })
         })
@@ -107,17 +124,17 @@ const actions = {
     dispatch(`groupe/${types.getGroupeAdminUsers}`, null, { root: true })
     dispatch(`groupe/${types.getGroupeIsAdmin}`, null, { root: true })
     dispatch((`chat/${types.setMessageList}`), [], { root: true })
-    dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
+    dispatch((`chat/${types.getSavedActMessages}`), null, { root: true })
   },
   //Evitez duplication, mais flemme
-  async [types.chooseGroupAdmin]({ dispatch, rootState }, group) {
-    Router.push(`/admin/group/${group.id}`);
-    dispatch(types.setGroupe, group);
+  async [types.chooseGroupAdmin]({ state, dispatch, rootState }) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
-    axios.post(`${constants.API_URL}api/message/add/${group.id}/${rootState.user.user.id}/`)
+    axios.post(`${constants.API_URL}api/message/add/${state.groupe.id}/${rootState.user.user.id}/`)
     dispatch(`groupe/${types.getGroupeMembers}`, null, { root: true })
-    dispatch('chat/setMessageList', [], { root: true })
-    // dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
+    dispatch(`groupe/${types.getGroupeFriends}`, null, { root: true })
+    dispatch(`groupe/${types.getGroupeBlockUsers}`, null, { root: true })
+    dispatch((`chat/${types.setMessageList}`), [], { root: true })
+    dispatch((`chat/${types.getSavedMessages}`), null, { root: true })
   },
   async [types.getGroupeMembers]({ dispatch, rootState }) {
     if (rootState.groupe.groupe.id !== undefined) {
@@ -143,6 +160,26 @@ const actions = {
       axios.get(`${constants.API_URL}api/groupe/find/Members/groupe/bloque/${rootState.groupe.groupe.id}/${rootState.user.user.id}`)
         .then(function (response) {
           dispatch("groupe/setGroupeBlockUsers", response.data, { root: true });
+        })
+    }
+  },
+  async [types.restoreGroupe]({  commit, rootState }, groupeId) {
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/groupe/show/group`, {groupId: groupeId, userId: rootState.user.user.id})
+        .then(function () {
+          commit('SET_ACTIVE', {id : groupeId, active: null})
+        })
+    }
+  },
+  async [types.deleteGroupe]({  commit, rootState }, groupeId) {
+    if (rootState.user.user.id !== "undefined") {
+      axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+      axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+      axios.post(`${constants.API_URL}api/groupe/hide/group`, {groupId: groupeId, userId: rootState.user.user.id})
+        .then(function () {
+          commit('SET_ACTIVE', {id : groupeId, active: true})
         })
     }
   },
