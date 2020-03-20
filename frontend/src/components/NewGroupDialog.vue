@@ -58,6 +58,7 @@ export default {
     createGroupeAndCloseMenu() {
       this.createGroupe();
       this.menu = false;
+      this.selectedUserList = [];
     },
     closeMenuAndResetInput() {
       this.menu = false;
