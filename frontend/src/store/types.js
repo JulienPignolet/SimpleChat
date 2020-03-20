@@ -39,6 +39,7 @@ export const getGroupeIsAdmin = 'getGroupeIsAdmin'
 export const groupeAddAmin = 'groupeAddAdmin'
 export const groupeDeleteUser = 'groupeDeleteUser'
 export const groupeDelete = 'groupeDelete'
+export const addMembers = 'addMembers'
 
 // action module register
 export const register = 'register'

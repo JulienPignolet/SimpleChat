@@ -49,7 +49,8 @@
     "new_group": {
       "select_users": "Séléctionner des utilisateurs",
       "name": "Nom du groupe",
-      "create_group": "Créer un groupe"
+      "create_group": "Créer un groupe",
+      "add_user": "Ajouter les utilisateurs"
     },
     "new_poll": {
       "title": "Créer un sondage",

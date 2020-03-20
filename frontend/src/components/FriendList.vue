@@ -2,7 +2,7 @@
   <div>
     <v-tabs background-color="primary" dark>
       <v-tab>Mes amis</v-tab>
-      <v-tab>Bloqués</v-tab>
+      <!-- <v-tab>Bloqués</v-tab> -->
 
       <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
         <template v-slot:activator="{ on }">

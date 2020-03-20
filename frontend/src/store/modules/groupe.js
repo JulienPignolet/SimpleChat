@@ -62,6 +62,7 @@ const actions = {
     dispatch('groupe/setGroupeName', "", { root: true })
 
   },
+  
   async [types.createGroupeWithFriend]({ dispatch, rootState }, friend) {
     axios.defaults.headers.post['user_key'] = rootState.user.user.token;
     let request = { "adminGroupeId": rootState.user.user.id, "groupeName": friend.username, "isPrivateChat": 0, "members": [friend.id] };
@@ -80,6 +81,19 @@ const actions = {
         .then(function (response) {
           dispatch("groupe/setGroupeList", response.data, { root: true })
         })
+    }
+  },
+  async [types.addMembers]({ state, dispatch, rootState }, users) {
+    if (rootState.user.user.id !== "undefined") {
+      for(let user in users){
+        axios.defaults.headers.post['user_key'] = rootState.user.user.token;
+        axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+        let request = {"adminGroupeId": rootState.user.user.id, "groupeId": state.groupe.id, "userId": users[user] }
+        axios.post(`${constants.API_URL}api/groupe/add/member/`, request)
+          .then(function (response) {
+            dispatch("groupe/setGroupeList", response.data, { root: true })
+          })
+      }
     }
   },
   async [types.getAllGroupes]({ dispatch, rootState }) {
