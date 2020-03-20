@@ -4,7 +4,7 @@
       <v-subheader>{{ $t('user_group.actions') }}</v-subheader>
 
       <div class="buttons">
-        <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="500" offset-x>
+        <v-menu v-model="menu" :close-on-content-click="false">
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" block color="primary" class="white--text">
               <v-icon left>mdi-account-plus</v-icon>
