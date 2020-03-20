@@ -59,6 +59,11 @@ import User from "./User";
 import { call, sync, get } from "vuex-pathify";
 import * as types from "@/store/types.js";
 export default {
+    data() {
+    return {
+      menu: false
+    };
+  },
   components: { User },
   computed: {
     selectedUserList: sync("user/selectedUserList"),
